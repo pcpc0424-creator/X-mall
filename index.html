@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X-mall | 건강과 아름다움을 위한 프리미엄 쇼핑몰</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 커서 팔로우 효과 -->
+    <div class="cursor-follower"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- 로딩 스크린 -->
+    <div class="loading-screen">
+        <div class="loader">
+            <div class="loader-text">X-mall</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 헤더 -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <span class="logo-text">X-mall</span>
+                <span class="logo-dot"></span>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active">홈</a></li>
+                <li class="has-dropdown">
+                    <a href="#" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>비타민 & 미네랄</h4>
+                                <a href="#">멀티비타민</a>
+                                <a href="#">비타민C</a>
+                                <a href="#">비타민D</a>
+                                <a href="#">철분제</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>다이어트</h4>
+                                <a href="#">다이어트 보조제</a>
+                                <a href="#">단백질 쉐이크</a>
+                                <a href="#">식이섬유</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>피로회복</h4>
+                                <a href="#">홍삼</a>
+                                <a href="#">녹용</a>
+                                <a href="#">흑마늘</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop" alt="건강식품">
+                                <h4>이달의 추천</h4>
+                                <p>프리미엄 홍삼 정 BEST</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="#" class="nav-link">의료기기 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>건강측정기</h4>
+                                <a href="#">혈압계</a>
+                                <a href="#">체온계</a>
+                                <a href="#">혈당계</a>
+                                <a href="#">체중계</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>치료기기</h4>
+                                <a href="#">마사지기</a>
+                                <a href="#">저주파자극기</a>
+                                <a href="#">온열기</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>재활/보조기</h4>
+                                <a href="#">보호대</a>
+                                <a href="#">교정기</a>
+                                <a href="#">워커</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=200&fit=crop" alt="의료기기">
+                                <h4>신제품</h4>
+                                <p>스마트 혈압계 출시</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="#" class="nav-link">화장품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>스킨케어</h4>
+                                <a href="#">토너/스킨</a>
+                                <a href="#">에센스/세럼</a>
+                                <a href="#">크림</a>
+                                <a href="#">선케어</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>메이크업</h4>
+                                <a href="#">베이스</a>
+                                <a href="#">립</a>
+                                <a href="#">아이</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>바디케어</h4>
+                                <a href="#">바디로션</a>
+                                <a href="#">핸드케어</a>
+                                <a href="#">헤어케어</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=200&fit=crop" alt="화장품">
+                                <h4>베스트셀러</h4>
+                                <p>히알루론산 세럼</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="#" class="nav-link">브랜드 스토리</a></li>
+                <li><a href="#" class="nav-link">이벤트</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="search-btn" aria-label="검색">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="user-btn" aria-label="마이페이지">
+                    <i class="fas fa-user"></i>
+                </button>
+                <button class="cart-btn" aria-label="장바구니">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">3</span>
+                </button>
+                <button class="menu-toggle" aria-label="메뉴">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- 검색 오버레이 -->
+        <div class="search-overlay">
+            <div class="search-container">
+                <button class="search-close"><i class="fas fa-times"></i></button>
+                <h2>무엇을 찾으시나요?</h2>
+                <div class="search-input-wrap">
+                    <input type="text" placeholder="검색어를 입력하세요">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="search-tags">
+                    <span>인기검색어:</span>
+                    <a href="#">비타민C</a>
+                    <a href="#">히알루론산</a>
+                    <a href="#">혈압계</a>
+                    <a href="#">콜라겐</a>
+                    <a href="#">홍삼</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 히어로 섹션 -->
+    <section class="hero">
+        <div class="hero-slider">
+            <div class="hero-slide active" data-slide="1">
+                <div class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1920&q=80')"></div>
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <div class="hero-tag">
+                        <span class="tag-line"></span>
+                        <span>Premium Health & Beauty</span>
+                    </div>
+                    <h1 class="hero-title">
+                        <span class="line">당신의 건강한</span>
+                        <span class="line">아름다움을 위한</span>
+                        <span class="line highlight">프리미엄 케어</span>
+                    </h1>
+                    <p class="hero-desc">과학적으로 검증된 성분과 최첨단 기술력으로<br>건강과 아름다움의 새로운 기준을 제시합니다</p>
+                    <div class="hero-btns">
+                        <a href="#" class="btn btn-primary">
+                            <span>쇼핑하기</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline">
+                            <span>브랜드 스토리</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-product">
+                    <div class="product-showcase">
+                        <div class="product-glow"></div>
+                        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=500&fit=crop" alt="프리미엄 건강식품">
+                    </div>
+                </div>
+            </div>
+            <div class="hero-slide" data-slide="2">
+                <div class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=1920&q=80')"></div>
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <div class="hero-tag">
+                        <span class="tag-line"></span>
+                        <span>Smart Medical Device</span>
+                    </div>
+                    <h1 class="hero-title">
+                        <span class="line">스마트한</span>
+                        <span class="line">건강 관리의</span>
+                        <span class="line highlight">새로운 시작</span>
+                    </h1>
+                    <p class="hero-desc">AI 기반 건강 모니터링으로<br>언제 어디서나 정확한 건강 체크</p>
+                    <div class="hero-btns">
+                        <a href="#" class="btn btn-primary">
+                            <span>제품 보기</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline">
+                            <span>더 알아보기</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-product">
+                    <div class="product-showcase">
+                        <div class="product-glow"></div>
+                        <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&h=500&fit=crop" alt="스마트 의료기기">
+                    </div>
+                </div>
+            </div>
+            <div class="hero-slide" data-slide="3">
+                <div class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1920&q=80')"></div>
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <div class="hero-tag">
+                        <span class="tag-line"></span>
+                        <span>Luxury Skincare</span>
+                    </div>
+                    <h1 class="hero-title">
+                        <span class="line">과학이 증명한</span>
+                        <span class="line">피부 본연의</span>
+                        <span class="line highlight">빛나는 아름다움</span>
+                    </h1>
+                    <p class="hero-desc">피부과학 연구진이 개발한<br>더마코스메틱 솔루션</p>
+                    <div class="hero-btns">
+                        <a href="#" class="btn btn-primary">
+                            <span>컬렉션 보기</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline">
+                            <span>성분 알아보기</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-product">
+                    <div class="product-showcase">
+                        <div class="product-glow"></div>
+                        <img src="https://images.unsplash.com/photo-1571875257727-256c39da42af?w=400&h=500&fit=crop" alt="프리미엄 화장품">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-controls">
+            <div class="slide-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <span class="slide-counter"><span class="current">01</span> / <span class="total">03</span></span>
+            </div>
+            <div class="slide-nav">
+                <button class="slide-prev"><i class="fas fa-arrow-left"></i></button>
+                <button class="slide-next"><i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <div class="hero-scroll">
+            <span>Scroll</span>
+            <div class="scroll-line">
+                <div class="scroll-dot"></div>
+            </div>
+        </div>
+
+        <div class="hero-socials">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+        </div>
+    </section>
+
+    <!-- 빠른 혜택 바 -->
+    <section class="benefits-bar">
+        <div class="benefits-track">
+            <div class="benefit-item">
+                <i class="fas fa-truck"></i>
+                <span>전 상품 무료배송</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-box-open"></i>
+                <span>신규회원 15% 할인</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-sync-alt"></i>
+                <span>30일 무료 반품</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-award"></i>
+                <span>정품 100% 보장</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-headset"></i>
+                <span>24시간 고객센터</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-truck"></i>
+                <span>전 상품 무료배송</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-box-open"></i>
+                <span>신규회원 15% 할인</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-sync-alt"></i>
+                <span>30일 무료 반품</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 카테고리 섹션 -->
+    <section class="categories section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Categories</span>
+                <h2 class="section-title">카테고리</h2>
+                <p class="section-desc">건강과 아름다움을 위한 프리미엄 카테고리를 만나보세요</p>
+            </div>
+
+            <div class="category-grid">
+                <div class="category-card" data-tilt>
+                    <div class="category-bg">
+                        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=800&fit=crop" alt="건강식품">
+                    </div>
+                    <div class="category-overlay"></div>
+                    <div class="category-content">
+                        <div class="category-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>건강식품</h3>
+                        <p>과학적으로 검증된 프리미엄 영양제</p>
+                        <span class="category-count">1,240+ 제품</span>
+                        <a href="#" class="category-link">
+                            <span>둘러보기</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="category-glow"></div>
+                </div>
+
+                <div class="category-card" data-tilt>
+                    <div class="category-bg">
+                        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=800&fit=crop" alt="의료기기">
+                    </div>
+                    <div class="category-overlay"></div>
+                    <div class="category-content">
+                        <div class="category-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h3>의료기기</h3>
+                        <p>스마트한 건강 관리의 시작</p>
+                        <span class="category-count">580+ 제품</span>
+                        <a href="#" class="category-link">
+                            <span>둘러보기</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="category-glow"></div>
+                </div>
+
+                <div class="category-card" data-tilt>
+                    <div class="category-bg">
+                        <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=800&fit=crop" alt="화장품">
+                    </div>
+                    <div class="category-overlay"></div>
+                    <div class="category-content">
+                        <div class="category-icon">
+                            <i class="fas fa-spa"></i>
+                        </div>
+                        <h3>화장품</h3>
+                        <p>피부과학이 만든 더마코스메틱</p>
+                        <span class="category-count">2,100+ 제품</span>
+                        <a href="#" class="category-link">
+                            <span>둘러보기</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="category-glow"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 베스트셀러 섹션 -->
+    <section class="bestsellers section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Best Sellers</span>
+                <h2 class="section-title">베스트셀러</h2>
+                <p class="section-desc">가장 사랑받는 인기 제품을 만나보세요</p>
+            </div>
+
+            <div class="product-tabs">
+                <button class="tab-btn active" data-tab="all">전체</button>
+                <button class="tab-btn" data-tab="health">건강식품</button>
+                <button class="tab-btn" data-tab="medical">의료기기</button>
+                <button class="tab-btn" data-tab="cosmetic">화장품</button>
+            </div>
+
+            <div class="products-slider">
+                <div class="products-track">
+                    <!-- 상품 1 -->
+                    <div class="product-card" data-category="health">
+                        <div class="product-badges">
+                            <span class="badge badge-best">BEST</span>
+                            <span class="badge badge-sale">-20%</span>
+                        </div>
+                        <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop" alt="프리미엄 멀티비타민">
+                            <div class="product-overlay">
+                                <button class="quick-view">Quick View</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">X-mall</span>
+                            <h4 class="product-name">프리미엄 멀티비타민</h4>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="rating-count">(2,847)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-original">₩45,000</span>
+                                <span class="price-sale">₩36,000</span>
+                            </div>
+                            <button class="btn-add-cart">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>장바구니</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 상품 2 -->
+                    <div class="product-card" data-category="cosmetic">
+                        <div class="product-badges">
+                            <span class="badge badge-new">NEW</span>
+                        </div>
+                        <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop" alt="히알루론산 세럼">
+                            <div class="product-overlay">
+                                <button class="quick-view">Quick View</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">X-mall DERM</span>
+                            <h4 class="product-name">히알루론산 앰플 세럼</h4>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="rating-count">(1,523)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-sale">₩58,000</span>
+                            </div>
+                            <button class="btn-add-cart">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>장바구니</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 상품 3 -->
+                    <div class="product-card" data-category="medical">
+                        <div class="product-badges">
+                            <span class="badge badge-best">BEST</span>
+                        </div>
+                        <button class="product-wishlist active"><i class="fas fa-heart"></i></button>
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&h=400&fit=crop" alt="스마트 혈압계">
+                            <div class="product-overlay">
+                                <button class="quick-view">Quick View</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">X-mall CARE</span>
+                            <h4 class="product-name">스마트 블루투스 혈압계</h4>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span class="rating-count">(892)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-sale">₩89,000</span>
+                            </div>
+                            <button class="btn-add-cart">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>장바구니</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 상품 4 -->
+                    <div class="product-card" data-category="health">
+                        <div class="product-badges">
+                            <span class="badge badge-sale">-30%</span>
+                        </div>
+                        <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=400&h=400&fit=crop" alt="정관장 홍삼정">
+                            <div class="product-overlay">
+                                <button class="quick-view">Quick View</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">X-mall</span>
+                            <h4 class="product-name">6년근 프리미엄 홍삼정</h4>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="rating-count">(3,241)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-original">₩180,000</span>
+                                <span class="price-sale">₩126,000</span>
+                            </div>
+                            <button class="btn-add-cart">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>장바구니</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 상품 5 -->
+                    <div class="product-card" data-category="cosmetic">
+                        <div class="product-badges">
+                            <span class="badge badge-best">BEST</span>
+                        </div>
+                        <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1571875257727-256c39da42af?w=400&h=400&fit=crop" alt="레티놀 크림">
+                            <div class="product-overlay">
+                                <button class="quick-view">Quick View</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">X-mall DERM</span>
+                            <h4 class="product-name">리뉴잉 레티놀 크림</h4>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="rating-count">(1,892)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-sale">₩72,000</span>
+                            </div>
+                            <button class="btn-add-cart">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>장바구니</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 상품 6 -->
+                    <div class="product-card" data-category="medical">
+                        <div class="product-badges">
+                            <span class="badge badge-new">NEW</span>
+                            <span class="badge badge-sale">-15%</span>
+                        </div>
+                        <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=400&fit=crop" alt="체온계">
+                            <div class="product-overlay">
+                                <button class="quick-view">Quick View</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">X-mall CARE</span>
+                            <h4 class="product-name">비접촉식 적외선 체온계</h4>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="rating-count">(654)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-original">₩49,000</span>
+                                <span class="price-sale">₩41,650</span>
+                            </div>
+                            <button class="btn-add-cart">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>장바구니</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="slider-arrow slider-prev"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-arrow slider-next"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <div class="view-all-wrap">
+                <a href="#" class="btn btn-outline-dark">
+                    <span>전체 상품 보기</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 프로모션 배너 -->
+    <section class="promo-banner">
+        <div class="promo-parallax" data-parallax>
+            <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=1920&q=80" alt="프로모션">
+        </div>
+        <div class="promo-overlay"></div>
+        <div class="promo-content">
+            <div class="promo-tag">Limited Time Offer</div>
+            <h2 class="promo-title">신규 회원 특별 혜택</h2>
+            <p class="promo-desc">지금 가입하시면 첫 구매 <strong>15% 할인</strong>과<br><strong>5,000 포인트</strong>를 드립니다</p>
+            <div class="promo-timer">
+                <div class="timer-item">
+                    <span class="timer-value" data-days>03</span>
+                    <span class="timer-label">DAYS</span>
+                </div>
+                <div class="timer-separator">:</div>
+                <div class="timer-item">
+                    <span class="timer-value" data-hours>12</span>
+                    <span class="timer-label">HOURS</span>
+                </div>
+                <div class="timer-separator">:</div>
+                <div class="timer-item">
+                    <span class="timer-value" data-minutes>45</span>
+                    <span class="timer-label">MINS</span>
+                </div>
+                <div class="timer-separator">:</div>
+                <div class="timer-item">
+                    <span class="timer-value" data-seconds>28</span>
+                    <span class="timer-label">SECS</span>
+                </div>
+            </div>
+            <a href="#" class="btn btn-white">
+                <span>지금 가입하기</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 신상품 섹션 -->
+    <section class="new-arrivals section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">New Arrivals</span>
+                <h2 class="section-title">신상품</h2>
+                <p class="section-desc">X-mall가 엄선한 최신 제품을 만나보세요</p>
+            </div>
+
+            <div class="new-products-grid">
+                <div class="new-product-featured">
+                    <div class="product-card large">
+                        <div class="product-badges">
+                            <span class="badge badge-new">NEW</span>
+                        </div>
+                        <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1617897903246-719242758050?w=600&h=800&fit=crop" alt="콜라겐 부스터">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">X-mall DERM</span>
+                            <h4 class="product-name">마린 콜라겐 부스터 세럼</h4>
+                            <p class="product-desc">깊은 바다의 마린 콜라겐으로 탱탱한 피부를 경험하세요</p>
+                            <div class="product-price">
+                                <span class="price-sale">₩85,000</span>
+                            </div>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>장바구니 담기</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="new-product-list">
+                    <div class="product-card horizontal">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&h=200&fit=crop" alt="오메가3">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">X-mall</span>
+                            <h4 class="product-name">알티지 오메가3 플러스</h4>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-sale">₩42,000</span>
+                            </div>
+                        </div>
+                        <button class="btn-add-cart-mini"><i class="fas fa-plus"></i></button>
+                    </div>
+
+                    <div class="product-card horizontal">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=200&h=200&fit=crop" alt="선크림">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">X-mall DERM</span>
+                            <h4 class="product-name">톤업 선크림 SPF50+</h4>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-sale">₩32,000</span>
+                            </div>
+                        </div>
+                        <button class="btn-add-cart-mini"><i class="fas fa-plus"></i></button>
+                    </div>
+
+                    <div class="product-card horizontal">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?w=200&h=200&fit=crop" alt="네일 세럼">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">X-mall DERM</span>
+                            <h4 class="product-name">네일 스트렝스 세럼</h4>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-sale">₩28,000</span>
+                            </div>
+                        </div>
+                        <button class="btn-add-cart-mini"><i class="fas fa-plus"></i></button>
+                    </div>
+
+                    <div class="product-card horizontal">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1583209814683-c023dd293cc6?w=200&h=200&fit=crop" alt="마사지건">
+                        </div>
+                        <div class="product-info">
+                            <span class="product-brand">X-mall CARE</span>
+                            <h4 class="product-name">프로 마사지건</h4>
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="product-price">
+                                <span class="price-sale">₩158,000</span>
+                            </div>
+                        </div>
+                        <button class="btn-add-cart-mini"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 브랜드 스토리 섹션 -->
+    <section class="brand-story section">
+        <div class="container">
+            <div class="brand-story-grid">
+                <div class="brand-story-content">
+                    <span class="section-tag">Our Story</span>
+                    <h2 class="section-title">
+                        건강한 아름다움을<br>
+                        <span class="highlight">과학으로 완성하다</span>
+                    </h2>
+                    <p class="brand-desc">
+                        X-mall는 2010년 설립 이래, '건강한 아름다움'이라는
+                        가치 아래 최고 품질의 건강식품, 의료기기, 화장품을
+                        선보이고 있습니다.
+                    </p>
+                    <p class="brand-desc">
+                        피부과 전문의와 약학 연구진이 함께하는 R&D 센터에서
+                        엄격한 임상시험을 거친 제품만을 고객에게 전달합니다.
+                    </p>
+
+                    <div class="brand-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="150">0</span><span class="stat-suffix">만+</span>
+                            <span class="stat-label">누적 고객</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="3900">0</span><span class="stat-suffix">+</span>
+                            <span class="stat-label">제품 라인업</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-count="98">0</span><span class="stat-suffix">%</span>
+                            <span class="stat-label">고객 만족도</span>
+                        </div>
+                    </div>
+
+                    <a href="#" class="btn btn-primary">
+                        <span>브랜드 스토리 보기</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="brand-story-visual">
+                    <div class="visual-main">
+                        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=800&fit=crop" alt="X-mall 연구소">
+                        <div class="visual-badge">
+                            <span class="badge-year">Since</span>
+                            <span class="badge-number">2010</span>
+                        </div>
+                    </div>
+                    <div class="visual-sub">
+                        <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=300&h=300&fit=crop" alt="연구 개발">
+                    </div>
+                    <div class="visual-float">
+                        <div class="float-card">
+                            <i class="fas fa-award"></i>
+                            <span>품질 인증</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 고객 리뷰 섹션 -->
+    <section class="reviews section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Reviews</span>
+                <h2 class="section-title">고객 리뷰</h2>
+                <p class="section-desc">실제 고객님들의 생생한 후기를 확인하세요</p>
+            </div>
+
+            <div class="reviews-slider">
+                <div class="reviews-track">
+                    <div class="review-card">
+                        <div class="review-header">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="고객" class="reviewer-img">
+                            <div class="reviewer-info">
+                                <h4>김지연</h4>
+                                <span>@jiyeon_k</span>
+                            </div>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="review-text">
+                            "히알루론산 세럼 정말 좋아요! 건조했던 피부가 촉촉해지고
+                            다음날 아침 피부결이 확실히 달라진 게 느껴져요.
+                            이제 없으면 안 되는 필수템이 됐어요 💕"
+                        </p>
+                        <div class="review-product">
+                            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=60&h=60&fit=crop" alt="히알루론산 세럼">
+                            <span>히알루론산 앰플 세럼</span>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="고객" class="reviewer-img">
+                            <div class="reviewer-info">
+                                <h4>박준호</h4>
+                                <span>@junho_p</span>
+                            </div>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="review-text">
+                            "부모님 선물로 홍삼정 샀는데 포장도 고급스럽고
+                            품질도 믿을 수 있어서 좋았습니다.
+                            부모님도 효과 좋다고 하시네요. 재구매 예정입니다!"
+                        </p>
+                        <div class="review-product">
+                            <img src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=60&h=60&fit=crop" alt="홍삼정">
+                            <span>6년근 프리미엄 홍삼정</span>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" alt="고객" class="reviewer-img">
+                            <div class="reviewer-info">
+                                <h4>이수진</h4>
+                                <span>@sujin_lee</span>
+                            </div>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                        <p class="review-text">
+                            "스마트 혈압계 앱 연동 기능이 정말 편해요!
+                            측정 기록이 자동 저장되고 그래프로 볼 수 있어서
+                            건강 관리하기 너무 좋습니다 👍"
+                        </p>
+                        <div class="review-product">
+                            <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=60&h=60&fit=crop" alt="혈압계">
+                            <span>스마트 블루투스 혈압계</span>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="고객" class="reviewer-img">
+                            <div class="reviewer-info">
+                                <h4>최민서</h4>
+                                <span>@minseo_c</span>
+                            </div>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="review-text">
+                            "레티놀 크림 한 달 사용 후기인데요,
+                            잔주름이 확실히 옅어졌어요!
+                            자극 없이 순하게 사용할 수 있어서 만족합니다 ✨"
+                        </p>
+                        <div class="review-product">
+                            <img src="https://images.unsplash.com/photo-1571875257727-256c39da42af?w=60&h=60&fit=crop" alt="레티놀 크림">
+                            <span>리뉴잉 레티놀 크림</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reviews-nav">
+                <button class="review-prev"><i class="fas fa-arrow-left"></i></button>
+                <div class="reviews-dots"></div>
+                <button class="review-next"><i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 인스타그램 피드 -->
+    <section class="instagram-feed section">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-tag">Instagram</span>
+                <h2 class="section-title">@vivex_official</h2>
+                <p class="section-desc">인스타그램에서 X-mall의 새로운 소식을 만나보세요</p>
+            </div>
+
+            <div class="insta-grid">
+                <a href="#" class="insta-item">
+                    <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop" alt="Instagram">
+                    <div class="insta-overlay">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                </a>
+                <a href="#" class="insta-item">
+                    <img src="https://images.unsplash.com/photo-1571875257727-256c39da42af?w=400&h=400&fit=crop" alt="Instagram">
+                    <div class="insta-overlay">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                </a>
+                <a href="#" class="insta-item">
+                    <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop" alt="Instagram">
+                    <div class="insta-overlay">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                </a>
+                <a href="#" class="insta-item">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=400&fit=crop" alt="Instagram">
+                    <div class="insta-overlay">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                </a>
+                <a href="#" class="insta-item">
+                    <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop" alt="Instagram">
+                    <div class="insta-overlay">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                </a>
+                <a href="#" class="insta-item">
+                    <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&h=400&fit=crop" alt="Instagram">
+                    <div class="insta-overlay">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 뉴스레터 섹션 -->
+    <section class="newsletter section">
+        <div class="newsletter-bg">
+            <div class="newsletter-shape shape-1"></div>
+            <div class="newsletter-shape shape-2"></div>
+            <div class="newsletter-shape shape-3"></div>
+        </div>
+        <div class="container">
+            <div class="newsletter-content">
+                <h2>뉴스레터 구독하기</h2>
+                <p>최신 제품 소식과 특별 할인 정보를 가장 먼저 받아보세요</p>
+                <form class="newsletter-form">
+                    <div class="input-wrap">
+                        <input type="email" placeholder="이메일 주소를 입력하세요">
+                        <button type="submit">
+                            <span>구독하기</span>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <label class="checkbox-wrap">
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+                        <span>마케팅 정보 수신에 동의합니다</span>
+                    </label>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-col footer-about">
+                        <div class="footer-logo">
+                            <span class="logo-text">X-mall</span>
+                            <span class="logo-dot"></span>
+                        </div>
+                        <p>건강과 아름다움을 위한 프리미엄 쇼핑몰 X-mall입니다. 과학적으로 검증된 최고 품질의 제품만을 선보입니다.</p>
+                        <div class="footer-socials">
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>쇼핑 안내</h4>
+                        <ul>
+                            <li><a href="#">이용약관</a></li>
+                            <li><a href="#">개인정보처리방침</a></li>
+                            <li><a href="#">배송 안내</a></li>
+                            <li><a href="#">교환/반품</a></li>
+                            <li><a href="#">적립금 안내</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>고객센터</h4>
+                        <ul>
+                            <li><a href="#">자주 묻는 질문</a></li>
+                            <li><a href="#">1:1 문의</a></li>
+                            <li><a href="#">공지사항</a></li>
+                            <li><a href="#">제휴문의</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>카테고리</h4>
+                        <ul>
+                            <li><a href="#">건강식품</a></li>
+                            <li><a href="#">의료기기</a></li>
+                            <li><a href="#">화장품</a></li>
+                            <li><a href="#">베스트셀러</a></li>
+                            <li><a href="#">신상품</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col footer-contact">
+                        <h4>고객센터</h4>
+                        <div class="contact-phone">
+                            <span>1588-1234</span>
+                            <small>평일 09:00 - 18:00</small>
+                        </div>
+                        <div class="contact-info">
+                            <p><i class="fas fa-envelope"></i> help@vivex.co.kr</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 서울시 강남구 테헤란로 123</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2024 X-mall. All rights reserved.</p>
+                    <div class="payment-methods">
+                        <img src="https://img.icons8.com/color/48/visa.png" alt="Visa">
+                        <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard">
+                        <img src="https://img.icons8.com/color/48/amex.png" alt="Amex">
+                        <img src="https://img.icons8.com/color/48/paypal.png" alt="PayPal">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 맨 위로 버튼 -->
+    <button class="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- 퀵 메뉴 -->
+    <div class="quick-menu">
+        <button class="quick-menu-toggle">
+            <i class="fas fa-headset"></i>
+        </button>
+        <div class="quick-menu-items">
+            <a href="#" class="quick-item" data-tooltip="카카오톡 상담">
+                <i class="fas fa-comment"></i>
+            </a>
+            <a href="tel:1588-1234" class="quick-item" data-tooltip="전화 상담">
+                <i class="fas fa-phone"></i>
+            </a>
+            <a href="#" class="quick-item" data-tooltip="최근 본 상품">
+                <i class="fas fa-history"></i>
+            </a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
