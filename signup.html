@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 | X-mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=23">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header header-solid">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">X-mall</span>
+                <span class="logo-dot"></span>
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li class="has-dropdown">
+                    <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>비타민 & 미네랄</h4>
+                                <a href="sub-health-vitamin.html">멀티비타민</a>
+                                <a href="sub-health-vitamin.html">비타민C</a>
+                                <a href="sub-health-vitamin.html">비타민D</a>
+                                <a href="sub-health-vitamin.html">철분제</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>다이어트</h4>
+                                <a href="sub-health-probiotics.html">다이어트 보조제</a>
+                                <a href="sub-health-probiotics.html">단백질 쉐이크</a>
+                                <a href="sub-health-probiotics.html">식이섬유</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>피로회복</h4>
+                                <a href="sub-health-ginseng.html">홍삼</a>
+                                <a href="sub-health-ginseng.html">녹용</a>
+                                <a href="sub-health-ginseng.html">흑마늘</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop" alt="건강식품">
+                                <h4>이달의 추천</h4>
+                                <p>프리미엄 홍삼 정 BEST</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-medical.html" class="nav-link">의료기기 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>건강측정기</h4>
+                                <a href="sub-medical-bp.html">혈압계</a>
+                                <a href="sub-medical-thermo.html">체온계</a>
+                                <a href="sub-medical-glucose.html">혈당계</a>
+                                <a href="sub-medical-glucose.html">체중계</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>치료기기</h4>
+                                <a href="sub-medical-massager.html">마사지기</a>
+                                <a href="sub-medical-massager.html">저주파자극기</a>
+                                <a href="sub-medical-massager.html">온열기</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>재활/보조기</h4>
+                                <a href="sub-medical-massager.html">보호대</a>
+                                <a href="sub-medical-massager.html">교정기</a>
+                                <a href="sub-medical-massager.html">워커</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=200&fit=crop" alt="의료기기">
+                                <h4>신제품</h4>
+                                <p>스마트 혈압계 출시</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-cosmetic.html" class="nav-link">화장품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>스킨케어</h4>
+                                <a href="sub-cosmetic-skincare.html">토너/스킨</a>
+                                <a href="sub-cosmetic-skincare.html">에센스/세럼</a>
+                                <a href="sub-cosmetic-skincare.html">크림</a>
+                                <a href="sub-cosmetic-skincare.html">선케어</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>메이크업</h4>
+                                <a href="sub-cosmetic-makeup.html">베이스</a>
+                                <a href="sub-cosmetic-makeup.html">립</a>
+                                <a href="sub-cosmetic-makeup.html">아이</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>바디케어</h4>
+                                <a href="sub-cosmetic-bodycare.html">바디로션</a>
+                                <a href="sub-cosmetic-bodycare.html">핸드케어</a>
+                                <a href="sub-cosmetic-haircare.html">헤어케어</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=200&fit=crop" alt="화장품">
+                                <h4>베스트셀러</h4>
+                                <p>히알루론산 세럼</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
+                <li><a href="event.html" class="nav-link">이벤트</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="search.html" class="search-btn" aria-label="검색">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="login.html" class="user-btn" aria-label="로그인">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="cart.html" class="cart-btn" aria-label="장바구니">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="menu-toggle-wrap">
+                    <button class="menu-toggle" aria-label="메뉴">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="hamburger-dropdown">
+                        <li class="has-submenu">
+                            <a href="category-health.html">건강식품 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-health-vitamin.html">비타민 & 미네랄</a></li>
+                                <li><a href="sub-health-probiotics.html">다이어트</a></li>
+                                <li><a href="sub-health-ginseng.html">피로회복</a></li>
+                                <li><a href="sub-health-omega.html">오메가3</a></li>
+                                <li><a href="sub-health-probiotics.html">프로바이오틱스</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="category-medical.html">의료기기 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-medical-bp.html">혈압계</a></li>
+                                <li><a href="sub-medical-thermo.html">체온계</a></li>
+                                <li><a href="sub-medical-glucose.html">혈당계</a></li>
+                                <li><a href="sub-medical-massager.html">마사지기</a></li>
+                                <li><a href="sub-medical-massager.html">치료기기</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="category-cosmetic.html">화장품 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-cosmetic-skincare.html">스킨케어</a></li>
+                                <li><a href="sub-cosmetic-makeup.html">메이크업</a></li>
+                                <li><a href="sub-cosmetic-bodycare.html">바디케어</a></li>
+                                <li><a href="sub-cosmetic-haircare.html">헤어케어</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="brand-story.html">브랜드 스토리</a></li>
+                        <li><a href="event.html">이벤트</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 회원가입 페이지 -->
+    <main class="auth-page signup-page">
+        <div class="auth-container">
+            <div class="auth-visual">
+                <div class="visual-content">
+                    <h2>Join X-mall</h2>
+                    <p>지금 가입하시고<br>특별한 혜택을 받아보세요</p>
+                    <div class="visual-features">
+                        <div class="feature">
+                            <i class="fas fa-gift"></i>
+                            <span>가입 즉시 5,000원 쿠폰</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-percent"></i>
+                            <span>첫 구매 10% 할인</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-truck"></i>
+                            <span>무료 배송 쿠폰</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-coins"></i>
+                            <span>구매금액 3% 적립</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-form-section">
+                <div class="auth-form-wrapper signup-form-wrapper">
+                    <div class="auth-header">
+                        <h1>회원가입</h1>
+                        <p>X-mall 회원이 되어 다양한 혜택을 누리세요</p>
+                    </div>
+
+                    <!-- 진행 단계 -->
+                    <div class="signup-steps">
+                        <div class="step active" data-step="1">
+                            <span class="step-number">1</span>
+                            <span class="step-label">정보 입력</span>
+                        </div>
+                        <div class="step" data-step="2">
+                            <span class="step-number">2</span>
+                            <span class="step-label">약관 동의</span>
+                        </div>
+                        <div class="step" data-step="3">
+                            <span class="step-number">3</span>
+                            <span class="step-label">가입 완료</span>
+                        </div>
+                    </div>
+
+                    <form class="auth-form" id="signupForm">
+                        <!-- Step 1: 정보 입력 -->
+                        <div class="form-step" id="step1">
+                            <div class="form-group">
+                                <label for="name">이름 <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="name" name="name" placeholder="홍길동" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">이메일 <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-envelope"></i>
+                                    <input type="email" id="email" name="email" placeholder="example@email.com" required>
+                                </div>
+                                <p class="input-hint">로그인 시 사용됩니다</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">비밀번호 <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="password" name="password" placeholder="8자 이상 입력" required>
+                                    <button type="button" class="toggle-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="password-strength">
+                                    <div class="strength-bar">
+                                        <div class="strength-fill" id="strengthFill"></div>
+                                    </div>
+                                    <span class="strength-text" id="strengthText">비밀번호 강도</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="passwordConfirm">비밀번호 확인 <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="비밀번호 재입력" required>
+                                </div>
+                                <p class="input-error" id="passwordError" style="display: none;">비밀번호가 일치하지 않습니다</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">휴대폰 번호 <span class="required">*</span></label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-phone"></i>
+                                    <input type="tel" id="phone" name="phone" placeholder="01012345678" required>
+                                </div>
+                            </div>
+
+                            <button type="button" class="auth-submit-btn" id="nextStep1">
+                                다음 단계 <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Step 2: 약관 동의 -->
+                        <div class="form-step" id="step2" style="display: none;">
+                            <div class="terms-section">
+                                <label class="checkbox-wrapper terms-all">
+                                    <input type="checkbox" id="agreeAll">
+                                    <span class="checkmark"></span>
+                                    <span>전체 동의하기</span>
+                                </label>
+
+                                <div class="terms-list">
+                                    <div class="terms-item">
+                                        <label class="checkbox-wrapper">
+                                            <input type="checkbox" class="term-checkbox" id="term1" required>
+                                            <span class="checkmark"></span>
+                                            <span>[필수] 이용약관 동의</span>
+                                        </label>
+                                        <button type="button" class="view-terms"><i class="fas fa-chevron-right"></i></button>
+                                    </div>
+                                    <div class="terms-item">
+                                        <label class="checkbox-wrapper">
+                                            <input type="checkbox" class="term-checkbox" id="term2" required>
+                                            <span class="checkmark"></span>
+                                            <span>[필수] 개인정보 수집·이용 동의</span>
+                                        </label>
+                                        <button type="button" class="view-terms"><i class="fas fa-chevron-right"></i></button>
+                                    </div>
+                                    <div class="terms-item">
+                                        <label class="checkbox-wrapper">
+                                            <input type="checkbox" class="term-checkbox" id="term3" required>
+                                            <span class="checkmark"></span>
+                                            <span>[필수] 만 14세 이상입니다</span>
+                                        </label>
+                                    </div>
+                                    <div class="terms-item">
+                                        <label class="checkbox-wrapper">
+                                            <input type="checkbox" class="term-checkbox" id="term4">
+                                            <span class="checkmark"></span>
+                                            <span>[선택] 마케팅 정보 수신 동의</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-buttons">
+                                <button type="button" class="auth-submit-btn secondary" id="prevStep2">
+                                    <i class="fas fa-arrow-left"></i> 이전
+                                </button>
+                                <button type="submit" class="auth-submit-btn">
+                                    가입 완료 <i class="fas fa-check"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: 완료 -->
+                        <div class="form-step" id="step3" style="display: none;">
+                            <div class="signup-complete">
+                                <div class="complete-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h2>회원가입 완료!</h2>
+                                <p>X-mall의 회원이 되신 것을 환영합니다.</p>
+                                <div class="welcome-benefits">
+                                    <h3>가입 축하 혜택</h3>
+                                    <div class="benefit-cards">
+                                        <div class="benefit-card">
+                                            <i class="fas fa-gift"></i>
+                                            <span>5,000원 쿠폰</span>
+                                        </div>
+                                        <div class="benefit-card">
+                                            <i class="fas fa-percent"></i>
+                                            <span>10% 할인 쿠폰</span>
+                                        </div>
+                                        <div class="benefit-card">
+                                            <i class="fas fa-truck"></i>
+                                            <span>무료배송 쿠폰</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="complete-actions">
+                                    <a href="index.html" class="auth-submit-btn">쇼핑 시작하기</a>
+                                    <a href="login.html" class="auth-submit-btn secondary">로그인하기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="auth-footer" id="authFooter">
+                        <p>이미 회원이신가요? <a href="login.html">로그인</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .auth-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: calc(100vh - 80px);
+        }
+
+        .auth-visual {
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-visual::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+        }
+
+        .auth-visual::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            bottom: -50px;
+            left: -50px;
+        }
+
+        .visual-content {
+            color: white;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .visual-content h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .visual-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+
+        .visual-features {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .visual-features .feature {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.15);
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .visual-features .feature i {
+            font-size: 1.3rem;
+        }
+
+        .auth-form-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .auth-form-wrapper {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .signup-form-wrapper {
+            max-width: 480px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .auth-header p {
+            color: var(--text-secondary);
+        }
+
+        .signup-steps {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            opacity: 1;
+        }
+
+        .step.completed {
+            opacity: 1;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number {
+            background: var(--gradient-primary);
+        }
+
+        .step.completed .step-number {
+            background: #28a745;
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #ff4444;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            color: #999;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+        }
+
+        .input-hint {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .input-error {
+            font-size: 0.85rem;
+            color: #ff4444;
+            margin-top: 6px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .password-strength {
+            margin-top: 10px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            display: block;
+        }
+
+        .terms-section {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .terms-all {
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        .terms-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .terms-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .view-terms {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .checkbox-wrapper input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .checkbox-wrapper input:checked + .checkmark {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .checkbox-wrapper input:checked + .checkmark::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 11px;
+            color: white;
+        }
+
+        .step-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .step-buttons .auth-submit-btn {
+            flex: 1;
+        }
+
+        .auth-submit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .auth-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .auth-submit-btn.secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 2px solid #e0e0e0;
+        }
+
+        .auth-submit-btn.secondary:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            box-shadow: none;
+        }
+
+        .signup-complete {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .complete-icon {
+            font-size: 5rem;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .signup-complete h2 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .signup-complete > p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .welcome-benefits {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(255, 107, 157, 0.1));
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .welcome-benefits h3 {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .benefit-cards {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 20px 15px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .benefit-card i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .benefit-card span {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .complete-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-secondary);
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        @media (max-width: 992px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-visual {
+                display: none;
+            }
+
+            .auth-form-section {
+                padding: 40px 20px;
+            }
+
+            .signup-steps {
+                gap: 15px;
+            }
+
+            .step-label {
+                display: none;
+            }
+
+            .benefit-cards {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const signupForm = document.getElementById('signupForm');
+            const steps = document.querySelectorAll('.step');
+            const formSteps = document.querySelectorAll('.form-step');
+            const authFooter = document.getElementById('authFooter');
+
+            const password = document.getElementById('password');
+            const passwordConfirm = document.getElementById('passwordConfirm');
+            const passwordError = document.getElementById('passwordError');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+
+            const nextStep1 = document.getElementById('nextStep1');
+            const prevStep2 = document.getElementById('prevStep2');
+
+            const agreeAll = document.getElementById('agreeAll');
+            const termCheckboxes = document.querySelectorAll('.term-checkbox');
+
+            // 비밀번호 강도 체크
+            password.addEventListener('input', function() {
+                const value = this.value;
+                let strength = 0;
+                let text = '비밀번호 강도';
+                let color = '#e0e0e0';
+
+                if (value.length >= 8) strength++;
+                if (/[a-z]/.test(value) && /[A-Z]/.test(value)) strength++;
+                if (/\d/.test(value)) strength++;
+                if (/[^a-zA-Z0-9]/.test(value)) strength++;
+
+                switch (strength) {
+                    case 1:
+                        text = '약함';
+                        color = '#ff4444';
+                        break;
+                    case 2:
+                        text = '보통';
+                        color = '#ffaa00';
+                        break;
+                    case 3:
+                        text = '강함';
+                        color = '#00aa00';
+                        break;
+                    case 4:
+                        text = '매우 강함';
+                        color = '#00cc00';
+                        break;
+                }
+
+                strengthFill.style.width = (strength * 25) + '%';
+                strengthFill.style.background = color;
+                strengthText.textContent = text;
+                strengthText.style.color = color;
+            });
+
+            // 비밀번호 확인
+            passwordConfirm.addEventListener('input', function() {
+                if (this.value !== password.value) {
+                    passwordError.style.display = 'block';
+                    this.parentElement.style.borderColor = '#ff4444';
+                } else {
+                    passwordError.style.display = 'none';
+                    this.parentElement.style.borderColor = '';
+                }
+            });
+
+            // 비밀번호 보기 토글
+            document.querySelectorAll('.toggle-password').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                });
+            });
+
+            // Step 1 -> Step 2
+            nextStep1.addEventListener('click', function() {
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const pass = password.value;
+                const passConfirm = passwordConfirm.value;
+                const phone = document.getElementById('phone').value;
+
+                if (!name || !email || !pass || !passConfirm || !phone) {
+                    alert('모든 필수 항목을 입력해주세요.');
+                    return;
+                }
+
+                if (pass !== passConfirm) {
+                    alert('비밀번호가 일치하지 않습니다.');
+                    return;
+                }
+
+                if (pass.length < 8) {
+                    alert('비밀번호는 8자 이상이어야 합니다.');
+                    return;
+                }
+
+                showStep(2);
+            });
+
+            // Step 2 -> Step 1
+            prevStep2.addEventListener('click', function() {
+                showStep(1);
+            });
+
+            // 전체 동의
+            agreeAll.addEventListener('change', function() {
+                termCheckboxes.forEach(cb => cb.checked = this.checked);
+            });
+
+            termCheckboxes.forEach(cb => {
+                cb.addEventListener('change', function() {
+                    agreeAll.checked = Array.from(termCheckboxes).every(c => c.checked);
+                });
+            });
+
+            // 폼 제출
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const requiredTerms = Array.from(termCheckboxes).filter(cb => cb.required);
+                const allRequired = requiredTerms.every(cb => cb.checked);
+
+                if (!allRequired) {
+                    alert('필수 약관에 동의해주세요.');
+                    return;
+                }
+
+                showStep(3);
+                authFooter.style.display = 'none';
+            });
+
+            function showStep(stepNum) {
+                formSteps.forEach(step => step.style.display = 'none');
+                document.getElementById('step' + stepNum).style.display = 'block';
+
+                steps.forEach((step, index) => {
+                    step.classList.remove('active', 'completed');
+                    if (index + 1 < stepNum) {
+                        step.classList.add('completed');
+                    } else if (index + 1 === stepNum) {
+                        step.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

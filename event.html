@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이벤트 | X-mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=23">
+    <style>
+        /* Event Page Specific Styles */
+        .event-hero {
+            position: relative;
+            height: 400px;
+            margin-top: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .event-hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .event-hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .event-hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.85) 0%, rgba(245, 87, 108, 0.85) 100%);
+        }
+
+        .event-hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .event-hero-content h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .event-hero-content p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        /* Event Tabs */
+        .event-section {
+            padding: 80px 0;
+            background: var(--gray-100);
+        }
+
+        .event-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 50px;
+        }
+
+        .event-tab {
+            padding: 15px 35px;
+            border: none;
+            background: var(--white);
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .event-tab:hover {
+            color: var(--primary);
+        }
+
+        .event-tab.active {
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+
+        /* Event Grid */
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .event-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-normal);
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .event-card-image {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .event-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-normal);
+        }
+
+        .event-card:hover .event-card-image img {
+            transform: scale(1.05);
+        }
+
+        .event-status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .event-status.ongoing {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .event-status.upcoming {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .event-status.ended {
+            background: var(--gray-500);
+        }
+
+        .event-card-content {
+            padding: 30px;
+        }
+
+        .event-card-content h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+            line-height: 1.4;
+        }
+
+        .event-card-content p {
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .event-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .event-date {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+
+        .event-date i {
+            color: var(--primary);
+        }
+
+        .event-btn {
+            margin-left: auto;
+            padding: 10px 25px;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-normal);
+        }
+
+        .event-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .event-btn.disabled {
+            background: var(--gray-400);
+            cursor: not-allowed;
+        }
+
+        .event-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Featured Event */
+        .featured-event {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .featured-event .event-card-image {
+            height: 100%;
+            min-height: 400px;
+        }
+
+        .featured-event .event-card-content {
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-event .event-card-content h3 {
+            font-size: 2rem;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: var(--white);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        /* Countdown Timer */
+        .countdown {
+            display: flex;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .countdown-item {
+            text-align: center;
+        }
+
+        .countdown-value {
+            display: block;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .countdown-label {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--gray-600);
+        }
+
+        /* Winners Section */
+        .winners-section {
+            padding: 80px 0;
+            background: var(--white);
+        }
+
+        .winners-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .winner-card {
+            background: var(--gray-100);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .winner-event {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .winner-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .winner-prize {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+        }
+
+        .winner-date {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray-300);
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .event-grid { grid-template-columns: 1fr; }
+            .featured-event { grid-column: span 1; grid-template-columns: 1fr; }
+            .featured-event .event-card-image { min-height: 250px; }
+            .winners-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .event-hero { height: 300px; }
+            .event-hero-content h1 { font-size: 2rem; }
+            .event-tabs { flex-wrap: wrap; }
+            .event-tab { padding: 12px 25px; font-size: 0.9rem; }
+            .winners-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 576px) {
+            .event-meta { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .event-btn { margin-left: 0; width: 100%; text-align: center; }
+            .countdown-value { width: 50px; height: 50px; line-height: 50px; font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body class="category-page">
+    <!-- 헤더 -->
+    <header class="header scrolled">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">X-mall</span>
+                <span class="logo-dot"></span>
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li class="has-dropdown">
+                    <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>비타민 & 미네랄</h4>
+                                <a href="sub-health-vitamin.html">멀티비타민</a>
+                                <a href="sub-health-vitamin.html">비타민C</a>
+                                <a href="sub-health-vitamin.html">비타민D</a>
+                                <a href="sub-health-vitamin.html">철분제</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>다이어트</h4>
+                                <a href="sub-health-probiotics.html">다이어트 보조제</a>
+                                <a href="sub-health-probiotics.html">단백질 쉐이크</a>
+                                <a href="sub-health-probiotics.html">식이섬유</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>피로회복</h4>
+                                <a href="sub-health-ginseng.html">홍삼</a>
+                                <a href="sub-health-ginseng.html">녹용</a>
+                                <a href="sub-health-ginseng.html">흑마늘</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop" alt="건강식품">
+                                <h4>이달의 추천</h4>
+                                <p>프리미엄 홍삼 정 BEST</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-medical.html" class="nav-link">의료기기 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>건강측정기</h4>
+                                <a href="sub-medical-bp.html">혈압계</a>
+                                <a href="sub-medical-thermo.html">체온계</a>
+                                <a href="sub-medical-glucose.html">혈당계</a>
+                                <a href="sub-medical-glucose.html">체중계</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>치료기기</h4>
+                                <a href="sub-medical-massager.html">마사지기</a>
+                                <a href="sub-medical-massager.html">저주파자극기</a>
+                                <a href="sub-medical-massager.html">온열기</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>재활/보조기</h4>
+                                <a href="sub-medical-massager.html">보호대</a>
+                                <a href="sub-medical-massager.html">교정기</a>
+                                <a href="sub-medical-massager.html">워커</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=200&fit=crop" alt="의료기기">
+                                <h4>신제품</h4>
+                                <p>스마트 혈압계 출시</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-cosmetic.html" class="nav-link">화장품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>스킨케어</h4>
+                                <a href="sub-cosmetic-skincare.html">토너/스킨</a>
+                                <a href="sub-cosmetic-skincare.html">에센스/세럼</a>
+                                <a href="sub-cosmetic-skincare.html">크림</a>
+                                <a href="sub-cosmetic-skincare.html">선케어</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>메이크업</h4>
+                                <a href="sub-cosmetic-makeup.html">베이스</a>
+                                <a href="sub-cosmetic-makeup.html">립</a>
+                                <a href="sub-cosmetic-makeup.html">아이</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>바디케어</h4>
+                                <a href="sub-cosmetic-bodycare.html">바디로션</a>
+                                <a href="sub-cosmetic-bodycare.html">핸드케어</a>
+                                <a href="sub-cosmetic-haircare.html">헤어케어</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=200&fit=crop" alt="화장품">
+                                <h4>베스트셀러</h4>
+                                <p>히알루론산 세럼</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
+                <li><a href="event.html" class="nav-link active">이벤트</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="search.html" class="search-btn" aria-label="검색">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="login.html" class="user-btn" aria-label="로그인">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="cart.html" class="cart-btn" aria-label="장바구니">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="menu-toggle-wrap">
+                    <button class="menu-toggle" aria-label="메뉴">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="hamburger-dropdown">
+                        <li class="has-submenu">
+                            <a href="category-health.html">건강식품 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-health-vitamin.html">비타민 & 미네랄</a></li>
+                                <li><a href="sub-health-probiotics.html">다이어트</a></li>
+                                <li><a href="sub-health-ginseng.html">피로회복</a></li>
+                                <li><a href="sub-health-omega.html">오메가3</a></li>
+                                <li><a href="sub-health-probiotics.html">프로바이오틱스</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="category-medical.html">의료기기 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-medical-bp.html">혈압계</a></li>
+                                <li><a href="sub-medical-thermo.html">체온계</a></li>
+                                <li><a href="sub-medical-glucose.html">혈당계</a></li>
+                                <li><a href="sub-medical-massager.html">마사지기</a></li>
+                                <li><a href="sub-medical-massager.html">치료기기</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="category-cosmetic.html">화장품 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-cosmetic-skincare.html">스킨케어</a></li>
+                                <li><a href="sub-cosmetic-makeup.html">메이크업</a></li>
+                                <li><a href="sub-cosmetic-bodycare.html">바디케어</a></li>
+                                <li><a href="sub-cosmetic-haircare.html">헤어케어</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="brand-story.html">브랜드 스토리</a></li>
+                        <li><a href="event.html">이벤트</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 이벤트 히어로 -->
+    <section class="event-hero">
+        <div class="event-hero-bg">
+            <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1920&q=80" alt="Event">
+        </div>
+        <div class="event-hero-overlay"></div>
+        <div class="event-hero-content">
+            <h1>X-mall 이벤트</h1>
+            <p>다양한 혜택과 특별한 이벤트에 참여하세요!</p>
+        </div>
+    </section>
+
+    <!-- 이벤트 섹션 -->
+    <section class="event-section">
+        <div class="container">
+            <div class="event-tabs">
+                <button class="event-tab active" data-tab="all">전체</button>
+                <button class="event-tab" data-tab="ongoing">진행중</button>
+                <button class="event-tab" data-tab="upcoming">예정</button>
+                <button class="event-tab" data-tab="ended">종료</button>
+            </div>
+
+            <div class="event-grid">
+                <!-- Featured Event -->
+                <div class="featured-event event-card" data-status="ongoing">
+                    <div class="event-card-image">
+                        <img src="https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=800&q=80" alt="신년 이벤트">
+                        <span class="event-status ongoing">진행중</span>
+                    </div>
+                    <div class="event-card-content">
+                        <span class="featured-badge">HOT EVENT</span>
+                        <h3>2024 새해맞이 메가세일!<br>최대 50% 할인</h3>
+                        <p>새해를 맞아 X-mall에서 준비한 초특가 할인 이벤트! 건강식품, 의료기기, 화장품 전 카테고리 최대 50% 할인 혜택을 누려보세요.</p>
+
+                        <div class="countdown">
+                            <div class="countdown-item">
+                                <span class="countdown-value" id="days">03</span>
+                                <span class="countdown-label">일</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" id="hours">12</span>
+                                <span class="countdown-label">시간</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" id="minutes">45</span>
+                                <span class="countdown-label">분</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" id="seconds">30</span>
+                                <span class="countdown-label">초</span>
+                            </div>
+                        </div>
+
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <i class="far fa-calendar-alt"></i>
+                                <span>2024.01.01 ~ 2024.01.31</span>
+                            </div>
+                            <button class="event-btn">참여하기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 1 -->
+                <div class="event-card" data-status="ongoing">
+                    <div class="event-card-image">
+                        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80" alt="건강식품 이벤트">
+                        <span class="event-status ongoing">진행중</span>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>건강식품 1+1 이벤트</h3>
+                        <p>인기 비타민, 프로바이오틱스 제품 1+1 행사! 가족 건강을 위한 특별 혜택.</p>
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <i class="far fa-calendar-alt"></i>
+                                <span>2024.01.15 ~ 2024.02.15</span>
+                            </div>
+                            <button class="event-btn">참여하기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="event-card" data-status="ongoing">
+                    <div class="event-card-image">
+                        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&q=80" alt="뷰티 이벤트">
+                        <span class="event-status ongoing">진행중</span>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>스프링 뷰티 페스티벌</h3>
+                        <p>봄맞이 화장품 특가전! 스킨케어, 메이크업 베스트셀러 최대 40% 할인.</p>
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <i class="far fa-calendar-alt"></i>
+                                <span>2024.01.20 ~ 2024.02.28</span>
+                            </div>
+                            <button class="event-btn">참여하기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 3 -->
+                <div class="event-card" data-status="upcoming">
+                    <div class="event-card-image">
+                        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80" alt="의료기기 이벤트">
+                        <span class="event-status upcoming">예정</span>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>스마트 헬스케어 기획전</h3>
+                        <p>최신 스마트 의료기기 런칭 기념! 얼리버드 할인 및 무료 배송 혜택.</p>
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <i class="far fa-calendar-alt"></i>
+                                <span>2024.02.01 ~ 2024.02.29</span>
+                            </div>
+                            <button class="event-btn">알림신청</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 4 -->
+                <div class="event-card" data-status="upcoming">
+                    <div class="event-card-image">
+                        <img src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=600&q=80" alt="회원 이벤트">
+                        <span class="event-status upcoming">예정</span>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>VIP 회원 감사 이벤트</h3>
+                        <p>VIP 회원 대상 특별 사은품 증정 및 더블 적립 혜택!</p>
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <i class="far fa-calendar-alt"></i>
+                                <span>2024.02.14 ~ 2024.02.28</span>
+                            </div>
+                            <button class="event-btn">알림신청</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 5 - Ended -->
+                <div class="event-card" data-status="ended">
+                    <div class="event-card-image">
+                        <img src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?w=600&q=80" alt="크리스마스 이벤트">
+                        <span class="event-status ended">종료</span>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>크리스마스 선물 대잔치</h3>
+                        <p>크리스마스 시즌 한정 기프트 세트 및 특별 할인 이벤트</p>
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <i class="far fa-calendar-alt"></i>
+                                <span>2023.12.01 ~ 2023.12.25</span>
+                            </div>
+                            <button class="event-btn disabled">종료됨</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 6 - Ended -->
+                <div class="event-card" data-status="ended">
+                    <div class="event-card-image">
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="블랙프라이데이">
+                        <span class="event-status ended">종료</span>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>블랙프라이데이 세일</h3>
+                        <p>연중 최대 할인! 전 상품 최대 70% 할인 빅세일 이벤트</p>
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <i class="far fa-calendar-alt"></i>
+                                <span>2023.11.20 ~ 2023.11.30</span>
+                            </div>
+                            <button class="event-btn disabled">종료됨</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 당첨자 발표 섹션 -->
+    <section class="winners-section">
+        <div class="container">
+            <div class="section-header" style="text-align: center;">
+                <span class="section-badge">WINNERS</span>
+                <h2 class="section-title">당첨자 발표</h2>
+                <p class="section-desc">최근 이벤트 당첨자를 확인하세요</p>
+            </div>
+
+            <div class="winners-grid">
+                <div class="winner-card">
+                    <div class="winner-event">크리스마스 선물 대잔치</div>
+                    <div class="winner-name">김*영 님 외 99명</div>
+                    <div class="winner-prize">프리미엄 기프트 세트</div>
+                    <div class="winner-date">2023.12.26 발표</div>
+                </div>
+
+                <div class="winner-card">
+                    <div class="winner-event">블랙프라이데이 럭키드로우</div>
+                    <div class="winner-name">이*수 님 외 49명</div>
+                    <div class="winner-prize">10만원 상품권</div>
+                    <div class="winner-date">2023.12.05 발표</div>
+                </div>
+
+                <div class="winner-card">
+                    <div class="winner-event">11월 구매왕 이벤트</div>
+                    <div class="winner-name">박*현 님</div>
+                    <div class="winner-prize">50만원 쇼핑 지원금</div>
+                    <div class="winner-date">2023.12.01 발표</div>
+                </div>
+
+                <div class="winner-card">
+                    <div class="winner-event">회원가입 감사 이벤트</div>
+                    <div class="winner-name">최*진 님 외 199명</div>
+                    <div class="winner-prize">신규회원 웰컴키트</div>
+                    <div class="winner-date">2023.11.30 발표</div>
+                </div>
+
+                <div class="winner-card">
+                    <div class="winner-event">리뷰 작성 이벤트</div>
+                    <div class="winner-name">정*미 님 외 29명</div>
+                    <div class="winner-prize">5천 포인트</div>
+                    <div class="winner-date">2023.11.25 발표</div>
+                </div>
+
+                <div class="winner-card">
+                    <div class="winner-event">가을 건강 챌린지</div>
+                    <div class="winner-name">홍*동 님 외 9명</div>
+                    <div class="winner-prize">건강식품 세트</div>
+                    <div class="winner-date">2023.11.15 발표</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-about">
+                        <a href="index.html" class="footer-logo">
+                            <span class="logo-text">X-mall</span>
+                            <span class="logo-dot"></span>
+                        </a>
+                        <p>프리미엄 건강식품, 의료기기, 화장품을 한 곳에서 만나보세요. X-mall은 고객의 건강한 라이프스타일을 위해 최고의 제품만을 엄선합니다.</p>
+                        <div class="footer-socials">
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>쇼핑 안내</h4>
+                        <ul>
+                            <li><a href="#">이용약관</a></li>
+                            <li><a href="#">개인정보처리방침</a></li>
+                            <li><a href="#">배송 안내</a></li>
+                            <li><a href="#">교환/반품 안내</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>고객 서비스</h4>
+                        <ul>
+                            <li><a href="#">자주 묻는 질문</a></li>
+                            <li><a href="#">1:1 문의</a></li>
+                            <li><a href="#">주문/배송 조회</a></li>
+                            <li><a href="#">매장 안내</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>회사 정보</h4>
+                        <ul>
+                            <li><a href="brand-story.html">회사 소개</a></li>
+                            <li><a href="#">채용 정보</a></li>
+                            <li><a href="#">제휴 문의</a></li>
+                            <li><a href="#">공지사항</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col footer-contact">
+                        <h4>고객센터</h4>
+                        <div class="contact-phone">
+                            <span>1588-0000</span>
+                            <small>평일 09:00 - 18:00</small>
+                        </div>
+                        <div class="contact-info">
+                            <p><i class="fas fa-envelope"></i> help@x-mall.co.kr</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 서울시 강남구 테헤란로 123</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2024 X-mall. All rights reserved.</p>
+                    <div class="payment-methods">
+                        <img src="https://img.icons8.com/color/48/visa.png" alt="Visa">
+                        <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard">
+                        <img src="https://img.icons8.com/color/48/amex.png" alt="Amex">
+                        <img src="https://img.icons8.com/color/48/paypal.png" alt="PayPal">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 맨 위로 버튼 -->
+    <button class="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Scroll to Top
+        const scrollTopBtn = document.querySelector('.scroll-top');
+        if (scrollTopBtn) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
+            });
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // Mobile Menu Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        if (menuToggle && navMenu) {
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
+
+        // Event Tab Filter
+        const eventTabs = document.querySelectorAll('.event-tab');
+        const eventCards = document.querySelectorAll('.event-card');
+
+        eventTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                eventTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const filter = tab.dataset.tab;
+
+                eventCards.forEach(card => {
+                    if (filter === 'all' || card.dataset.status === filter) {
+                        card.style.display = 'grid';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Countdown Timer
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 3);
+        endDate.setHours(endDate.getHours() + 12);
+        endDate.setMinutes(endDate.getMinutes() + 45);
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = endDate - now;
+
+            if (diff <= 0) return;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Animate on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.event-card, .winner-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

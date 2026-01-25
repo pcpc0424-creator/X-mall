@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>화장품 | X-mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=23">
+</head>
+<body class="category-page">
+    <!-- 헤더 -->
+    <header class="header scrolled">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">X-mall</span>
+                <span class="logo-dot"></span>
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li class="has-dropdown">
+                    <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>비타민 & 미네랄</h4>
+                                <a href="sub-health-vitamin.html">멀티비타민</a>
+                                <a href="sub-health-vitamin.html">비타민C</a>
+                                <a href="sub-health-vitamin.html">비타민D</a>
+                                <a href="sub-health-vitamin.html">철분제</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>다이어트</h4>
+                                <a href="sub-health-probiotics.html">다이어트 보조제</a>
+                                <a href="sub-health-probiotics.html">단백질 쉐이크</a>
+                                <a href="sub-health-probiotics.html">식이섬유</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>피로회복</h4>
+                                <a href="sub-health-ginseng.html">홍삼</a>
+                                <a href="sub-health-ginseng.html">녹용</a>
+                                <a href="sub-health-ginseng.html">흑마늘</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop" alt="건강식품">
+                                <h4>이달의 추천</h4>
+                                <p>프리미엄 홍삼 정 BEST</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-medical.html" class="nav-link">의료기기 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>건강측정기</h4>
+                                <a href="sub-medical-bp.html">혈압계</a>
+                                <a href="sub-medical-thermo.html">체온계</a>
+                                <a href="sub-medical-glucose.html">혈당계</a>
+                                <a href="sub-medical-glucose.html">체중계</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>치료기기</h4>
+                                <a href="sub-medical-massager.html">마사지기</a>
+                                <a href="sub-medical-massager.html">저주파자극기</a>
+                                <a href="sub-medical-massager.html">온열기</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>재활/보조기</h4>
+                                <a href="sub-medical-massager.html">보호대</a>
+                                <a href="sub-medical-massager.html">교정기</a>
+                                <a href="sub-medical-massager.html">워커</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=200&fit=crop" alt="의료기기">
+                                <h4>신제품</h4>
+                                <p>스마트 혈압계 출시</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-cosmetic.html" class="nav-link active">화장품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>스킨케어</h4>
+                                <a href="sub-cosmetic-skincare.html">토너/스킨</a>
+                                <a href="sub-cosmetic-skincare.html">에센스/세럼</a>
+                                <a href="sub-cosmetic-skincare.html">크림</a>
+                                <a href="sub-cosmetic-skincare.html">선케어</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>메이크업</h4>
+                                <a href="sub-cosmetic-makeup.html">베이스</a>
+                                <a href="sub-cosmetic-makeup.html">립</a>
+                                <a href="sub-cosmetic-makeup.html">아이</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>바디케어</h4>
+                                <a href="sub-cosmetic-bodycare.html">바디로션</a>
+                                <a href="sub-cosmetic-bodycare.html">핸드케어</a>
+                                <a href="sub-cosmetic-haircare.html">헤어케어</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=200&fit=crop" alt="화장품">
+                                <h4>베스트셀러</h4>
+                                <p>히알루론산 세럼</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
+                <li><a href="event.html" class="nav-link">이벤트</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="search.html" class="search-btn" aria-label="검색">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="login.html" class="user-btn" aria-label="로그인">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="cart.html" class="cart-btn" aria-label="장바구니">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="menu-toggle-wrap">
+                    <button class="menu-toggle" aria-label="메뉴">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="hamburger-dropdown">
+                        <li class="has-submenu">
+                            <a href="category-health.html">건강식품 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-health-vitamin.html">비타민 & 미네랄</a></li>
+                                <li><a href="sub-health-probiotics.html">다이어트</a></li>
+                                <li><a href="sub-health-ginseng.html">피로회복</a></li>
+                                <li><a href="sub-health-omega.html">오메가3</a></li>
+                                <li><a href="sub-health-probiotics.html">프로바이오틱스</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="category-medical.html">의료기기 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-medical-bp.html">혈압계</a></li>
+                                <li><a href="sub-medical-thermo.html">체온계</a></li>
+                                <li><a href="sub-medical-glucose.html">혈당계</a></li>
+                                <li><a href="sub-medical-massager.html">마사지기</a></li>
+                                <li><a href="sub-medical-massager.html">치료기기</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="category-cosmetic.html">화장품 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-cosmetic-skincare.html">스킨케어</a></li>
+                                <li><a href="sub-cosmetic-makeup.html">메이크업</a></li>
+                                <li><a href="sub-cosmetic-bodycare.html">바디케어</a></li>
+                                <li><a href="sub-cosmetic-haircare.html">헤어케어</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="brand-story.html">브랜드 스토리</a></li>
+                        <li><a href="event.html">이벤트</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 카테고리 배너 -->
+    <section class="category-banner">
+        <div class="category-banner-bg">
+            <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1920&q=80" alt="화장품">
+        </div>
+        <div class="category-banner-overlay"></div>
+        <div class="category-banner-content">
+            <div class="breadcrumb">
+                <a href="index.html">홈</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>화장품</span>
+            </div>
+            <h1>화장품</h1>
+            <p>피부 본연의 아름다움을 되찾아주는 프리미엄 스킨케어 & 메이크업</p>
+        </div>
+    </section>
+
+    <!-- 카테고리 필터 및 상품 리스트 -->
+    <section class="category-content section">
+        <div class="container">
+            <div class="category-layout">
+                <!-- 사이드바 필터 -->
+                <aside class="category-sidebar">
+                    <div class="filter-section">
+                        <h3 class="filter-title">
+                            <span>카테고리</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <ul class="filter-list">
+                            <li><a href="category-cosmetic.html" class="active">전체 <span>(1,160)</span></a></li>
+                            <li><a href="sub-cosmetic-skincare.html">스킨케어 <span>(450)</span></a></li>
+                            <li><a href="sub-cosmetic-makeup.html">메이크업 <span>(320)</span></a></li>
+                            <li><a href="sub-cosmetic-haircare.html">헤어케어 <span>(180)</span></a></li>
+                            <li><a href="sub-cosmetic-bodycare.html">바디케어 <span>(210)</span></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3 class="filter-title">
+                            <span>브랜드</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <ul class="filter-list">
+                            <li><label><input type="checkbox" checked> X-mall</label></li>
+                            <li><label><input type="checkbox"> 설화수</label></li>
+                            <li><label><input type="checkbox"> 랑콤</label></li>
+                            <li><label><input type="checkbox"> 에스티로더</label></li>
+                            <li><label><input type="checkbox"> 이니스프리</label></li>
+                        </ul>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3 class="filter-title">
+                            <span>가격대</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="price-range">
+                            <div class="price-inputs">
+                                <input type="number" placeholder="최소" value="0">
+                                <span>~</span>
+                                <input type="number" placeholder="최대" value="200000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3 class="filter-title">
+                            <span>평점</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <ul class="filter-list rating-list">
+                            <li><label><input type="checkbox" checked> <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span> 이상</label></li>
+                            <li><label><input type="checkbox"> <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span> 이상</label></li>
+                            <li><label><input type="checkbox"> <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></span> 이상</label></li>
+                        </ul>
+                    </div>
+
+                    <button class="filter-reset">
+                        <i class="fas fa-redo"></i>
+                        필터 초기화
+                    </button>
+                </aside>
+
+                <!-- 상품 리스트 -->
+                <div class="category-products">
+                    <div class="products-header">
+                        <p class="products-count">총 <strong>6</strong>개의 상품</p>
+                        <div class="products-sort">
+                            <select>
+                                <option>인기순</option>
+                                <option>최신순</option>
+                                <option>가격 낮은순</option>
+                                <option>가격 높은순</option>
+                                <option>리뷰 많은순</option>
+                            </select>
+                            <div class="view-toggle">
+                                <button class="view-btn active"><i class="fas fa-th"></i></button>
+                                <button class="view-btn"><i class="fas fa-list"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="products-grid">
+                        <!-- 상품 1 -->
+                        <div class="product-card">
+                            <a href="product-hyaluronic.html">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1571875257727-256c39da42af?w=400&h=400&fit=crop" alt="히알루론산 세럼">
+                                    <div class="product-badges">
+                                        <span class="badge badge-best">BEST</span>
+                                    </div>
+                                    <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                                    <div class="product-overlay">
+                                        <button class="quick-view">Quick View</button>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="product-info">
+                                <span class="product-brand">X-MALL</span>
+                                <h3 class="product-name"><a href="product-hyaluronic.html">히알루론산 수분 세럼</a></h3>
+                                <div class="product-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="rating-count">(5,678)</span>
+                                </div>
+                                <div class="product-price">
+                                    <span class="price-sale">₩48,000</span>
+                                </div>
+                                <button class="btn-add-cart">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>장바구니</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 상품 2 -->
+                        <div class="product-card">
+                            <a href="product-yunjoe.html">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&h=400&fit=crop" alt="윤조에센스">
+                                    <div class="product-badges">
+                                        <span class="badge badge-new">NEW</span>
+                                    </div>
+                                    <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                                    <div class="product-overlay">
+                                        <button class="quick-view">Quick View</button>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="product-info">
+                                <span class="product-brand">설화수</span>
+                                <h3 class="product-name"><a href="product-yunjoe.html">윤조에센스 6세대</a></h3>
+                                <div class="product-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-count">(3,456)</span>
+                                </div>
+                                <div class="product-price">
+                                    <span class="price-sale">₩135,000</span>
+                                </div>
+                                <button class="btn-add-cart">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>장바구니</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 상품 3 -->
+                        <div class="product-card">
+                            <a href="product-lancome-lipstick.html">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=400&fit=crop" alt="립스틱">
+                                    <div class="product-badges">
+                                        <span class="badge badge-sale">20%</span>
+                                    </div>
+                                    <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                                    <div class="product-overlay">
+                                        <button class="quick-view">Quick View</button>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="product-info">
+                                <span class="product-brand">랑콤</span>
+                                <h3 class="product-name"><a href="product-lancome-lipstick.html">앱솔루 루즈 립스틱</a></h3>
+                                <div class="product-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="rating-count">(2,876)</span>
+                                </div>
+                                <div class="product-price">
+                                    <span class="price-original">₩50,000</span>
+                                    <span class="price-sale">₩40,000</span>
+                                </div>
+                                <button class="btn-add-cart">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>장바구니</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 상품 4 -->
+                        <div class="product-card">
+                            <a href="product-night-repair.html">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop" alt="나이트 리페어">
+                                    <div class="product-badges">
+                                        <span class="badge badge-best">BEST</span>
+                                    </div>
+                                    <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                                    <div class="product-overlay">
+                                        <button class="quick-view">Quick View</button>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="product-info">
+                                <span class="product-brand">에스티로더</span>
+                                <h3 class="product-name"><a href="product-night-repair.html">어드밴스드 나이트 리페어</a></h3>
+                                <div class="product-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="rating-count">(8,765)</span>
+                                </div>
+                                <div class="product-price">
+                                    <span class="price-sale">₩158,000</span>
+                                </div>
+                                <button class="btn-add-cart">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>장바구니</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 상품 5 -->
+                        <div class="product-card">
+                            <a href="product-greentea.html">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&h=400&fit=crop" alt="그린티 씨드 세럼">
+                                    <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                                    <div class="product-overlay">
+                                        <button class="quick-view">Quick View</button>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="product-info">
+                                <span class="product-brand">이니스프리</span>
+                                <h3 class="product-name"><a href="product-greentea.html">그린티 씨드 세럼</a></h3>
+                                <div class="product-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-count">(4,321)</span>
+                                </div>
+                                <div class="product-price">
+                                    <span class="price-sale">₩32,000</span>
+                                </div>
+                                <button class="btn-add-cart">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>장바구니</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 상품 6 -->
+                        <div class="product-card">
+                            <a href="product-sunscreen.html">
+                                <div class="product-image">
+                                    <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=400&h=400&fit=crop" alt="선크림">
+                                    <div class="product-badges">
+                                        <span class="badge badge-new">NEW</span>
+                                    </div>
+                                    <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                                    <div class="product-overlay">
+                                        <button class="quick-view">Quick View</button>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="product-info">
+                                <span class="product-brand">X-MALL</span>
+                                <h3 class="product-name"><a href="product-sunscreen.html">톤업 선크림 SPF50+</a></h3>
+                                <div class="product-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="rating-count">(2,156)</span>
+                                </div>
+                                <div class="product-price">
+                                    <span class="price-sale">₩28,000</span>
+                                </div>
+                                <button class="btn-add-cart">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>장바구니</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 페이지네이션 -->
+                    <div class="pagination">
+                        <button class="page-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                        <div class="page-numbers">
+                            <button class="page-num active">1</button>
+                        </div>
+                        <button class="page-btn" disabled><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-about">
+                        <a href="index.html" class="footer-logo">
+                            <span class="logo-text">X-mall</span>
+                            <span class="logo-dot"></span>
+                        </a>
+                        <p>프리미엄 건강식품, 의료기기, 화장품을 한 곳에서 만나보세요. X-mall은 고객의 건강한 라이프스타일을 위해 최고의 제품만을 엄선합니다.</p>
+                        <div class="footer-socials">
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>쇼핑 안내</h4>
+                        <ul>
+                            <li><a href="#">이용약관</a></li>
+                            <li><a href="#">개인정보처리방침</a></li>
+                            <li><a href="#">배송 안내</a></li>
+                            <li><a href="#">교환/반품 안내</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>고객 서비스</h4>
+                        <ul>
+                            <li><a href="#">자주 묻는 질문</a></li>
+                            <li><a href="#">1:1 문의</a></li>
+                            <li><a href="#">주문/배송 조회</a></li>
+                            <li><a href="#">매장 안내</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>회사 정보</h4>
+                        <ul>
+                            <li><a href="#">회사 소개</a></li>
+                            <li><a href="#">채용 정보</a></li>
+                            <li><a href="#">제휴 문의</a></li>
+                            <li><a href="#">공지사항</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col footer-contact">
+                        <h4>고객센터</h4>
+                        <div class="contact-phone">
+                            <span>1588-0000</span>
+                            <small>평일 09:00 - 18:00</small>
+                        </div>
+                        <div class="contact-info">
+                            <p><i class="fas fa-envelope"></i> help@x-mall.co.kr</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 서울시 강남구 테헤란로 123</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2024 X-mall. All rights reserved.</p>
+                    <div class="payment-methods">
+                        <img src="https://img.icons8.com/color/48/visa.png" alt="Visa">
+                        <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard">
+                        <img src="https://img.icons8.com/color/48/amex.png" alt="Amex">
+                        <img src="https://img.icons8.com/color/48/paypal.png" alt="PayPal">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 맨 위로 버튼 -->
+    <button class="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Scroll to Top
+        const scrollTopBtn = document.querySelector('.scroll-top');
+        if (scrollTopBtn) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
+            });
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // Wishlist Toggle
+        document.querySelectorAll('.product-wishlist').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                btn.classList.toggle('active');
+                const icon = btn.querySelector('i');
+                icon.classList.toggle('far');
+                icon.classList.toggle('fas');
+            });
+        });
+
+        // Add to Cart
+        document.querySelectorAll('.btn-add-cart').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                btn.innerHTML = '<i class="fas fa-check"></i><span>추가됨</span>';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-shopping-bag"></i><span>장바구니</span>';
+                }, 2000);
+            });
+        });
+
+        // Mobile Menu Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        if (menuToggle && navMenu) {
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
+    });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

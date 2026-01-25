@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장바구니 | X-mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=23">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header header-solid">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">X-mall</span>
+                <span class="logo-dot"></span>
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li class="has-dropdown">
+                    <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>비타민 & 미네랄</h4>
+                                <a href="sub-health-vitamin.html">멀티비타민</a>
+                                <a href="sub-health-vitamin.html">비타민C</a>
+                                <a href="sub-health-vitamin.html">비타민D</a>
+                                <a href="sub-health-vitamin.html">철분제</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>다이어트</h4>
+                                <a href="sub-health-probiotics.html">다이어트 보조제</a>
+                                <a href="sub-health-probiotics.html">단백질 쉐이크</a>
+                                <a href="sub-health-probiotics.html">식이섬유</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>피로회복</h4>
+                                <a href="sub-health-ginseng.html">홍삼</a>
+                                <a href="sub-health-ginseng.html">녹용</a>
+                                <a href="sub-health-ginseng.html">흑마늘</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop" alt="건강식품">
+                                <h4>이달의 추천</h4>
+                                <p>프리미엄 홍삼 정 BEST</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-medical.html" class="nav-link">의료기기 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>건강측정기</h4>
+                                <a href="sub-medical-bp.html">혈압계</a>
+                                <a href="sub-medical-thermo.html">체온계</a>
+                                <a href="sub-medical-glucose.html">혈당계</a>
+                                <a href="sub-medical-glucose.html">체중계</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>치료기기</h4>
+                                <a href="sub-medical-massager.html">마사지기</a>
+                                <a href="sub-medical-massager.html">저주파자극기</a>
+                                <a href="sub-medical-massager.html">온열기</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>재활/보조기</h4>
+                                <a href="sub-medical-massager.html">보호대</a>
+                                <a href="sub-medical-massager.html">교정기</a>
+                                <a href="sub-medical-massager.html">워커</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=200&fit=crop" alt="의료기기">
+                                <h4>신제품</h4>
+                                <p>스마트 혈압계 출시</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-cosmetic.html" class="nav-link">화장품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>스킨케어</h4>
+                                <a href="sub-cosmetic-skincare.html">토너/스킨</a>
+                                <a href="sub-cosmetic-skincare.html">에센스/세럼</a>
+                                <a href="sub-cosmetic-skincare.html">크림</a>
+                                <a href="sub-cosmetic-skincare.html">선케어</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>메이크업</h4>
+                                <a href="sub-cosmetic-makeup.html">베이스</a>
+                                <a href="sub-cosmetic-makeup.html">립</a>
+                                <a href="sub-cosmetic-makeup.html">아이</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>바디케어</h4>
+                                <a href="sub-cosmetic-bodycare.html">바디로션</a>
+                                <a href="sub-cosmetic-bodycare.html">핸드케어</a>
+                                <a href="sub-cosmetic-haircare.html">헤어케어</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=200&fit=crop" alt="화장품">
+                                <h4>베스트셀러</h4>
+                                <p>히알루론산 세럼</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
+                <li><a href="event.html" class="nav-link">이벤트</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="search.html" class="search-btn" aria-label="검색">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="login.html" class="user-btn" aria-label="로그인">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="cart.html" class="cart-btn" aria-label="장바구니">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count" id="headerCartCount">3</span>
+                </a>
+                <div class="menu-toggle-wrap">
+                    <button class="menu-toggle" aria-label="메뉴">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="hamburger-dropdown">
+                        <li class="has-submenu">
+                            <a href="category-health.html">건강식품 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-health-vitamin.html">비타민 & 미네랄</a></li>
+                                <li><a href="sub-health-probiotics.html">다이어트</a></li>
+                                <li><a href="sub-health-ginseng.html">피로회복</a></li>
+                                <li><a href="sub-health-omega.html">오메가3</a></li>
+                                <li><a href="sub-health-probiotics.html">프로바이오틱스</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="category-medical.html">의료기기 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-medical-bp.html">혈압계</a></li>
+                                <li><a href="sub-medical-thermo.html">체온계</a></li>
+                                <li><a href="sub-medical-glucose.html">혈당계</a></li>
+                                <li><a href="sub-medical-massager.html">마사지기</a></li>
+                                <li><a href="sub-medical-massager.html">치료기기</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="category-cosmetic.html">화장품 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-cosmetic-skincare.html">스킨케어</a></li>
+                                <li><a href="sub-cosmetic-makeup.html">메이크업</a></li>
+                                <li><a href="sub-cosmetic-bodycare.html">바디케어</a></li>
+                                <li><a href="sub-cosmetic-haircare.html">헤어케어</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="brand-story.html">브랜드 스토리</a></li>
+                        <li><a href="event.html">이벤트</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 장바구니 페이지 -->
+    <main class="cart-page">
+        <div class="container">
+            <div class="cart-header">
+                <h1>장바구니</h1>
+                <div class="cart-steps">
+                    <div class="cart-step active">
+                        <span class="step-num">1</span>
+                        <span>장바구니</span>
+                    </div>
+                    <div class="cart-step">
+                        <span class="step-num">2</span>
+                        <span>주문/결제</span>
+                    </div>
+                    <div class="cart-step">
+                        <span class="step-num">3</span>
+                        <span>주문완료</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cart-content">
+                <div class="cart-main">
+                    <!-- 상품 선택 헤더 -->
+                    <div class="cart-select-header">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="selectAll" checked>
+                            <span class="checkmark"></span>
+                            <span>전체선택 (<span id="selectedCount">3</span>/<span id="totalCount">3</span>)</span>
+                        </label>
+                        <button class="delete-selected-btn" id="deleteSelected">선택삭제</button>
+                    </div>
+
+                    <!-- 장바구니 상품 목록 -->
+                    <div class="cart-items" id="cartItems">
+                        <!-- 상품 1 -->
+                        <div class="cart-item" data-id="1" data-price="28000">
+                            <label class="checkbox-wrapper item-checkbox">
+                                <input type="checkbox" class="item-select" checked>
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="item-image">
+                                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&h=200&fit=crop" alt="비타민C">
+                            </div>
+                            <div class="item-info">
+                                <span class="item-category">건강식품</span>
+                                <h3 class="item-name">프리미엄 비타민C 1000mg 120정</h3>
+                                <p class="item-option">옵션: 기본</p>
+                                <div class="item-price-mobile">
+                                    <span class="current-price">28,000원</span>
+                                    <span class="original-price">35,000원</span>
+                                </div>
+                            </div>
+                            <div class="item-quantity">
+                                <button class="qty-btn minus"><i class="fas fa-minus"></i></button>
+                                <input type="number" class="qty-input" value="1" min="1" max="99">
+                                <button class="qty-btn plus"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="item-price">
+                                <span class="current-price">28,000원</span>
+                                <span class="original-price">35,000원</span>
+                            </div>
+                            <button class="item-delete"><i class="fas fa-times"></i></button>
+                        </div>
+
+                        <!-- 상품 2 -->
+                        <div class="cart-item" data-id="2" data-price="89000">
+                            <label class="checkbox-wrapper item-checkbox">
+                                <input type="checkbox" class="item-select" checked>
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="item-image">
+                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop" alt="홍삼">
+                            </div>
+                            <div class="item-info">
+                                <span class="item-category">건강식품</span>
+                                <h3 class="item-name">6년근 홍삼 진액 스틱 30포</h3>
+                                <p class="item-option">옵션: 30포 x 1박스</p>
+                                <div class="item-price-mobile">
+                                    <span class="current-price">89,000원</span>
+                                    <span class="original-price">120,000원</span>
+                                </div>
+                            </div>
+                            <div class="item-quantity">
+                                <button class="qty-btn minus"><i class="fas fa-minus"></i></button>
+                                <input type="number" class="qty-input" value="1" min="1" max="99">
+                                <button class="qty-btn plus"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="item-price">
+                                <span class="current-price">89,000원</span>
+                                <span class="original-price">120,000원</span>
+                            </div>
+                            <button class="item-delete"><i class="fas fa-times"></i></button>
+                        </div>
+
+                        <!-- 상품 3 -->
+                        <div class="cart-item" data-id="3" data-price="45000">
+                            <label class="checkbox-wrapper item-checkbox">
+                                <input type="checkbox" class="item-select" checked>
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="item-image">
+                                <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=200&h=200&fit=crop" alt="세럼">
+                            </div>
+                            <div class="item-info">
+                                <span class="item-category">화장품</span>
+                                <h3 class="item-name">히알루론산 수분 세럼 50ml</h3>
+                                <p class="item-option">옵션: 50ml x 1개</p>
+                                <div class="item-price-mobile">
+                                    <span class="current-price">45,000원</span>
+                                    <span class="original-price">58,000원</span>
+                                </div>
+                            </div>
+                            <div class="item-quantity">
+                                <button class="qty-btn minus"><i class="fas fa-minus"></i></button>
+                                <input type="number" class="qty-input" value="2" min="1" max="99">
+                                <button class="qty-btn plus"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="item-price">
+                                <span class="current-price">90,000원</span>
+                                <span class="original-price">116,000원</span>
+                            </div>
+                            <button class="item-delete"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- 빈 장바구니 -->
+                    <div class="cart-empty" id="cartEmpty" style="display: none;">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h2>장바구니가 비어있습니다</h2>
+                        <p>원하는 상품을 담아보세요!</p>
+                        <a href="index.html" class="shop-now-btn">쇼핑하러 가기</a>
+                    </div>
+                </div>
+
+                <!-- 주문 요약 -->
+                <div class="cart-summary">
+                    <div class="summary-card">
+                        <h3>주문 요약</h3>
+                        <div class="summary-row">
+                            <span>상품 금액</span>
+                            <span id="subtotal">207,000원</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>상품 할인</span>
+                            <span class="discount" id="discount">-36,000원</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>배송비</span>
+                            <span id="shipping">무료</span>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row total">
+                            <span>결제 예정금액</span>
+                            <span id="total">207,000원</span>
+                        </div>
+                        <div class="summary-benefits">
+                            <div class="benefit-item">
+                                <i class="fas fa-coins"></i>
+                                <span>최대 <strong>6,210P</strong> 적립 예정</span>
+                            </div>
+                        </div>
+                        <button class="checkout-btn" id="checkoutBtn">
+                            주문하기 (<span id="checkoutCount">3</span>개)
+                        </button>
+                        <button class="continue-shopping-btn">
+                            <i class="fas fa-arrow-left"></i> 쇼핑 계속하기
+                        </button>
+                    </div>
+
+                    <!-- 쿠폰/적립금 -->
+                    <div class="summary-card coupon-card">
+                        <h3>쿠폰 & 적립금</h3>
+                        <div class="coupon-input-wrapper">
+                            <input type="text" placeholder="쿠폰 코드 입력">
+                            <button>적용</button>
+                        </div>
+                        <div class="point-wrapper">
+                            <label>적립금 사용</label>
+                            <div class="point-input-wrapper">
+                                <input type="number" placeholder="0" id="pointInput">
+                                <span>P</span>
+                                <button>전액 사용</button>
+                            </div>
+                            <p class="available-point">사용 가능: <strong>5,000P</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- 무료배송 안내 -->
+                    <div class="summary-card shipping-info">
+                        <div class="free-shipping-banner">
+                            <i class="fas fa-truck"></i>
+                            <span>50,000원 이상 구매 시 <strong>무료배송</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 추천 상품 -->
+            <div class="recommended-products">
+                <h2>함께 구매하면 좋은 상품</h2>
+                <div class="product-slider">
+                    <div class="product-card mini">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&h=300&fit=crop" alt="프로바이오틱스">
+                        </div>
+                        <div class="product-info">
+                            <h3>프로바이오틱스 유산균</h3>
+                            <div class="product-price">
+                                <span class="current-price">32,000원</span>
+                            </div>
+                            <button class="add-cart-mini"><i class="fas fa-cart-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-card mini">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1577401239170-897942555fb3?w=300&h=300&fit=crop" alt="오메가3">
+                        </div>
+                        <div class="product-info">
+                            <h3>오메가3 피쉬오일</h3>
+                            <div class="product-price">
+                                <span class="current-price">38,000원</span>
+                            </div>
+                            <button class="add-cart-mini"><i class="fas fa-cart-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-card mini">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=300&fit=crop" alt="선크림">
+                        </div>
+                        <div class="product-info">
+                            <h3>워터프루프 선크림</h3>
+                            <div class="product-price">
+                                <span class="current-price">28,000원</span>
+                            </div>
+                            <button class="add-cart-mini"><i class="fas fa-cart-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-card mini">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=300&h=300&fit=crop" alt="혈압계">
+                        </div>
+                        <div class="product-info">
+                            <h3>디지털 자동 혈압계</h3>
+                            <div class="product-price">
+                                <span class="current-price">65,000원</span>
+                            </div>
+                            <button class="add-cart-mini"><i class="fas fa-cart-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>X-mall</h3>
+                <p>건강과 아름다움을 위한<br>프리미엄 쇼핑몰</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>쇼핑 안내</h4>
+                <ul>
+                    <li><a href="#">이용약관</a></li>
+                    <li><a href="#">개인정보처리방침</a></li>
+                    <li><a href="#">배송안내</a></li>
+                    <li><a href="#">교환/반품</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>고객센터</h4>
+                <ul>
+                    <li><a href="#">자주 묻는 질문</a></li>
+                    <li><a href="#">1:1 문의</a></li>
+                    <li><a href="#">공지사항</a></li>
+                </ul>
+                <p class="cs-number">1588-0000</p>
+            </div>
+            <div class="footer-section">
+                <h4>회사 정보</h4>
+                <ul>
+                    <li><a href="brand-story.html">브랜드 스토리</a></li>
+                    <li><a href="#">입점문의</a></li>
+                    <li><a href="#">제휴문의</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 X-mall. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <style>
+        .cart-page {
+            padding-top: 120px;
+            padding-bottom: 80px;
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .cart-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .cart-steps {
+            display: flex;
+            gap: 30px;
+        }
+
+        .cart-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.4;
+        }
+
+        .cart-step.active {
+            opacity: 1;
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .cart-step.active .step-num {
+            background: var(--gradient-primary);
+        }
+
+        .cart-content {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .cart-main {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .cart-select-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-wrapper input:checked + .checkmark {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+
+        .delete-selected-btn {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--gray-600);
+            transition: all 0.3s ease;
+        }
+
+        .delete-selected-btn:hover {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 30px 100px 1fr 120px 130px 40px;
+            gap: 20px;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-checkbox {
+            justify-content: center;
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .item-category {
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .item-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .item-option {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        .item-price-mobile {
+            display: none;
+        }
+
+        .item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            transition: all 0.2s ease;
+        }
+
+        .qty-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .qty-input {
+            width: 50px;
+            height: 32px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .qty-input::-webkit-inner-spin-button,
+        .qty-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+        }
+
+        .item-price {
+            text-align: right;
+        }
+
+        .item-price .current-price {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .item-price .original-price {
+            font-size: 0.85rem;
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .item-delete {
+            width: 36px;
+            height: 36px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .item-delete:hover {
+            color: #ff4444;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .cart-empty i {
+            font-size: 5rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .cart-empty h2 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .cart-empty p {
+            color: var(--gray-600);
+            margin-bottom: 30px;
+        }
+
+        .shop-now-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .shop-now-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .cart-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .summary-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: var(--gray-600);
+        }
+
+        .summary-row.total {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .summary-row.total span:last-child {
+            color: var(--primary);
+        }
+
+        .summary-row .discount {
+            color: #ff6b6b;
+        }
+
+        .summary-divider {
+            height: 1px;
+            background: #eee;
+            margin: 20px 0;
+        }
+
+        .summary-benefits {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(255, 107, 157, 0.1));
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .benefit-item i {
+            color: var(--primary);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .continue-shopping-btn {
+            width: 100%;
+            padding: 14px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            color: var(--dark);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .continue-shopping-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .coupon-input-wrapper {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .coupon-input-wrapper input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .coupon-input-wrapper button {
+            padding: 12px 20px;
+            background: var(--dark);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .point-wrapper label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: var(--gray-600);
+        }
+
+        .point-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .point-input-wrapper input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: right;
+        }
+
+        .point-input-wrapper span {
+            color: var(--gray-600);
+        }
+
+        .point-input-wrapper button {
+            padding: 12px 15px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .available-point {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            margin-top: 10px;
+        }
+
+        .free-shipping-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--primary);
+        }
+
+        .free-shipping-banner i {
+            font-size: 1.2rem;
+        }
+
+        .recommended-products {
+            margin-top: 60px;
+        }
+
+        .recommended-products h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .product-slider {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .product-card.mini {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .product-card.mini .product-image {
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .product-card.mini .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card.mini:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-card.mini .product-info {
+            padding: 15px;
+            position: relative;
+        }
+
+        .product-card.mini h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .product-card.mini .current-price {
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .add-cart-mini {
+            position: absolute;
+            right: 15px;
+            bottom: 15px;
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-cart-mini:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 1024px) {
+            .cart-content {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-summary {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cart-header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .cart-steps {
+                gap: 15px;
+            }
+
+            .cart-step span:last-child {
+                display: none;
+            }
+
+            .cart-item {
+                grid-template-columns: 30px 80px 1fr 30px;
+                gap: 15px;
+            }
+
+            .item-image {
+                width: 80px;
+                height: 80px;
+            }
+
+            .item-quantity,
+            .item-price {
+                display: none;
+            }
+
+            .item-price-mobile {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .item-price-mobile .current-price {
+                font-weight: 700;
+            }
+
+            .item-price-mobile .original-price {
+                font-size: 0.85rem;
+                color: #999;
+                text-decoration: line-through;
+            }
+
+            .product-slider {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAll = document.getElementById('selectAll');
+            const cartItems = document.getElementById('cartItems');
+            const cartEmpty = document.getElementById('cartEmpty');
+            const deleteSelected = document.getElementById('deleteSelected');
+            const selectedCount = document.getElementById('selectedCount');
+            const totalCount = document.getElementById('totalCount');
+            const subtotal = document.getElementById('subtotal');
+            const discount = document.getElementById('discount');
+            const total = document.getElementById('total');
+            const checkoutCount = document.getElementById('checkoutCount');
+            const headerCartCount = document.getElementById('headerCartCount');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            // 수량 변경
+            cartItems.addEventListener('click', function(e) {
+                const target = e.target.closest('.qty-btn');
+                if (!target) return;
+
+                const item = target.closest('.cart-item');
+                const input = item.querySelector('.qty-input');
+                let value = parseInt(input.value);
+
+                if (target.classList.contains('minus') && value > 1) {
+                    input.value = value - 1;
+                } else if (target.classList.contains('plus') && value < 99) {
+                    input.value = value + 1;
+                }
+
+                updateItemPrice(item);
+                updateTotal();
+            });
+
+            // 수량 직접 입력
+            cartItems.addEventListener('change', function(e) {
+                if (e.target.classList.contains('qty-input')) {
+                    const item = e.target.closest('.cart-item');
+                    let value = parseInt(e.target.value);
+                    if (value < 1) e.target.value = 1;
+                    if (value > 99) e.target.value = 99;
+                    updateItemPrice(item);
+                    updateTotal();
+                }
+            });
+
+            // 상품 가격 업데이트
+            function updateItemPrice(item) {
+                const basePrice = parseInt(item.dataset.price);
+                const qty = parseInt(item.querySelector('.qty-input').value);
+                const totalPrice = basePrice * qty;
+                item.querySelector('.item-price .current-price').textContent = totalPrice.toLocaleString() + '원';
+            }
+
+            // 개별 선택
+            cartItems.addEventListener('change', function(e) {
+                if (e.target.classList.contains('item-select')) {
+                    updateSelectAll();
+                    updateTotal();
+                }
+            });
+
+            // 전체 선택
+            selectAll.addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('.item-select');
+                checkboxes.forEach(cb => cb.checked = this.checked);
+                updateTotal();
+            });
+
+            // 전체선택 상태 업데이트
+            function updateSelectAll() {
+                const checkboxes = document.querySelectorAll('.item-select');
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                selectAll.checked = allChecked;
+            }
+
+            // 상품 삭제
+            cartItems.addEventListener('click', function(e) {
+                if (e.target.closest('.item-delete')) {
+                    const item = e.target.closest('.cart-item');
+                    item.style.transform = 'translateX(100%)';
+                    item.style.opacity = '0';
+                    setTimeout(() => {
+                        item.remove();
+                        updateTotal();
+                        checkEmpty();
+                    }, 300);
+                }
+            });
+
+            // 선택 삭제
+            deleteSelected.addEventListener('click', function() {
+                const checked = document.querySelectorAll('.item-select:checked');
+                if (checked.length === 0) {
+                    alert('삭제할 상품을 선택해주세요.');
+                    return;
+                }
+
+                if (confirm(`선택한 ${checked.length}개 상품을 삭제하시겠습니까?`)) {
+                    checked.forEach(cb => {
+                        const item = cb.closest('.cart-item');
+                        item.remove();
+                    });
+                    updateTotal();
+                    checkEmpty();
+                }
+            });
+
+            // 빈 장바구니 체크
+            function checkEmpty() {
+                const items = document.querySelectorAll('.cart-item');
+                if (items.length === 0) {
+                    cartItems.style.display = 'none';
+                    cartEmpty.style.display = 'block';
+                    document.querySelector('.cart-select-header').style.display = 'none';
+                }
+            }
+
+            // 총액 계산
+            function updateTotal() {
+                const items = document.querySelectorAll('.cart-item');
+                let totalItems = 0;
+                let selectedItems = 0;
+                let subtotalValue = 0;
+
+                items.forEach(item => {
+                    totalItems++;
+                    const checkbox = item.querySelector('.item-select');
+                    if (checkbox.checked) {
+                        selectedItems++;
+                        const price = parseInt(item.dataset.price);
+                        const qty = parseInt(item.querySelector('.qty-input').value);
+                        subtotalValue += price * qty;
+                    }
+                });
+
+                selectedCount.textContent = selectedItems;
+                totalCount.textContent = totalItems;
+                checkoutCount.textContent = selectedItems;
+                headerCartCount.textContent = totalItems;
+
+                subtotal.textContent = subtotalValue.toLocaleString() + '원';
+                total.textContent = subtotalValue.toLocaleString() + '원';
+
+                // 할인금액 (예시로 원가 대비 15% 할인)
+                const discountValue = Math.round(subtotalValue * 0.15);
+                discount.textContent = '-' + discountValue.toLocaleString() + '원';
+            }
+
+            // 주문하기 버튼
+            checkoutBtn.addEventListener('click', function() {
+                const selectedItems = document.querySelectorAll('.item-select:checked');
+                if (selectedItems.length === 0) {
+                    alert('주문할 상품을 선택해주세요.');
+                    return;
+                }
+                alert('결제 페이지로 이동합니다. (데모)');
+            });
+
+            // 쇼핑 계속하기
+            document.querySelector('.continue-shopping-btn').addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+
+            // 추천상품 장바구니 담기
+            document.querySelectorAll('.add-cart-mini').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    alert('장바구니에 추가되었습니다!');
+                });
+            });
+
+            // 초기 총액 계산
+            updateTotal();
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

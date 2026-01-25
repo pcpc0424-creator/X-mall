@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색 | X-mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=23">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header header-solid">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">X-mall</span>
+                <span class="logo-dot"></span>
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li class="has-dropdown">
+                    <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>비타민 & 미네랄</h4>
+                                <a href="sub-health-vitamin.html">멀티비타민</a>
+                                <a href="sub-health-vitamin.html">비타민C</a>
+                                <a href="sub-health-vitamin.html">비타민D</a>
+                                <a href="sub-health-vitamin.html">철분제</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>다이어트</h4>
+                                <a href="sub-health-probiotics.html">다이어트 보조제</a>
+                                <a href="sub-health-probiotics.html">단백질 쉐이크</a>
+                                <a href="sub-health-probiotics.html">식이섬유</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>피로회복</h4>
+                                <a href="sub-health-ginseng.html">홍삼</a>
+                                <a href="sub-health-ginseng.html">녹용</a>
+                                <a href="sub-health-ginseng.html">흑마늘</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop" alt="건강식품">
+                                <h4>이달의 추천</h4>
+                                <p>프리미엄 홍삼 정 BEST</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-medical.html" class="nav-link">의료기기 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>건강측정기</h4>
+                                <a href="sub-medical-bp.html">혈압계</a>
+                                <a href="sub-medical-thermo.html">체온계</a>
+                                <a href="sub-medical-glucose.html">혈당계</a>
+                                <a href="sub-medical-glucose.html">체중계</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>치료기기</h4>
+                                <a href="sub-medical-massager.html">마사지기</a>
+                                <a href="sub-medical-massager.html">저주파자극기</a>
+                                <a href="sub-medical-massager.html">온열기</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>재활/보조기</h4>
+                                <a href="sub-medical-massager.html">보호대</a>
+                                <a href="sub-medical-massager.html">교정기</a>
+                                <a href="sub-medical-massager.html">워커</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=200&fit=crop" alt="의료기기">
+                                <h4>신제품</h4>
+                                <p>스마트 혈압계 출시</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-cosmetic.html" class="nav-link">화장품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>스킨케어</h4>
+                                <a href="sub-cosmetic-skincare.html">토너/스킨</a>
+                                <a href="sub-cosmetic-skincare.html">에센스/세럼</a>
+                                <a href="sub-cosmetic-skincare.html">크림</a>
+                                <a href="sub-cosmetic-skincare.html">선케어</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>메이크업</h4>
+                                <a href="sub-cosmetic-makeup.html">베이스</a>
+                                <a href="sub-cosmetic-makeup.html">립</a>
+                                <a href="sub-cosmetic-makeup.html">아이</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>바디케어</h4>
+                                <a href="sub-cosmetic-bodycare.html">바디로션</a>
+                                <a href="sub-cosmetic-bodycare.html">핸드케어</a>
+                                <a href="sub-cosmetic-haircare.html">헤어케어</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=200&fit=crop" alt="화장품">
+                                <h4>베스트셀러</h4>
+                                <p>히알루론산 세럼</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
+                <li><a href="event.html" class="nav-link">이벤트</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="search.html" class="search-btn" aria-label="검색">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="login.html" class="user-btn" aria-label="로그인">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="cart.html" class="cart-btn" aria-label="장바구니">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="menu-toggle-wrap">
+                    <button class="menu-toggle" aria-label="메뉴">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="hamburger-dropdown">
+                        <li class="has-submenu">
+                            <a href="category-health.html">건강식품 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-health-vitamin.html">비타민 & 미네랄</a></li>
+                                <li><a href="sub-health-probiotics.html">다이어트</a></li>
+                                <li><a href="sub-health-ginseng.html">피로회복</a></li>
+                                <li><a href="sub-health-omega.html">오메가3</a></li>
+                                <li><a href="sub-health-probiotics.html">프로바이오틱스</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="category-medical.html">의료기기 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-medical-bp.html">혈압계</a></li>
+                                <li><a href="sub-medical-thermo.html">체온계</a></li>
+                                <li><a href="sub-medical-glucose.html">혈당계</a></li>
+                                <li><a href="sub-medical-massager.html">마사지기</a></li>
+                                <li><a href="sub-medical-massager.html">치료기기</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-submenu">
+                            <a href="category-cosmetic.html">화장품 <i class="fas fa-chevron-down"></i></a>
+                            <ul class="hamburger-submenu">
+                                <li><a href="sub-cosmetic-skincare.html">스킨케어</a></li>
+                                <li><a href="sub-cosmetic-makeup.html">메이크업</a></li>
+                                <li><a href="sub-cosmetic-bodycare.html">바디케어</a></li>
+                                <li><a href="sub-cosmetic-haircare.html">헤어케어</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="brand-story.html">브랜드 스토리</a></li>
+                        <li><a href="event.html">이벤트</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 검색 페이지 -->
+    <main class="search-page">
+        <div class="container">
+            <!-- 검색 영역 -->
+            <div class="search-hero">
+                <h1>상품 검색</h1>
+                <p>원하시는 상품을 찾아보세요</p>
+                <div class="search-input-wrapper">
+                    <input type="text" id="searchInput" class="search-main-input" placeholder="검색어를 입력하세요" autofocus>
+                    <button class="search-submit-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 인기 검색어 -->
+            <div class="search-section">
+                <h3>인기 검색어</h3>
+                <div class="popular-keywords">
+                    <button class="keyword-tag" data-keyword="비타민C">비타민C</button>
+                    <button class="keyword-tag" data-keyword="홍삼">홍삼</button>
+                    <button class="keyword-tag" data-keyword="프로바이오틱스">프로바이오틱스</button>
+                    <button class="keyword-tag" data-keyword="혈압계">혈압계</button>
+                    <button class="keyword-tag" data-keyword="히알루론산">히알루론산</button>
+                    <button class="keyword-tag" data-keyword="오메가3">오메가3</button>
+                    <button class="keyword-tag" data-keyword="마사지기">마사지기</button>
+                    <button class="keyword-tag" data-keyword="선크림">선크림</button>
+                </div>
+            </div>
+
+            <!-- 최근 검색어 -->
+            <div class="search-section" id="recentSearchSection" style="display: none;">
+                <div class="section-header">
+                    <h3>최근 검색어</h3>
+                    <button class="clear-all-btn" id="clearRecentBtn">전체 삭제</button>
+                </div>
+                <div class="recent-keywords" id="recentKeywords">
+                </div>
+            </div>
+
+            <!-- 추천 카테고리 -->
+            <div class="search-section">
+                <h3>추천 카테고리</h3>
+                <div class="recommend-categories">
+                    <a href="category-health.html" class="recommend-category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-heart-pulse"></i>
+                        </div>
+                        <span>건강식품</span>
+                    </a>
+                    <a href="category-medical.html" class="recommend-category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-stethoscope"></i>
+                        </div>
+                        <span>의료기기</span>
+                    </a>
+                    <a href="category-cosmetic.html" class="recommend-category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-spa"></i>
+                        </div>
+                        <span>화장품</span>
+                    </a>
+                    <a href="sub-health-vitamin.html" class="recommend-category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-capsules"></i>
+                        </div>
+                        <span>비타민</span>
+                    </a>
+                    <a href="sub-cosmetic-skincare.html" class="recommend-category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-droplet"></i>
+                        </div>
+                        <span>스킨케어</span>
+                    </a>
+                    <a href="sub-medical-massager.html" class="recommend-category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-hand-holding-medical"></i>
+                        </div>
+                        <span>마사지기</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 검색 결과 영역 -->
+            <div class="search-results-section" id="searchResults" style="display: none;">
+                <div class="section-header">
+                    <h3>검색 결과 <span id="resultCount">0</span>건</h3>
+                    <select class="sort-select" id="sortSelect">
+                        <option value="relevance">관련도순</option>
+                        <option value="popular">인기순</option>
+                        <option value="newest">최신순</option>
+                        <option value="price-low">가격 낮은순</option>
+                        <option value="price-high">가격 높은순</option>
+                    </select>
+                </div>
+                <div class="product-grid" id="productGrid">
+                </div>
+                <div class="no-results" id="noResults" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <p>검색 결과가 없습니다.</p>
+                    <span>다른 검색어로 다시 시도해 주세요.</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>X-mall</h3>
+                <p>건강과 아름다움을 위한<br>프리미엄 쇼핑몰</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>쇼핑 안내</h4>
+                <ul>
+                    <li><a href="#">이용약관</a></li>
+                    <li><a href="#">개인정보처리방침</a></li>
+                    <li><a href="#">배송안내</a></li>
+                    <li><a href="#">교환/반품</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>고객센터</h4>
+                <ul>
+                    <li><a href="#">자주 묻는 질문</a></li>
+                    <li><a href="#">1:1 문의</a></li>
+                    <li><a href="#">공지사항</a></li>
+                </ul>
+                <p class="cs-number">1588-0000</p>
+            </div>
+            <div class="footer-section">
+                <h4>회사 정보</h4>
+                <ul>
+                    <li><a href="brand-story.html">브랜드 스토리</a></li>
+                    <li><a href="#">입점문의</a></li>
+                    <li><a href="#">제휴문의</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 X-mall. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <style>
+        .search-page {
+            padding-top: 120px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #f8f9fa 0%, #fff 100%);
+        }
+
+        .search-hero {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .search-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .search-hero p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .search-input-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-main-input {
+            flex: 1;
+            padding: 20px 30px;
+            font-size: 1.1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-main-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+        }
+
+        .search-submit-btn {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-submit-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .search-section {
+            margin-bottom: 50px;
+        }
+
+        .search-section h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            margin-bottom: 0;
+        }
+
+        .clear-all-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .clear-all-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .popular-keywords,
+        .recent-keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .keyword-tag {
+            padding: 10px 20px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .keyword-tag:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        .recent-keyword {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+        }
+
+        .recent-keyword span {
+            cursor: pointer;
+        }
+
+        .recent-keyword .remove-btn {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            font-size: 0.8rem;
+        }
+
+        .recent-keyword .remove-btn:hover {
+            color: #ff4444;
+        }
+
+        .recommend-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .recommend-category-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .recommend-category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .category-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .recommend-category-card span {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .search-results-section {
+            margin-top: 50px;
+            padding-bottom: 100px;
+        }
+
+        .sort-select {
+            padding: 10px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-secondary);
+        }
+
+        .no-results i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .no-results p {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .search-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .search-input-wrapper {
+                flex-direction: column;
+                padding: 0 20px;
+            }
+
+            .search-submit-btn {
+                width: 100%;
+                border-radius: 30px;
+                height: 50px;
+            }
+
+            .recommend-categories {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .recommend-category-card {
+                padding: 20px 10px;
+            }
+
+            .category-icon {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const keywordTags = document.querySelectorAll('.keyword-tag');
+            const recentSearchSection = document.getElementById('recentSearchSection');
+            const recentKeywords = document.getElementById('recentKeywords');
+            const clearRecentBtn = document.getElementById('clearRecentBtn');
+            const searchResults = document.getElementById('searchResults');
+            const productGrid = document.getElementById('productGrid');
+            const noResults = document.getElementById('noResults');
+            const resultCount = document.getElementById('resultCount');
+
+            // 샘플 상품 데이터
+            const products = [
+                { id: 1, name: '프리미엄 비타민C 1000mg', price: 28000, originalPrice: 35000, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop', category: '건강식품', keywords: ['비타민', '비타민C'] },
+                { id: 2, name: '6년근 홍삼 진액 스틱', price: 89000, originalPrice: 120000, image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop', category: '건강식품', keywords: ['홍삼', '인삼'] },
+                { id: 3, name: '프로바이오틱스 유산균', price: 32000, originalPrice: 40000, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop', category: '건강식품', keywords: ['프로바이오틱스', '유산균'] },
+                { id: 4, name: '디지털 자동 혈압계', price: 65000, originalPrice: 89000, image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&h=400&fit=crop', category: '의료기기', keywords: ['혈압계', '혈압'] },
+                { id: 5, name: '히알루론산 수분 세럼', price: 45000, originalPrice: 58000, image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop', category: '화장품', keywords: ['히알루론산', '세럼', '스킨케어'] },
+                { id: 6, name: '오메가3 피쉬오일', price: 38000, originalPrice: 48000, image: 'https://images.unsplash.com/photo-1577401239170-897942555fb3?w=400&h=400&fit=crop', category: '건강식품', keywords: ['오메가3', '피쉬오일'] },
+                { id: 7, name: '무선 목 마사지기', price: 78000, originalPrice: 99000, image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&h=400&fit=crop', category: '의료기기', keywords: ['마사지기', '목마사지'] },
+                { id: 8, name: '워터프루프 선크림 SPF50+', price: 28000, originalPrice: 35000, image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop', category: '화장품', keywords: ['선크림', '자외선차단'] },
+            ];
+
+            // 최근 검색어 로드
+            function loadRecentSearches() {
+                const recent = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+                if (recent.length > 0) {
+                    recentSearchSection.style.display = 'block';
+                    recentKeywords.innerHTML = recent.map(keyword => `
+                        <div class="recent-keyword">
+                            <span onclick="searchFor('${keyword}')">${keyword}</span>
+                            <button class="remove-btn" onclick="removeRecent('${keyword}')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `).join('');
+                } else {
+                    recentSearchSection.style.display = 'none';
+                }
+            }
+
+            // 최근 검색어 저장
+            function saveRecentSearch(keyword) {
+                let recent = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+                recent = recent.filter(k => k !== keyword);
+                recent.unshift(keyword);
+                recent = recent.slice(0, 10);
+                localStorage.setItem('recentSearches', JSON.stringify(recent));
+                loadRecentSearches();
+            }
+
+            // 최근 검색어 삭제
+            window.removeRecent = function(keyword) {
+                let recent = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+                recent = recent.filter(k => k !== keyword);
+                localStorage.setItem('recentSearches', JSON.stringify(recent));
+                loadRecentSearches();
+            };
+
+            // 전체 삭제
+            clearRecentBtn.addEventListener('click', function() {
+                localStorage.removeItem('recentSearches');
+                loadRecentSearches();
+            });
+
+            // 검색 실행
+            function performSearch(keyword) {
+                if (!keyword.trim()) return;
+
+                saveRecentSearch(keyword);
+                searchInput.value = keyword;
+
+                const results = products.filter(product =>
+                    product.name.toLowerCase().includes(keyword.toLowerCase()) ||
+                    product.category.includes(keyword) ||
+                    product.keywords.some(k => k.includes(keyword))
+                );
+
+                searchResults.style.display = 'block';
+                resultCount.textContent = results.length;
+
+                if (results.length > 0) {
+                    noResults.style.display = 'none';
+                    productGrid.style.display = 'grid';
+                    productGrid.innerHTML = results.map(product => `
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="${product.image}" alt="${product.name}">
+                                <div class="product-overlay">
+                                    <button class="quick-view-btn">Quick View</button>
+                                </div>
+                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                                <span class="product-badge sale">SALE</span>
+                            </div>
+                            <div class="product-info">
+                                <span class="product-category">${product.category}</span>
+                                <h3 class="product-name">${product.name}</h3>
+                                <div class="product-price">
+                                    <span class="current-price">${product.price.toLocaleString()}원</span>
+                                    <span class="original-price">${product.originalPrice.toLocaleString()}원</span>
+                                </div>
+                                <div class="product-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="rating-count">(128)</span>
+                                </div>
+                                <button class="add-to-cart-btn">장바구니 담기</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    noResults.style.display = 'block';
+                    productGrid.style.display = 'none';
+                }
+
+                // 스크롤 이동
+                searchResults.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            window.searchFor = performSearch;
+
+            // 검색 버튼 클릭
+            searchBtn.addEventListener('click', function() {
+                performSearch(searchInput.value);
+            });
+
+            // 엔터 키 검색
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch(searchInput.value);
+                }
+            });
+
+            // 인기 검색어 클릭
+            keywordTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    performSearch(this.dataset.keyword);
+                });
+            });
+
+            // 초기 로드
+            loadRecentSearches();
+
+            // URL 파라미터로 검색어가 있으면 자동 검색
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryParam = urlParams.get('q');
+            if (queryParam) {
+                performSearch(queryParam);
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

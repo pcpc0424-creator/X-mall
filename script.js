@@ -11,11 +11,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingScreen = document.querySelector('.loading-screen');
 
     window.addEventListener('load', function() {
-        setTimeout(() => {
-            loadingScreen.classList.add('hidden');
+        if (loadingScreen) {
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                initScrollAnimations();
+            }, 1500);
+        } else {
+            // 카테고리 페이지 등 로딩스크린 없는 페이지
             document.body.style.overflow = 'auto';
             initScrollAnimations();
-        }, 1500);
+        }
     });
 
     // ===================================
@@ -30,31 +36,39 @@ document.addEventListener('DOMContentLoaded', function() {
         mouseX = e.clientX;
         mouseY = e.clientY;
 
-        cursorDot.style.left = mouseX + 'px';
-        cursorDot.style.top = mouseY + 'px';
+        if (cursorDot) {
+            cursorDot.style.left = mouseX + 'px';
+            cursorDot.style.top = mouseY + 'px';
+        }
     });
 
     function animateCursor() {
         followerX += (mouseX - followerX) * 0.1;
         followerY += (mouseY - followerY) * 0.1;
 
-        cursorFollower.style.left = followerX + 'px';
-        cursorFollower.style.top = followerY + 'px';
+        if (cursorFollower) {
+            cursorFollower.style.left = followerX + 'px';
+            cursorFollower.style.top = followerY + 'px';
+        }
 
         requestAnimationFrame(animateCursor);
     }
-    animateCursor();
+    if (cursorFollower) {
+        animateCursor();
+    }
 
     // Cursor hover effects
-    const hoverElements = document.querySelectorAll('a, button, .product-card, .category-card');
-    hoverElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursorFollower.classList.add('hover');
+    if (cursorFollower) {
+        const hoverElements = document.querySelectorAll('a, button, .product-card, .category-card');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorFollower.classList.add('hover');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorFollower.classList.remove('hover');
+            });
         });
-        el.addEventListener('mouseleave', () => {
-            cursorFollower.classList.remove('hover');
-        });
-    });
+    }
 
     // ===================================
     // Header Scroll Effect
@@ -81,32 +95,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchOverlay = document.querySelector('.search-overlay');
     const searchClose = document.querySelector('.search-close');
 
-    searchBtn.addEventListener('click', () => {
-        searchOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => {
-            searchOverlay.querySelector('input').focus();
-        }, 300);
-    });
+    if (searchBtn && searchOverlay) {
+        searchBtn.addEventListener('click', () => {
+            searchOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                const input = searchOverlay.querySelector('input');
+                if (input) input.focus();
+            }, 300);
+        });
+    }
 
-    searchClose.addEventListener('click', () => {
-        searchOverlay.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
-
-    searchOverlay.addEventListener('click', (e) => {
-        if (e.target === searchOverlay) {
+    if (searchClose && searchOverlay) {
+        searchClose.addEventListener('click', () => {
             searchOverlay.classList.remove('active');
             document.body.style.overflow = 'auto';
-        }
-    });
+        });
+    }
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
-            searchOverlay.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-    });
+    if (searchOverlay) {
+        searchOverlay.addEventListener('click', (e) => {
+            if (e.target === searchOverlay) {
+                searchOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
+                searchOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    }
 
     // ===================================
     // Hero Slider
@@ -123,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const slideDuration = 6000;
 
     function updateSlider() {
+        if (heroSlides.length === 0) return;
         heroSlides.forEach((slide, index) => {
             slide.classList.remove('active');
             if (index === currentSlide) {
@@ -130,21 +152,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        progressFill.style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
-        currentSlideEl.textContent = String(currentSlide + 1).padStart(2, '0');
+        if (progressFill) progressFill.style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
+        if (currentSlideEl) currentSlideEl.textContent = String(currentSlide + 1).padStart(2, '0');
     }
 
     function nextSlide() {
+        if (totalSlides === 0) return;
         currentSlide = (currentSlide + 1) % totalSlides;
         updateSlider();
     }
 
     function prevSlide() {
+        if (totalSlides === 0) return;
         currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
         updateSlider();
     }
 
     function startSlideshow() {
+        if (totalSlides === 0) return;
         slideInterval = setInterval(nextSlide, slideDuration);
     }
 
@@ -153,15 +178,19 @@ document.addEventListener('DOMContentLoaded', function() {
         startSlideshow();
     }
 
-    nextBtn.addEventListener('click', () => {
-        nextSlide();
-        resetSlideshow();
-    });
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            resetSlideshow();
+        });
+    }
 
-    prevBtn.addEventListener('click', () => {
-        prevSlide();
-        resetSlideshow();
-    });
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            resetSlideshow();
+        });
+    }
 
     startSlideshow();
 
@@ -180,7 +209,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             productCards.forEach(card => {
                 if (category === 'all' || card.dataset.category === category) {
-                    card.style.display = 'block';
+                    card.style.display = 'flex';
+                    card.style.flex = '0 0 300px';
                     setTimeout(() => {
                         card.style.opacity = '1';
                         card.style.transform = 'translateY(0)';
@@ -190,6 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     card.style.transform = 'translateY(20px)';
                     setTimeout(() => {
                         card.style.display = 'none';
+                        card.style.flex = '0 0 0';
                     }, 300);
                 }
             });
@@ -205,22 +236,26 @@ document.addEventListener('DOMContentLoaded', function() {
     let scrollPosition = 0;
     const scrollAmount = 330;
 
-    sliderNext.addEventListener('click', () => {
-        scrollPosition += scrollAmount;
-        productsTrack.scrollTo({
-            left: scrollPosition,
-            behavior: 'smooth'
+    if (sliderNext && productsTrack) {
+        sliderNext.addEventListener('click', () => {
+            scrollPosition += scrollAmount;
+            productsTrack.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
         });
-    });
+    }
 
-    sliderPrev.addEventListener('click', () => {
-        scrollPosition -= scrollAmount;
-        if (scrollPosition < 0) scrollPosition = 0;
-        productsTrack.scrollTo({
-            left: scrollPosition,
-            behavior: 'smooth'
+    if (sliderPrev && productsTrack) {
+        sliderPrev.addEventListener('click', () => {
+            scrollPosition -= scrollAmount;
+            if (scrollPosition < 0) scrollPosition = 0;
+            productsTrack.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
         });
-    });
+    }
 
     // ===================================
     // Wishlist Toggle
@@ -230,6 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
     wishlistBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             btn.classList.toggle('active');
 
             const icon = btn.querySelector('i');
@@ -251,37 +287,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const minutesEl = document.querySelector('[data-minutes]');
     const secondsEl = document.querySelector('[data-seconds]');
 
-    // Set end date (3 days from now)
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 3);
-    endDate.setHours(endDate.getHours() + 12);
-    endDate.setMinutes(endDate.getMinutes() + 45);
+    if (daysEl && hoursEl && minutesEl && secondsEl) {
+        // Set end date (3 days from now)
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 3);
+        endDate.setHours(endDate.getHours() + 12);
+        endDate.setMinutes(endDate.getMinutes() + 45);
 
-    function updateTimer() {
-        const now = new Date();
-        const diff = endDate - now;
+        function updateTimer() {
+            const now = new Date();
+            const diff = endDate - now;
 
-        if (diff <= 0) {
-            daysEl.textContent = '00';
-            hoursEl.textContent = '00';
-            minutesEl.textContent = '00';
-            secondsEl.textContent = '00';
-            return;
+            if (diff <= 0) {
+                daysEl.textContent = '00';
+                hoursEl.textContent = '00';
+                minutesEl.textContent = '00';
+                secondsEl.textContent = '00';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            daysEl.textContent = String(days).padStart(2, '0');
+            hoursEl.textContent = String(hours).padStart(2, '0');
+            minutesEl.textContent = String(minutes).padStart(2, '0');
+            secondsEl.textContent = String(seconds).padStart(2, '0');
         }
 
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-        daysEl.textContent = String(days).padStart(2, '0');
-        hoursEl.textContent = String(hours).padStart(2, '0');
-        minutesEl.textContent = String(minutes).padStart(2, '0');
-        secondsEl.textContent = String(seconds).padStart(2, '0');
+        updateTimer();
+        setInterval(updateTimer, 1000);
     }
-
-    updateTimer();
-    setInterval(updateTimer, 1000);
 
     // ===================================
     // Reviews Slider
@@ -292,79 +330,87 @@ document.addEventListener('DOMContentLoaded', function() {
     const reviewsDotsContainer = document.querySelector('.reviews-dots');
     const reviewCards = document.querySelectorAll('.review-card');
 
-    let reviewIndex = 0;
-    const reviewsPerView = window.innerWidth > 992 ? 3 : window.innerWidth > 768 ? 2 : 1;
-    const totalReviewPages = Math.ceil(reviewCards.length / reviewsPerView);
+    if (reviewsTrack && reviewsDotsContainer && reviewCards.length > 0) {
+        let reviewIndex = 0;
+        const reviewsPerView = window.innerWidth > 992 ? 3 : window.innerWidth > 768 ? 2 : 1;
+        const totalReviewPages = Math.ceil(reviewCards.length / reviewsPerView);
 
-    // Create dots
-    for (let i = 0; i < totalReviewPages; i++) {
-        const dot = document.createElement('span');
-        dot.classList.add('dot');
-        if (i === 0) dot.classList.add('active');
-        dot.addEventListener('click', () => {
-            reviewIndex = i;
-            updateReviewSlider();
-        });
-        reviewsDotsContainer.appendChild(dot);
+        // Create dots
+        for (let i = 0; i < totalReviewPages; i++) {
+            const dot = document.createElement('span');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                reviewIndex = i;
+                updateReviewSlider();
+            });
+            reviewsDotsContainer.appendChild(dot);
+        }
+
+        const reviewDots = reviewsDotsContainer.querySelectorAll('.dot');
+
+        function updateReviewSlider() {
+            const cardWidth = reviewCards[0].offsetWidth + 30;
+            const offset = reviewIndex * cardWidth * reviewsPerView;
+            reviewsTrack.style.transform = `translateX(-${offset}px)`;
+
+            reviewDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === reviewIndex);
+            });
+        }
+
+        if (reviewNext) {
+            reviewNext.addEventListener('click', () => {
+                reviewIndex = (reviewIndex + 1) % totalReviewPages;
+                updateReviewSlider();
+            });
+        }
+
+        if (reviewPrev) {
+            reviewPrev.addEventListener('click', () => {
+                reviewIndex = (reviewIndex - 1 + totalReviewPages) % totalReviewPages;
+                updateReviewSlider();
+            });
+        }
     }
-
-    const reviewDots = reviewsDotsContainer.querySelectorAll('.dot');
-
-    function updateReviewSlider() {
-        const cardWidth = reviewCards[0].offsetWidth + 30;
-        const offset = reviewIndex * cardWidth * reviewsPerView;
-        reviewsTrack.style.transform = `translateX(-${offset}px)`;
-
-        reviewDots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === reviewIndex);
-        });
-    }
-
-    reviewNext.addEventListener('click', () => {
-        reviewIndex = (reviewIndex + 1) % totalReviewPages;
-        updateReviewSlider();
-    });
-
-    reviewPrev.addEventListener('click', () => {
-        reviewIndex = (reviewIndex - 1 + totalReviewPages) % totalReviewPages;
-        updateReviewSlider();
-    });
 
     // ===================================
     // Stats Counter Animation
     // ===================================
     const statNumbers = document.querySelectorAll('.stat-number');
+    const statsSection = document.querySelector('.brand-stats');
     let statsAnimated = false;
 
-    function animateStats() {
-        if (statsAnimated) return;
+    if (statsSection && statNumbers.length > 0) {
+        function animateStats() {
+            if (statsAnimated) return;
 
-        const statsSection = document.querySelector('.brand-stats');
-        const sectionTop = statsSection.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
+            const sectionTop = statsSection.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
 
-        if (sectionTop < windowHeight * 0.8) {
-            statsAnimated = true;
+            if (sectionTop < windowHeight * 0.8) {
+                statsAnimated = true;
 
-            statNumbers.forEach(stat => {
-                const target = parseInt(stat.dataset.count);
-                const duration = 2000;
-                const step = target / (duration / 16);
-                let current = 0;
+                statNumbers.forEach(stat => {
+                    const target = parseInt(stat.dataset.count);
+                    const duration = 2000;
+                    const step = target / (duration / 16);
+                    let current = 0;
 
-                const counter = setInterval(() => {
-                    current += step;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(counter);
-                    }
-                    stat.textContent = Math.floor(current).toLocaleString();
-                }, 16);
-            });
+                    const counter = setInterval(() => {
+                        current += step;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(counter);
+                        }
+                        stat.textContent = Math.floor(current).toLocaleString();
+                    }, 16);
+                });
+            }
         }
-    }
 
-    window.addEventListener('scroll', animateStats);
+        window.addEventListener('scroll', animateStats);
+    }
 
     // ===================================
     // Scroll Animations
@@ -438,20 +484,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===================================
     const scrollTopBtn = document.querySelector('.scroll-top');
 
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 500) {
-            scrollTopBtn.classList.add('visible');
-        } else {
-            scrollTopBtn.classList.remove('visible');
-        }
-    });
-
-    scrollTopBtn.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    if (scrollTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
         });
-    });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 
     // ===================================
     // Quick Menu
@@ -459,14 +507,65 @@ document.addEventListener('DOMContentLoaded', function() {
     const quickMenu = document.querySelector('.quick-menu');
     const quickMenuToggle = document.querySelector('.quick-menu-toggle');
 
-    quickMenuToggle.addEventListener('click', () => {
-        quickMenu.classList.toggle('active');
+    if (quickMenu && quickMenuToggle) {
+        quickMenuToggle.addEventListener('click', () => {
+            quickMenu.classList.toggle('active');
+        });
+
+        // Close quick menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!quickMenu.contains(e.target)) {
+                quickMenu.classList.remove('active');
+            }
+        });
+    }
+
+    // ===================================
+    // PC Hamburger Dropdown Toggle
+    // ===================================
+    const menuToggleWrap = document.querySelector('.menu-toggle-wrap');
+    const hamburgerDropdown = document.querySelector('.hamburger-dropdown');
+    const hamburgerSubmenus = document.querySelectorAll('.hamburger-dropdown > .has-submenu');
+
+    // 햄버거 카테고리 메뉴 토글 (직접 자식 a 태그만)
+    hamburgerSubmenus.forEach(item => {
+        const link = item.querySelector(':scope > a');
+        if (link) {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // 다른 열린 서브메뉴 닫기
+                hamburgerSubmenus.forEach(other => {
+                    if (other !== item && other.classList.contains('open')) {
+                        other.classList.remove('open');
+                    }
+                });
+
+                // 현재 서브메뉴 토글
+                item.classList.toggle('open');
+            });
+        }
     });
 
-    // Close quick menu when clicking outside
+    // 서브메뉴 링크 클릭 시 페이지 이동
+    const submenuLinks = document.querySelectorAll('.hamburger-submenu li a');
+    submenuLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const href = link.getAttribute('href');
+            if (href && href !== '#') {
+                window.location.href = href;
+            }
+        });
+    });
+
+    // 외부 클릭 시 드롭다운 닫기
     document.addEventListener('click', (e) => {
-        if (!quickMenu.contains(e.target)) {
-            quickMenu.classList.remove('active');
+        if (menuToggleWrap && !menuToggleWrap.contains(e.target)) {
+            hamburgerSubmenus.forEach(item => {
+                item.classList.remove('open');
+            });
         }
     });
 
@@ -476,10 +575,49 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.querySelector('.menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
 
-    menuToggle.addEventListener('click', () => {
-        menuToggle.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        document.body.classList.toggle('menu-open');
+    if (menuToggle && navMenu) {
+        menuToggle.addEventListener('click', () => {
+            // 모바일에서만 전체 메뉴 토글
+            if (window.innerWidth <= 992) {
+                menuToggle.classList.toggle('active');
+                navMenu.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
+
+                // 메뉴 닫을 때 모든 드롭다운도 닫기
+                if (!navMenu.classList.contains('active')) {
+                    const openDropdowns = navMenu.querySelectorAll('.has-dropdown.open');
+                    openDropdowns.forEach(dropdown => {
+                        dropdown.classList.remove('open');
+                    });
+                }
+            }
+        });
+    }
+
+    // ===================================
+    // Mobile Dropdown Toggle
+    // ===================================
+    const dropdownItems = document.querySelectorAll('.nav-menu .has-dropdown');
+
+    dropdownItems.forEach(item => {
+        const link = item.querySelector('.nav-link');
+
+        link.addEventListener('click', (e) => {
+            // 모바일에서만 드롭다운 토글
+            if (window.innerWidth <= 992) {
+                e.preventDefault();
+
+                // 다른 열린 드롭다운 닫기
+                dropdownItems.forEach(other => {
+                    if (other !== item && other.classList.contains('open')) {
+                        other.classList.remove('open');
+                    }
+                });
+
+                // 현재 드롭다운 토글
+                item.classList.toggle('open');
+            }
+        });
     });
 
     // ===================================
@@ -487,25 +625,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===================================
     const newsletterForm = document.querySelector('.newsletter-form');
 
-    newsletterForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = newsletterForm.querySelector('input[type="email"]').value;
-        const checkbox = newsletterForm.querySelector('input[type="checkbox"]');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = newsletterForm.querySelector('input[type="email"]').value;
+            const checkbox = newsletterForm.querySelector('input[type="checkbox"]');
 
-        if (!email) {
-            alert('이메일 주소를 입력해주세요.');
-            return;
-        }
+            if (!email) {
+                alert('이메일 주소를 입력해주세요.');
+                return;
+            }
 
-        if (!checkbox.checked) {
-            alert('마케팅 정보 수신에 동의해주세요.');
-            return;
-        }
+            if (!checkbox.checked) {
+                alert('마케팅 정보 수신에 동의해주세요.');
+                return;
+            }
 
-        // Simulate form submission
-        alert('뉴스레터 구독이 완료되었습니다!');
-        newsletterForm.reset();
-    });
+            // Simulate form submission
+            alert('뉴스레터 구독이 완료되었습니다!');
+            newsletterForm.reset();
+        });
+    }
 
     // ===================================
     // Add to Cart Animation
@@ -520,7 +660,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Button animation
             btn.classList.add('added');
-            btn.innerHTML = '<i class="fas fa-check"></i><span>추가됨</span>';
+            btn.innerHTML = '<i class="fas fa-check-circle"></i><span>추가됨</span>';
 
             // Update cart count
             cartItems++;
@@ -657,8 +797,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Hide cursor on mobile
     if ('ontouchstart' in window) {
-        cursorFollower.style.display = 'none';
-        cursorDot.style.display = 'none';
+        if (cursorFollower) cursorFollower.style.display = 'none';
+        if (cursorDot) cursorDot.style.display = 'none';
     }
 
 });
