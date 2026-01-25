@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>출금 신청 - X-mall</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        .my-account-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .my-account-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #333;
+        }
+        .my-account-nav {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .my-account-nav a {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 5px;
+            background: #f5f5f5;
+        }
+        .my-account-nav a.active {
+            background: #333;
+            color: white;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .card h2 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .balance-display {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .balance-display label {
+            display: block;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .balance-display .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1890ff;
+        }
+        .withdraw-form {
+            max-width: 500px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+        }
+        .btn-primary {
+            background: #333;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background: #555;
+        }
+        .info-box {
+            background: #fffbe6;
+            border: 1px solid #ffe58f;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .info-box ul {
+            margin: 10px 0 0 20px;
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .history-table th, .history-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .history-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+        .status-pending { color: #d46b08; }
+        .status-approved { color: #1890ff; }
+        .status-rejected { color: #ff4d4f; }
+        .status-completed { color: #52c41a; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="/X-mall/index.html" class="logo">X-mall</a>
+            <nav class="main-nav">
+                <a href="/X-mall/index.html">홈</a>
+                <a href="dashboard.html">마이페이지</a>
+                <a href="/X-mall/cart.html">장바구니</a>
+                <a href="#" class="logout-link" onclick="handleLogout(event)">로그아웃</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="my-account-container">
+        <div class="my-account-header">
+            <h1>출금 신청</h1>
+        </div>
+
+        <nav class="my-account-nav">
+            <a href="dashboard.html">대시보드</a>
+            <a href="points.html">포인트</a>
+            <a href="orders.html">주문내역</a>
+            <a href="withdraw.html" class="active">출금신청</a>
+        </nav>
+
+        <div class="card">
+            <h2>P포인트 출금</h2>
+
+            <div class="balance-display">
+                <label>출금 가능한 P포인트</label>
+                <div class="value" id="available-ppoint">0원</div>
+            </div>
+
+            <div class="info-box">
+                <strong>출금 안내</strong>
+                <ul>
+                    <li>최소 출금 금액: 10,000원</li>
+                    <li>출금 신청 후 다음 영업일에 지급됩니다.</li>
+                    <li>영업일: 월~금 (공휴일 제외)</li>
+                    <li>출금 신청 시 P포인트가 즉시 차감됩니다.</li>
+                </ul>
+            </div>
+
+            <form id="withdraw-form" class="withdraw-form">
+                <div class="form-group">
+                    <label>출금 금액</label>
+                    <input type="number" id="withdraw-amount" min="10000" placeholder="10000" required>
+                    <small>최소 10,000원 이상</small>
+                </div>
+                <div class="form-group">
+                    <label>은행</label>
+                    <select id="bank-name" required>
+                        <option value="">선택하세요</option>
+                        <option value="국민은행">국민은행</option>
+                        <option value="신한은행">신한은행</option>
+                        <option value="우리은행">우리은행</option>
+                        <option value="하나은행">하나은행</option>
+                        <option value="농협은행">농협은행</option>
+                        <option value="기업은행">기업은행</option>
+                        <option value="SC제일은행">SC제일은행</option>
+                        <option value="카카오뱅크">카카오뱅크</option>
+                        <option value="토스뱅크">토스뱅크</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>계좌번호</label>
+                    <input type="text" id="account-number" placeholder="- 없이 입력" required>
+                </div>
+                <div class="form-group">
+                    <label>예금주</label>
+                    <input type="text" id="account-holder" required>
+                </div>
+                <button type="submit" class="btn-primary">출금 신청</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>출금 신청 내역</h2>
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>신청일</th>
+                        <th>금액</th>
+                        <th>은행/계좌</th>
+                        <th>지급예정일</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+                <tbody id="history-body">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #999;">출금 내역이 없습니다.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="../js/api.js?v=3"></script>
+    <script src="../js/auth.js?v=3"></script>
+    <script>
+        const statusLabels = {
+            pending: '대기',
+            approved: '승인',
+            rejected: '거절',
+            completed: '완료'
+        };
+
+        let availableBalance = 0;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!auth.requireAuth()) return;
+
+            await loadBalance();
+            await loadHistory();
+
+            document.getElementById('withdraw-form').addEventListener('submit', handleWithdraw);
+        });
+
+        async function loadBalance() {
+            try {
+                const res = await pointsApi.getSummary();
+                if (res.success) {
+                    availableBalance = res.data.P;
+                    document.getElementById('available-ppoint').textContent = availableBalance.toLocaleString() + '원';
+                }
+            } catch (error) {
+                console.error('Failed to load balance:', error);
+            }
+        }
+
+        async function loadHistory() {
+            try {
+                const res = await withdrawalApi.getHistory();
+                if (res.success) {
+                    renderHistory(res.data.withdrawals);
+                }
+            } catch (error) {
+                console.error('Failed to load history:', error);
+            }
+        }
+
+        function renderHistory(withdrawals) {
+            const tbody = document.getElementById('history-body');
+
+            if (withdrawals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">출금 내역이 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = withdrawals.map(w => {
+                const requestDate = new Date(w.request_date).toLocaleDateString('ko-KR');
+                const paymentDate = new Date(w.scheduled_payment_date).toLocaleDateString('ko-KR');
+                const statusLabel = statusLabels[w.status] || w.status;
+
+                return `
+                    <tr>
+                        <td>${requestDate}</td>
+                        <td>₩${parseFloat(w.amount).toLocaleString()}</td>
+                        <td>${w.bank_name} ${w.account_number}</td>
+                        <td>${paymentDate}</td>
+                        <td class="status-${w.status}">${statusLabel}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function handleWithdraw(e) {
+            e.preventDefault();
+
+            const amount = parseInt(document.getElementById('withdraw-amount').value);
+            const bankName = document.getElementById('bank-name').value;
+            const accountNumber = document.getElementById('account-number').value;
+            const accountHolder = document.getElementById('account-holder').value;
+
+            if (amount < 10000) {
+                alert('최소 출금 금액은 10,000원입니다.');
+                return;
+            }
+
+            if (amount > availableBalance) {
+                alert('출금 가능한 금액을 초과했습니다.');
+                return;
+            }
+
+            if (!confirm(`${bankName} ${accountNumber} (${accountHolder})\n\n₩${amount.toLocaleString()}을 출금 신청하시겠습니까?\n\n출금 신청 시 P포인트가 즉시 차감됩니다.`)) {
+                return;
+            }
+
+            try {
+                const res = await withdrawalApi.create({
+                    amount,
+                    bank_name: bankName,
+                    account_number: accountNumber,
+                    account_holder: accountHolder
+                });
+
+                if (res.success) {
+                    alert(res.message);
+                    document.getElementById('withdraw-form').reset();
+                    await loadBalance();
+                    await loadHistory();
+                }
+            } catch (error) {
+                alert(error.message || '출금 신청에 실패했습니다.');
+            }
+        }
+    </script>
+</body>
+</html>

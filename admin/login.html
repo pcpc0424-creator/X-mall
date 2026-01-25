@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - X-mall 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="login-page">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-logo">X-<span>mall</span></div>
+            <p class="login-subtitle">관리자 로그인</p>
+        </div>
+
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label class="form-label" for="email">이메일</label>
+                <input type="email" class="form-control" id="email" placeholder="admin@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">비밀번호</label>
+                <input type="password" class="form-control" id="password" placeholder="비밀번호 입력" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="loginBtn">
+                로그인
+            </button>
+        </form>
+
+        <div class="login-footer">
+            <a href="/X-mall/index.html">쇼핑몰로 돌아가기</a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/X-mall/api';
+
+        // Redirect if already logged in
+        if (localStorage.getItem('xmallAdminSession')) {
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = '로그인 중...';
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || '로그인에 실패했습니다.');
+                }
+
+                // Save session
+                localStorage.setItem('xmallAdminSession', JSON.stringify(data.data));
+
+                // Redirect to dashboard
+                window.location.href = 'index.html';
+
+            } catch (error) {
+                alert(error.message);
+                loginBtn.disabled = false;
+                loginBtn.textContent = '로그인';
+            }
+        });
+    </script>
+</body>
+</html>

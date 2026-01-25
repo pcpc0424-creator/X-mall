@@ -294,7 +294,7 @@
                                 <div class="terms-list">
                                     <div class="terms-item">
                                         <label class="checkbox-wrapper">
-                                            <input type="checkbox" class="term-checkbox" id="term1" required>
+                                            <input type="checkbox" class="term-checkbox required-term" id="term1">
                                             <span class="checkmark"></span>
                                             <span>[필수] 이용약관 동의</span>
                                         </label>
@@ -302,7 +302,7 @@
                                     </div>
                                     <div class="terms-item">
                                         <label class="checkbox-wrapper">
-                                            <input type="checkbox" class="term-checkbox" id="term2" required>
+                                            <input type="checkbox" class="term-checkbox required-term" id="term2">
                                             <span class="checkmark"></span>
                                             <span>[필수] 개인정보 수집·이용 동의</span>
                                         </label>
@@ -310,7 +310,7 @@
                                     </div>
                                     <div class="terms-item">
                                         <label class="checkbox-wrapper">
-                                            <input type="checkbox" class="term-checkbox" id="term3" required>
+                                            <input type="checkbox" class="term-checkbox required-term" id="term3">
                                             <span class="checkmark"></span>
                                             <span>[필수] 만 14세 이상입니다</span>
                                         </label>
@@ -857,8 +857,16 @@
         }
     </style>
 
+    <script src="frontend/js/api.js?v=3"></script>
+    <script src="frontend/js/auth.js?v=3"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Redirect if already logged in
+            if (auth.isLoggedIn()) {
+                window.location.href = 'frontend/my-account/dashboard.html';
+                return;
+            }
+
             const signupForm = document.getElementById('signupForm');
             const steps = document.querySelectorAll('.step');
             const formSteps = document.querySelectorAll('.form-step');
@@ -977,19 +985,36 @@
             });
 
             // 폼 제출
-            signupForm.addEventListener('submit', function(e) {
+            signupForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
 
-                const requiredTerms = Array.from(termCheckboxes).filter(cb => cb.required);
-                const allRequired = requiredTerms.every(cb => cb.checked);
+                const requiredTerms = document.querySelectorAll('.required-term');
+                const allRequired = Array.from(requiredTerms).every(cb => cb.checked);
 
                 if (!allRequired) {
                     alert('필수 약관에 동의해주세요.');
                     return;
                 }
 
-                showStep(3);
-                authFooter.style.display = 'none';
+                const submitBtn = signupForm.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '가입 처리 중... <i class="fas fa-spinner fa-spin"></i>';
+
+                try {
+                    await auth.signup({
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value,
+                        name: document.getElementById('name').value,
+                        phone: document.getElementById('phone').value
+                    });
+
+                    showStep(3);
+                    authFooter.style.display = 'none';
+                } catch (error) {
+                    alert(error.message || '회원가입에 실패했습니다.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '가입 완료 <i class="fas fa-check"></i>';
+                }
             });
 
             function showStep(stepNum) {

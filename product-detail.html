@@ -798,7 +798,7 @@
                         <i class="far fa-heart"></i>
                     </button>
                     <button class="btn-cart-detail" onclick="addToCart()">장바구니</button>
-                    <button class="btn-buy-detail">바로 구매</button>
+                    <button class="btn-buy-detail" onclick="buyNow()">바로 구매</button>
                 </div>
 
                 <div class="product-benefits">
@@ -1134,7 +1134,45 @@
     }
 
     function addToCart() {
+        // Check if user is dealer
+        const token = localStorage.getItem('token');
+        const userStr = localStorage.getItem('user');
+
+        if (!token || !userStr) {
+            alert('대리점 회원만 구매가 가능합니다.\n로그인 후 이용해주세요.');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const user = JSON.parse(userStr);
+        if (user.grade !== 'dealer') {
+            alert('대리점 회원만 장바구니 및 구매가 가능합니다.\n대리점 가입 문의: 1588-0000');
+            return;
+        }
+
         alert('장바구니에 추가되었습니다.');
+    }
+
+    function buyNow() {
+        // Check if user is dealer
+        const token = localStorage.getItem('token');
+        const userStr = localStorage.getItem('user');
+
+        if (!token || !userStr) {
+            alert('대리점 회원만 구매가 가능합니다.\n로그인 후 이용해주세요.');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const user = JSON.parse(userStr);
+        if (user.grade !== 'dealer') {
+            alert('대리점 회원만 장바구니 및 구매가 가능합니다.\n대리점 가입 문의: 1588-0000');
+            return;
+        }
+
+        // Add to cart and redirect to checkout
+        addToCart();
+        window.location.href = 'cart.html';
     }
 
     function openTab(evt, tabName) {

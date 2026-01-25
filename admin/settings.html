@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>설정 - X-mall 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">X-<span>mall</span></a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section"><div class="nav-section-title">메인</div></div>
+                <a href="index.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+                    대시보드
+                </a>
+                <div class="nav-section"><div class="nav-section-title">관리</div></div>
+                <a href="members.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                    회원 관리
+                </a>
+                <a href="orders.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    주문 관리
+                </a>
+                <a href="products.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                    상품 관리
+                </a>
+                <a href="points.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    포인트 관리
+                </a>
+                <a href="withdrawals.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    출금 관리
+                </a>
+                <a href="settings.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                    설정
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="adminUserName">관리자</div>
+                        <div class="sidebar-user-role">최고 관리자</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    </button>
+                    <h1 class="page-title">설정</h1>
+                </div>
+                <div class="header-right">
+                    <a href="/X-mall/index.html" class="back-to-site">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        사이트 보기
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- Exchange Rate Settings -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">환율 설정</h2>
+                        <span class="badge badge-info">1 포인트 = 1 USD</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-info" style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px;">
+                            <p><strong>포인트 환산 기준:</strong></p>
+                            <p>포인트 → USD → KRW (원화)</p>
+                            <p>예시: 100 P포인트 = 100 USD = 135,000원 (환율 1,350원/USD 기준)</p>
+                        </div>
+                        <form id="exchangeRateForm" class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">현재 환율 (KRW/USD)</label>
+                                <input type="number" class="form-control" id="currentRate" readonly>
+                                <small class="form-text" id="rateUpdatedAt">마지막 업데이트: -</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">새 환율 설정</label>
+                                <input type="number" class="form-control" id="newRate" placeholder="예: 1350" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">적용 유형</label>
+                                <select class="form-control form-select" id="rateType">
+                                    <option value="weekly">주간 환율</option>
+                                    <option value="monthly">월간 환율</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">환율 업데이트</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Exchange Rate History -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">환율 변경 내역</h2>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>적용일</th>
+                                        <th>환율 (KRW/USD)</th>
+                                        <th>유형</th>
+                                        <th>등록일</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rateHistoryBody">
+                                    <tr><td colspan="4" class="text-center text-muted">로딩 중...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PV Settings Info -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">PV (Point Value) 정책</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="policy-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:20px;">
+                            <div class="policy-item" style="background:#e6f7ff;padding:20px;border-radius:12px;">
+                                <h4 style="color:#1890ff;margin-bottom:10px;">PV 산정 기준</h4>
+                                <p>대리점가 (부가세 제외) 기준</p>
+                                <p>예: 110만원 구매 → 100만 PV</p>
+                            </div>
+                            <div class="policy-item" style="background:#f6ffed;padding:20px;border-radius:12px;">
+                                <h4 style="color:#52c41a;margin-bottom:10px;">P포인트 적립</h4>
+                                <p>PV의 50% 백마진</p>
+                                <p>주문일 포함 14일 후 지급</p>
+                            </div>
+                            <div class="policy-item" style="background:#fff7e6;padding:20px;border-radius:12px;">
+                                <h4 style="color:#fa8c16;margin-bottom:10px;">출금 정책</h4>
+                                <p>P포인트만 출금 가능</p>
+                                <p>영업일 기준 익일 지급</p>
+                            </div>
+                            <div class="policy-item" style="background:#f9f0ff;padding:20px;border-radius:12px;">
+                                <h4 style="color:#722ed1;margin-bottom:10px;">포인트 이체</h4>
+                                <p>P/C포인트 → T포인트로 전환</p>
+                                <p>이메일만 알면 이체 가능</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Holiday Management -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">공휴일 관리</h2>
+                        <small>출금 지급일 계산에 사용됩니다</small>
+                    </div>
+                    <div class="card-body">
+                        <form id="holidayForm" class="form-inline" style="display:flex;gap:15px;margin-bottom:20px;">
+                            <div class="form-group" style="flex:1;">
+                                <input type="date" class="form-control" id="holidayDate" required>
+                            </div>
+                            <div class="form-group" style="flex:2;">
+                                <input type="text" class="form-control" id="holidayDesc" placeholder="공휴일 설명 (예: 설날)">
+                            </div>
+                            <button type="submit" class="btn btn-primary">추가</button>
+                        </form>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>날짜</th>
+                                        <th>설명</th>
+                                        <th>작업</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="holidaysBody">
+                                    <tr><td colspan="3" class="text-center text-muted">로딩 중...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+    <script>
+        // Load current exchange rate
+        async function loadExchangeRate() {
+            try {
+                const result = await api.get('/admin/settings/exchange-rate');
+                if (result.data) {
+                    document.getElementById('currentRate').value = result.data.rate || 1350;
+                    document.getElementById('rateUpdatedAt').textContent =
+                        `마지막 업데이트: ${formatDateTime(result.data.effective_date || result.data.created_at)}`;
+                }
+            } catch (error) {
+                console.error('Load exchange rate error:', error);
+                document.getElementById('currentRate').value = 1350;
+            }
+        }
+
+        // Update exchange rate
+        document.getElementById('exchangeRateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const rate = parseFloat(document.getElementById('newRate').value);
+            const rateType = document.getElementById('rateType').value;
+
+            if (rate < 100 || rate > 10000) {
+                showToast('환율은 100~10,000 범위로 입력해주세요.', 'error');
+                return;
+            }
+
+            try {
+                await api.post('/admin/settings/exchange-rate', { rate, rate_type: rateType });
+                showToast('환율이 업데이트되었습니다.', 'success');
+                loadExchangeRate();
+                loadRateHistory();
+                document.getElementById('newRate').value = '';
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        // Load exchange rate history
+        async function loadRateHistory() {
+            try {
+                const result = await api.get('/admin/settings/exchange-rate/history');
+                const tbody = document.getElementById('rateHistoryBody');
+
+                if (!result.data || result.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">내역이 없습니다</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = result.data.map(r => `
+                    <tr>
+                        <td>${formatDate(r.effective_date)}</td>
+                        <td class="fw-600">₩${parseFloat(r.rate).toLocaleString()}</td>
+                        <td>${r.rate_type === 'weekly' ? '주간' : '월간'}</td>
+                        <td>${formatDateTime(r.created_at)}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Load rate history error:', error);
+            }
+        }
+
+        // Load holidays
+        async function loadHolidays() {
+            try {
+                const result = await api.get('/admin/settings/holidays');
+                const tbody = document.getElementById('holidaysBody');
+
+                if (!result.data || result.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">등록된 공휴일이 없습니다</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = result.data.map(h => `
+                    <tr>
+                        <td>${formatDate(h.holiday_date)}</td>
+                        <td>${h.description || '-'}</td>
+                        <td>
+                            <button class="action-btn delete" onclick="deleteHoliday('${h.id}')" title="삭제">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3,6 5,6 21,6"/>
+                                    <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Load holidays error:', error);
+            }
+        }
+
+        // Add holiday
+        document.getElementById('holidayForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const date = document.getElementById('holidayDate').value;
+            const description = document.getElementById('holidayDesc').value;
+
+            try {
+                await api.post('/admin/settings/holidays', { date, description });
+                showToast('공휴일이 추가되었습니다.', 'success');
+                loadHolidays();
+                e.target.reset();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        // Delete holiday
+        async function deleteHoliday(id) {
+            if (!confirm('이 공휴일을 삭제하시겠습니까?')) return;
+
+            try {
+                await api.delete(`/admin/settings/holidays/${id}`);
+                showToast('공휴일이 삭제되었습니다.', 'success');
+                loadHolidays();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadExchangeRate();
+            loadRateHistory();
+            loadHolidays();
+        });
+    </script>
+</body>
+</html>

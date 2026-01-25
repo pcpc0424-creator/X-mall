@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - X-mall</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Header Styles */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+        .main-nav {
+            display: flex;
+            gap: 30px;
+        }
+        .main-nav a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: #6c63ff;
+        }
+        body {
+            background: #f5f5f5;
+            margin: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .my-account-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .my-account-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #333;
+        }
+        .my-account-nav {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .my-account-nav a {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 5px;
+            background: #f5f5f5;
+        }
+        .my-account-nav a.active {
+            background: #333;
+            color: white;
+        }
+        .balance-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .balance-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .balance-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .balance-card .amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+        .balance-card.rpay .amount { color: #1890ff; }
+        .balance-card.ppoint .amount { color: #52c41a; }
+        .balance-card.cpoint .amount { color: #faad14; }
+        .balance-card.tpoint .amount { color: #722ed1; }
+        .user-info-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .user-info-card h2 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .user-info-row {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .user-info-label {
+            width: 100px;
+            color: #666;
+        }
+        .user-info-value {
+            font-weight: 500;
+        }
+        .grade-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .grade-dealer {
+            background: #fff7e6;
+            color: #d46b08;
+        }
+        .grade-consumer {
+            background: #e6f7ff;
+            color: #0050b3;
+        }
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .quick-action-btn {
+            padding: 15px;
+            text-align: center;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.3s;
+        }
+        .quick-action-btn:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="/X-mall/index.html" class="logo">X-mall</a>
+            <nav class="main-nav">
+                <a href="/X-mall/index.html">홈</a>
+                <a href="dashboard.html" class="active">마이페이지</a>
+                <a href="/X-mall/cart.html">장바구니</a>
+                <a href="#" class="logout-link" onclick="handleLogout(event)">로그아웃</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="my-account-container">
+        <div class="my-account-header">
+            <h1>마이페이지</h1>
+            <div>
+                <span class="user-name"></span>님 환영합니다
+                <span class="grade-badge user-grade"></span>
+            </div>
+        </div>
+
+        <nav class="my-account-nav">
+            <a href="dashboard.html" class="active">대시보드</a>
+            <a href="points.html">포인트</a>
+            <a href="orders.html">주문내역</a>
+            <a href="withdraw.html">출금신청</a>
+        </nav>
+
+        <div class="balance-cards">
+            <div class="balance-card rpay">
+                <h3>R페이</h3>
+                <div class="amount" id="balance-rpay">0원</div>
+            </div>
+            <div class="balance-card ppoint">
+                <h3>P포인트</h3>
+                <div class="amount" id="balance-ppoint">0원</div>
+            </div>
+            <div class="balance-card cpoint">
+                <h3>C포인트</h3>
+                <div class="amount" id="balance-cpoint">0원</div>
+            </div>
+            <div class="balance-card tpoint">
+                <h3>T포인트</h3>
+                <div class="amount" id="balance-tpoint">0원</div>
+            </div>
+        </div>
+
+        <div class="user-info-card">
+            <h2>내 정보</h2>
+            <div class="user-info-row">
+                <div class="user-info-label">이메일</div>
+                <div class="user-info-value" id="user-email">-</div>
+            </div>
+            <div class="user-info-row">
+                <div class="user-info-label">이름</div>
+                <div class="user-info-value" id="user-name">-</div>
+            </div>
+            <div class="user-info-row">
+                <div class="user-info-label">전화번호</div>
+                <div class="user-info-value" id="user-phone">-</div>
+            </div>
+            <div class="user-info-row">
+                <div class="user-info-label">회원등급</div>
+                <div class="user-info-value" id="user-grade">-</div>
+            </div>
+        </div>
+
+        <div class="user-info-card">
+            <h2>바로가기</h2>
+            <div class="quick-actions">
+                <a href="orders.html" class="quick-action-btn">주문내역</a>
+                <a href="points.html" class="quick-action-btn">포인트 이체</a>
+                <a href="withdraw.html" class="quick-action-btn">출금 신청</a>
+                <a href="/X-mall/cart.html" class="quick-action-btn">장바구니</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/api.js?v=4"></script>
+    <script src="../js/auth.js?v=4"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!auth.requireAuth()) return;
+
+            try {
+                // Load user profile
+                const profileRes = await userApi.getProfile();
+                if (profileRes.success) {
+                    const user = profileRes.data;
+
+                    // Update localStorage with fresh data and refresh header UI
+                    auth.setUser(user);
+                    updateAuthUI();
+
+                    document.getElementById('user-email').textContent = user.email;
+                    document.getElementById('user-name').textContent = user.name;
+                    document.getElementById('user-phone').textContent = user.phone;
+                    document.getElementById('user-grade').innerHTML =
+                        `<span class="grade-badge grade-${user.grade}">${user.grade === 'dealer' ? '대리점' : '소비자'}</span>`;
+
+                    // Update balances
+                    document.getElementById('balance-rpay').textContent = user.balances.rpay.toLocaleString() + '원';
+                    document.getElementById('balance-ppoint').textContent = user.balances.P.toLocaleString() + '원';
+                    document.getElementById('balance-cpoint').textContent = user.balances.C.toLocaleString() + '원';
+                    document.getElementById('balance-tpoint').textContent = user.balances.T.toLocaleString() + '원';
+                }
+            } catch (error) {
+                console.error('Failed to load profile:', error);
+            }
+        });
+    </script>
+</body>
+</html>

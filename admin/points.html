@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포인트 관리 - X-mall 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">X-<span>mall</span></a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section"><div class="nav-section-title">메인</div></div>
+                <a href="index.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+                    대시보드
+                </a>
+                <div class="nav-section"><div class="nav-section-title">관리</div></div>
+                <a href="members.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                    회원 관리
+                </a>
+                <a href="orders.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    주문 관리
+                </a>
+                <a href="products.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                    상품 관리
+                </a>
+                <a href="points.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    포인트 관리
+                </a>
+                <a href="withdrawals.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    출금 관리
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                    설정
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="adminUserName">관리자</div>
+                        <div class="sidebar-user-role">최고 관리자</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    </button>
+                    <h1 class="page-title">포인트 관리</h1>
+                </div>
+                <div class="header-right">
+                    <a href="/X-mall/index.html" class="back-to-site">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        사이트 보기
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- Point Grant Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">포인트 지급</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="grantPointForm" class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">회원 이메일</label>
+                                <input type="email" class="form-control" id="grantEmail" placeholder="user@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">포인트 종류</label>
+                                <select class="form-control form-select" id="grantPointType" required>
+                                    <option value="P">P포인트 (출금 가능)</option>
+                                    <option value="C">C포인트 (주문 전용)</option>
+                                    <option value="T">T포인트 (전송 받은 포인트)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">지급 금액 (USD)</label>
+                                <input type="number" class="form-control" id="grantAmount" placeholder="0" min="1" required>
+                                <small class="form-text">1 포인트 = 1 USD</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">지급 사유</label>
+                                <input type="text" class="form-control" id="grantReason" placeholder="지급 사유 입력">
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <button type="submit" class="btn btn-primary">포인트 지급</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- R-pay Deposit Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">R페이 충전</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="depositRpayForm" class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">회원 이메일</label>
+                                <input type="email" class="form-control" id="rpayEmail" placeholder="user@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">충전 금액 (원)</label>
+                                <input type="number" class="form-control" id="rpayAmount" placeholder="0" min="1000" step="1000" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">충전 사유</label>
+                                <input type="text" class="form-control" id="rpayReason" placeholder="충전 사유 입력">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">R페이 충전</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Pending P-Points -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">대기 중 P포인트 (14일 후 지급 예정)</h2>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="data-table" id="pendingTable">
+                                <thead>
+                                    <tr>
+                                        <th>회원</th>
+                                        <th>주문번호</th>
+                                        <th>지급 예정 P포인트</th>
+                                        <th>지급 예정일</th>
+                                        <th>상태</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendingBody">
+                                    <tr><td colspan="5" class="text-center text-muted">로딩 중...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Point Transaction History -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">포인트 거래 내역</h2>
+                        <div class="header-actions">
+                            <select class="form-control form-select" id="txPointType" onchange="loadTransactions()">
+                                <option value="">전체</option>
+                                <option value="P">P포인트</option>
+                                <option value="C">C포인트</option>
+                                <option value="T">T포인트</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>일시</th>
+                                        <th>회원</th>
+                                        <th>포인트</th>
+                                        <th>유형</th>
+                                        <th>금액</th>
+                                        <th>잔액</th>
+                                        <th>설명</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactionsBody">
+                                    <tr><td colspan="7" class="text-center text-muted">로딩 중...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="pagination">
+                            <div class="pagination-info" id="paginationInfo">0건</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+    <script>
+        // Grant Point
+        document.getElementById('grantPointForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('grantEmail').value;
+            const pointType = document.getElementById('grantPointType').value;
+            const amount = parseFloat(document.getElementById('grantAmount').value);
+            const reason = document.getElementById('grantReason').value;
+
+            try {
+                await api.post('/admin/points/grant', {
+                    email,
+                    point_type: pointType,
+                    amount,
+                    reason
+                });
+                showToast(`${pointType}포인트 ${amount} 지급 완료`, 'success');
+                e.target.reset();
+                loadPendingPoints();
+                loadTransactions();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        // Deposit R-pay
+        document.getElementById('depositRpayForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('rpayEmail').value;
+            const amount = parseFloat(document.getElementById('rpayAmount').value);
+            const reason = document.getElementById('rpayReason').value;
+
+            try {
+                await api.post('/admin/rpay/deposit', {
+                    email,
+                    amount,
+                    reason
+                });
+                showToast(`R페이 ${formatCurrency(amount)} 충전 완료`, 'success');
+                e.target.reset();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        // Load Pending P-Points
+        async function loadPendingPoints() {
+            try {
+                const result = await api.get('/admin/points/pending');
+                const tbody = document.getElementById('pendingBody');
+
+                if (!result.data || result.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">대기 중인 P포인트가 없습니다</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = result.data.map(p => `
+                    <tr>
+                        <td>${p.user_name || p.user_email}</td>
+                        <td>#${p.order_number || p.order_id?.slice(0, 8)}</td>
+                        <td class="fw-600 text-success">+${p.ppoint_amount?.toLocaleString() || 0}</td>
+                        <td>${formatDate(p.scheduled_release_date)}</td>
+                        <td>${pendingStatusBadge(p.status)}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Load pending error:', error);
+            }
+        }
+
+        function pendingStatusBadge(status) {
+            const badges = {
+                pending: '<span class="status-badge status-pending">대기</span>',
+                released: '<span class="status-badge status-delivered">지급완료</span>',
+                cancelled: '<span class="status-badge status-cancelled">취소</span>'
+            };
+            return badges[status] || status;
+        }
+
+        // Load Transactions
+        async function loadTransactions() {
+            try {
+                const pointType = document.getElementById('txPointType').value;
+                let url = '/admin/points/transactions?limit=50';
+                if (pointType) url += `&point_type=${pointType}`;
+
+                const result = await api.get(url);
+                const tbody = document.getElementById('transactionsBody');
+
+                if (!result.data?.transactions || result.data.transactions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">거래 내역이 없습니다</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = result.data.transactions.map(t => `
+                    <tr>
+                        <td>${formatDateTime(t.created_at)}</td>
+                        <td>${t.user_name || t.user_email || '-'}</td>
+                        <td>${pointTypeBadge(t.point_type)}</td>
+                        <td>${transactionTypeBadge(t.transaction_type)}</td>
+                        <td class="${t.amount >= 0 ? 'text-success' : 'text-danger'} fw-600">
+                            ${t.amount >= 0 ? '+' : ''}${t.amount?.toLocaleString() || 0}
+                        </td>
+                        <td>${t.balance_after?.toLocaleString() || 0}</td>
+                        <td>${t.description || '-'}</td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('paginationInfo').textContent = `${result.data.total || result.data.transactions.length}건`;
+            } catch (error) {
+                console.error('Load transactions error:', error);
+            }
+        }
+
+        function pointTypeBadge(type) {
+            const badges = {
+                P: '<span class="status-badge" style="background:#52c41a20;color:#52c41a;">P포인트</span>',
+                C: '<span class="status-badge" style="background:#faad1420;color:#faad14;">C포인트</span>',
+                T: '<span class="status-badge" style="background:#722ed120;color:#722ed1;">T포인트</span>'
+            };
+            return badges[type] || type;
+        }
+
+        function transactionTypeBadge(type) {
+            const labels = {
+                grant: '관리자 지급',
+                transfer_in: '이체 받음',
+                transfer_out: '이체 보냄',
+                payment: '결제 사용',
+                withdrawal: '출금',
+                pv_reward: 'PV 리워드',
+                refund: '환불'
+            };
+            return labels[type] || type;
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPendingPoints();
+            loadTransactions();
+        });
+    </script>
+</body>
+</html>

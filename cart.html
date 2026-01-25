@@ -1225,12 +1225,28 @@
 
             // 주문하기 버튼
             checkoutBtn.addEventListener('click', function() {
+                // Check if user is dealer
+                const token = localStorage.getItem('token');
+                const userStr = localStorage.getItem('user');
+
+                if (!token || !userStr) {
+                    alert('대리점 회원만 주문이 가능합니다.\n로그인 후 이용해주세요.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const user = JSON.parse(userStr);
+                if (user.grade !== 'dealer') {
+                    alert('대리점 회원만 주문이 가능합니다.\n대리점 가입 문의: 1588-0000');
+                    return;
+                }
+
                 const selectedItems = document.querySelectorAll('.item-select:checked');
                 if (selectedItems.length === 0) {
                     alert('주문할 상품을 선택해주세요.');
                     return;
                 }
-                alert('결제 페이지로 이동합니다. (데모)');
+                window.location.href = 'frontend/checkout.html';
             });
 
             // 쇼핑 계속하기
@@ -1241,6 +1257,22 @@
             // 추천상품 장바구니 담기
             document.querySelectorAll('.add-cart-mini').forEach(btn => {
                 btn.addEventListener('click', function() {
+                    // Check if user is dealer
+                    const token = localStorage.getItem('token');
+                    const userStr = localStorage.getItem('user');
+
+                    if (!token || !userStr) {
+                        alert('대리점 회원만 구매가 가능합니다.\n로그인 후 이용해주세요.');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    const user = JSON.parse(userStr);
+                    if (user.grade !== 'dealer') {
+                        alert('대리점 회원만 장바구니 및 구매가 가능합니다.\n대리점 가입 문의: 1588-0000');
+                        return;
+                    }
+
                     alert('장바구니에 추가되었습니다!');
                 });
             });
