@@ -12,7 +12,7 @@
 </head>
 <body>
         <!-- 헤더 -->
-    <header class="header">
+    <header class="header header-solid">
         <nav class="nav-container">
             <div class="logo">
                 <span class="logo-text">X-mall</span>
@@ -128,7 +128,7 @@
                 </a>
                 <a href="cart.html" class="cart-btn" aria-label="장바구니">
                     <i class="fas fa-shopping-bag"></i>
-                    <span class="cart-count">0</span>
+                    <span class="cart-count" id="headerCartCount">0</span>
                 </a>
                 <div class="menu-toggle-wrap">
                     <button class="menu-toggle" aria-label="메뉴">
@@ -210,98 +210,7 @@
 
                     <!-- 장바구니 상품 목록 -->
                     <div class="cart-items" id="cartItems">
-                        <!-- 상품 1 -->
-                        <div class="cart-item" data-id="1" data-price="28000">
-                            <label class="checkbox-wrapper item-checkbox">
-                                <input type="checkbox" class="item-select" checked>
-                                <span class="checkmark"></span>
-                            </label>
-                            <div class="item-image">
-                                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&h=200&fit=crop" alt="비타민C">
-                            </div>
-                            <div class="item-info">
-                                <span class="item-category">건강식품</span>
-                                <h3 class="item-name">프리미엄 비타민C 1000mg 120정</h3>
-                                <p class="item-option">옵션: 기본</p>
-                                <div class="item-price-mobile">
-                                    <span class="current-price">28,000원</span>
-                                    <span class="original-price">35,000원</span>
-                                </div>
-                            </div>
-                            <div class="item-quantity">
-                                <button class="qty-btn minus"><i class="fas fa-minus"></i></button>
-                                <input type="number" class="qty-input" value="1" min="1" max="99">
-                                <button class="qty-btn plus"><i class="fas fa-plus"></i></button>
-                            </div>
-                            <div class="item-price">
-                                <span class="current-price">28,000원</span>
-                                <span class="original-price">35,000원</span>
-                                <span class="item-pv">PV 28</span>
-                            </div>
-                            <button class="item-delete"><i class="fas fa-times"></i></button>
-                        </div>
-
-                        <!-- 상품 2 -->
-                        <div class="cart-item" data-id="2" data-price="89000">
-                            <label class="checkbox-wrapper item-checkbox">
-                                <input type="checkbox" class="item-select" checked>
-                                <span class="checkmark"></span>
-                            </label>
-                            <div class="item-image">
-                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop" alt="홍삼">
-                            </div>
-                            <div class="item-info">
-                                <span class="item-category">건강식품</span>
-                                <h3 class="item-name">6년근 홍삼 진액 스틱 30포</h3>
-                                <p class="item-option">옵션: 30포 x 1박스</p>
-                                <div class="item-price-mobile">
-                                    <span class="current-price">89,000원</span>
-                                    <span class="original-price">120,000원</span>
-                                </div>
-                            </div>
-                            <div class="item-quantity">
-                                <button class="qty-btn minus"><i class="fas fa-minus"></i></button>
-                                <input type="number" class="qty-input" value="1" min="1" max="99">
-                                <button class="qty-btn plus"><i class="fas fa-plus"></i></button>
-                            </div>
-                            <div class="item-price">
-                                <span class="current-price">89,000원</span>
-                                <span class="original-price">120,000원</span>
-                                <span class="item-pv">PV 89</span>
-                            </div>
-                            <button class="item-delete"><i class="fas fa-times"></i></button>
-                        </div>
-
-                        <!-- 상품 3 -->
-                        <div class="cart-item" data-id="3" data-price="45000">
-                            <label class="checkbox-wrapper item-checkbox">
-                                <input type="checkbox" class="item-select" checked>
-                                <span class="checkmark"></span>
-                            </label>
-                            <div class="item-image">
-                                <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=200&h=200&fit=crop" alt="세럼">
-                            </div>
-                            <div class="item-info">
-                                <span class="item-category">화장품</span>
-                                <h3 class="item-name">히알루론산 수분 세럼 50ml</h3>
-                                <p class="item-option">옵션: 50ml x 1개</p>
-                                <div class="item-price-mobile">
-                                    <span class="current-price">45,000원</span>
-                                    <span class="original-price">58,000원</span>
-                                </div>
-                            </div>
-                            <div class="item-quantity">
-                                <button class="qty-btn minus"><i class="fas fa-minus"></i></button>
-                                <input type="number" class="qty-input" value="2" min="1" max="99">
-                                <button class="qty-btn plus"><i class="fas fa-plus"></i></button>
-                            </div>
-                            <div class="item-price">
-                                <span class="current-price">90,000원</span>
-                                <span class="original-price">116,000원</span>
-                                <span class="item-pv">PV 90</span>
-                            </div>
-                            <button class="item-delete"><i class="fas fa-times"></i></button>
-                        </div>
+                        <!-- 장바구니 상품이 동적으로 렌더링됩니다 -->
                     </div>
 
                     <!-- 빈 장바구니 -->
@@ -1088,10 +997,11 @@
         }
     </style>
 
+    <script src="frontend/js/api.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const selectAll = document.getElementById('selectAll');
-            const cartItems = document.getElementById('cartItems');
+            const cartItemsContainer = document.getElementById('cartItems');
             const cartEmpty = document.getElementById('cartEmpty');
             const deleteSelected = document.getElementById('deleteSelected');
             const selectedCount = document.getElementById('selectedCount');
@@ -1103,32 +1013,106 @@
             const headerCartCount = document.getElementById('headerCartCount');
             const checkoutBtn = document.getElementById('checkoutBtn');
 
+            // 장바구니 렌더링
+            function renderCart() {
+                const items = cartApi.getItems();
+
+                if (items.length === 0) {
+                    cartItemsContainer.style.display = 'none';
+                    cartEmpty.style.display = 'block';
+                    document.querySelector('.cart-select-header').style.display = 'none';
+                    updateTotal();
+                    return;
+                }
+
+                cartItemsContainer.style.display = 'flex';
+                cartEmpty.style.display = 'none';
+                document.querySelector('.cart-select-header').style.display = 'flex';
+
+                cartItemsContainer.innerHTML = items.map((item, index) => {
+                    const totalPrice = item.price * item.quantity;
+                    const originalTotal = (item.originalPrice || item.price) * item.quantity;
+                    const totalPv = (item.pv || 0) * item.quantity;
+
+                    return `
+                        <div class="cart-item" data-id="${item.id}" data-index="${index}" data-price="${item.price}" data-pv="${item.pv || 0}" data-option="${item.option || '기본'}">
+                            <label class="checkbox-wrapper item-checkbox">
+                                <input type="checkbox" class="item-select" checked>
+                                <span class="checkmark"></span>
+                            </label>
+                            <div class="item-image">
+                                <img src="${item.image || 'https://via.placeholder.com/200'}" alt="${item.name}">
+                            </div>
+                            <div class="item-info">
+                                <span class="item-category">${item.category || ''}</span>
+                                <h3 class="item-name">${item.name}</h3>
+                                <p class="item-option">옵션: ${item.option || '기본'}</p>
+                                <div class="item-price-mobile">
+                                    <span class="current-price">${totalPrice.toLocaleString()}원</span>
+                                    ${item.originalPrice && item.originalPrice > item.price ?
+                                        `<span class="original-price">${originalTotal.toLocaleString()}원</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="item-quantity">
+                                <button class="qty-btn minus"><i class="fas fa-minus"></i></button>
+                                <input type="number" class="qty-input" value="${item.quantity}" min="1" max="99">
+                                <button class="qty-btn plus"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="item-price">
+                                <span class="current-price">${totalPrice.toLocaleString()}원</span>
+                                ${item.originalPrice && item.originalPrice > item.price ?
+                                    `<span class="original-price">${originalTotal.toLocaleString()}원</span>` : ''}
+                                <span class="item-pv">PV ${totalPv}</span>
+                            </div>
+                            <button class="item-delete"><i class="fas fa-times"></i></button>
+                        </div>
+                    `;
+                }).join('');
+
+                // 체크박스 명시적으로 체크 설정
+                cartItemsContainer.querySelectorAll('.item-select').forEach(cb => {
+                    cb.checked = true;
+                });
+                selectAll.checked = true;
+
+                updateTotal();
+            }
+
             // 수량 변경
-            cartItems.addEventListener('click', function(e) {
+            cartItemsContainer.addEventListener('click', function(e) {
                 const target = e.target.closest('.qty-btn');
                 if (!target) return;
 
                 const item = target.closest('.cart-item');
                 const input = item.querySelector('.qty-input');
                 let value = parseInt(input.value);
+                const productId = item.dataset.id;
+                const option = item.dataset.option;
 
                 if (target.classList.contains('minus') && value > 1) {
-                    input.value = value - 1;
+                    value = value - 1;
                 } else if (target.classList.contains('plus') && value < 99) {
-                    input.value = value + 1;
+                    value = value + 1;
                 }
 
+                input.value = value;
+                cartApi.updateQuantity(productId, value, option);
                 updateItemPrice(item);
                 updateTotal();
             });
 
             // 수량 직접 입력
-            cartItems.addEventListener('change', function(e) {
+            cartItemsContainer.addEventListener('change', function(e) {
                 if (e.target.classList.contains('qty-input')) {
                     const item = e.target.closest('.cart-item');
                     let value = parseInt(e.target.value);
-                    if (value < 1) e.target.value = 1;
-                    if (value > 99) e.target.value = 99;
+                    if (value < 1) value = 1;
+                    if (value > 99) value = 99;
+                    e.target.value = value;
+
+                    const productId = item.dataset.id;
+                    const option = item.dataset.option;
+                    cartApi.updateQuantity(productId, value, option);
                     updateItemPrice(item);
                     updateTotal();
                 }
@@ -1137,13 +1121,16 @@
             // 상품 가격 업데이트
             function updateItemPrice(item) {
                 const basePrice = parseInt(item.dataset.price);
+                const basePv = parseInt(item.dataset.pv) || 0;
                 const qty = parseInt(item.querySelector('.qty-input').value);
                 const totalPrice = basePrice * qty;
+                const totalPv = basePv * qty;
                 item.querySelector('.item-price .current-price').textContent = totalPrice.toLocaleString() + '원';
+                item.querySelector('.item-price .item-pv').textContent = 'PV ' + totalPv;
             }
 
             // 개별 선택
-            cartItems.addEventListener('change', function(e) {
+            cartItemsContainer.addEventListener('change', function(e) {
                 if (e.target.classList.contains('item-select')) {
                     updateSelectAll();
                     updateTotal();
@@ -1160,20 +1147,26 @@
             // 전체선택 상태 업데이트
             function updateSelectAll() {
                 const checkboxes = document.querySelectorAll('.item-select');
+                if (checkboxes.length === 0) {
+                    selectAll.checked = false;
+                    return;
+                }
                 const allChecked = Array.from(checkboxes).every(cb => cb.checked);
                 selectAll.checked = allChecked;
             }
 
             // 상품 삭제
-            cartItems.addEventListener('click', function(e) {
+            cartItemsContainer.addEventListener('click', function(e) {
                 if (e.target.closest('.item-delete')) {
                     const item = e.target.closest('.cart-item');
+                    const productId = item.dataset.id;
+                    const option = item.dataset.option;
+
                     item.style.transform = 'translateX(100%)';
                     item.style.opacity = '0';
                     setTimeout(() => {
-                        item.remove();
-                        updateTotal();
-                        checkEmpty();
+                        cartApi.removeItem(productId, option);
+                        renderCart();
                     }, 300);
                 }
             });
@@ -1189,22 +1182,13 @@
                 if (confirm(`선택한 ${checked.length}개 상품을 삭제하시겠습니까?`)) {
                     checked.forEach(cb => {
                         const item = cb.closest('.cart-item');
-                        item.remove();
+                        const productId = item.dataset.id;
+                        const option = item.dataset.option;
+                        cartApi.removeItem(productId, option);
                     });
-                    updateTotal();
-                    checkEmpty();
+                    renderCart();
                 }
             });
-
-            // 빈 장바구니 체크
-            function checkEmpty() {
-                const items = document.querySelectorAll('.cart-item');
-                if (items.length === 0) {
-                    cartItems.style.display = 'none';
-                    cartEmpty.style.display = 'block';
-                    document.querySelector('.cart-select-header').style.display = 'none';
-                }
-            }
 
             // 총액 계산
             function updateTotal() {
@@ -1212,6 +1196,7 @@
                 let totalItems = 0;
                 let selectedItems = 0;
                 let subtotalValue = 0;
+                let totalPv = 0;
 
                 items.forEach(item => {
                     totalItems++;
@@ -1219,27 +1204,50 @@
                     if (checkbox.checked) {
                         selectedItems++;
                         const price = parseInt(item.dataset.price);
+                        const pv = parseInt(item.dataset.pv) || 0;
                         const qty = parseInt(item.querySelector('.qty-input').value);
                         subtotalValue += price * qty;
+                        totalPv += pv * qty;
                     }
                 });
 
                 selectedCount.textContent = selectedItems;
                 totalCount.textContent = totalItems;
                 checkoutCount.textContent = selectedItems;
-                headerCartCount.textContent = totalItems;
+                if (headerCartCount) {
+                    headerCartCount.textContent = totalItems;
+                }
 
                 subtotal.textContent = subtotalValue.toLocaleString() + '원';
                 total.textContent = subtotalValue.toLocaleString() + '원';
 
-                // 할인금액 (예시로 원가 대비 15% 할인)
-                const discountValue = Math.round(subtotalValue * 0.15);
-                discount.textContent = '-' + discountValue.toLocaleString() + '원';
+                // 할인금액 계산 (원가 대비)
+                const cartItems = cartApi.getItems();
+                let originalTotal = 0;
+                document.querySelectorAll('.cart-item').forEach(itemEl => {
+                    const checkbox = itemEl.querySelector('.item-select');
+                    if (checkbox.checked) {
+                        const id = itemEl.dataset.id;
+                        const option = itemEl.dataset.option;
+                        const cartItem = cartItems.find(ci => ci.id === id && ci.option === option);
+                        if (cartItem) {
+                            const qty = parseInt(itemEl.querySelector('.qty-input').value);
+                            originalTotal += (cartItem.originalPrice || cartItem.price) * qty;
+                        }
+                    }
+                });
+                const discountValue = originalTotal - subtotalValue;
+                discount.textContent = discountValue > 0 ? '-' + discountValue.toLocaleString() + '원' : '0원';
+
+                // 적립 예정 포인트 업데이트
+                const benefitStrong = document.querySelector('.benefit-item strong');
+                if (benefitStrong) {
+                    benefitStrong.textContent = Math.round(subtotalValue * 0.03).toLocaleString() + 'P';
+                }
             }
 
             // 주문하기 버튼
             checkoutBtn.addEventListener('click', function() {
-                // Check if user is dealer
                 const token = localStorage.getItem('token');
                 const userStr = localStorage.getItem('user');
 
@@ -1271,7 +1279,6 @@
             // 추천상품 장바구니 담기
             document.querySelectorAll('.add-cart-mini').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // Check if user is dealer
                     const token = localStorage.getItem('token');
                     const userStr = localStorage.getItem('user');
 
@@ -1291,8 +1298,8 @@
                 });
             });
 
-            // 초기 총액 계산
-            updateTotal();
+            // 초기 렌더링
+            renderCart();
         });
     </script>
     <script src="script.js"></script>

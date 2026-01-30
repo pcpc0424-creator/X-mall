@@ -312,7 +312,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             if (!auth.requireDealer()) return;
 
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cart = JSON.parse(localStorage.getItem('xmall_cart') || '[]');
             if (cart.length === 0) {
                 alert('장바구니가 비어있습니다.');
                 window.location.href = '../cart.html';
@@ -355,8 +355,8 @@
             totalPv = 0;
 
             container.innerHTML = cart.map(item => {
-                const itemTotal = item.dealerPrice * item.quantity;
-                const itemPv = item.pv * item.quantity;
+                const itemTotal = (item.dealerPrice || item.price) * item.quantity;
+                const itemPv = (item.pv || 0) * item.quantity;
                 totalKrw += itemTotal;
                 totalPv += itemPv;
                 return `
@@ -420,7 +420,7 @@
         async function handleSubmit(e) {
             e.preventDefault();
 
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cart = JSON.parse(localStorage.getItem('xmall_cart') || '[]');
             const shipping = {
                 name: document.getElementById('shipping-name').value,
                 phone: document.getElementById('shipping-phone').value,
@@ -473,7 +473,7 @@
 
                 if (response.success) {
                     alert(`주문이 완료되었습니다!\n\n주문번호: ${response.data.order_number}\n총 PV: ${response.data.total_pv}`);
-                    localStorage.removeItem('cart');
+                    localStorage.removeItem('xmall_cart');
                     window.location.href = 'my-account/orders.html';
                 }
             } catch (error) {

@@ -1094,8 +1094,13 @@
 
     <button class="scroll-top"><i class="fas fa-arrow-up"></i></button>
 
+    <script src="frontend/js/api.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    // 현재 상품 데이터 저장
+    let currentProduct = null;
+    let currentPrice = 89000;
+
+    document.addEventListener('DOMContentLoaded', async function() {
         const scrollTopBtn = document.querySelector('.scroll-top');
         if (scrollTopBtn) {
             window.addEventListener('scroll', () => { scrollTopBtn.classList.toggle('visible', window.scrollY > 500); });
@@ -1130,7 +1135,109 @@
                 navMenu.classList.toggle('active');
             });
         }
+
+        // URL 파라미터에서 상품 ID 확인
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        if (productId) {
+            await loadProductData(productId);
+        }
     });
+
+    // API에서 상품 데이터 로드
+    async function loadProductData(productId) {
+        try {
+            const response = await fetch(`/X-mall/api/products/${productId}`);
+            const result = await response.json();
+
+            if (result.success && result.data) {
+                currentProduct = result.data;
+                updatePageWithProductData(result.data);
+            }
+        } catch (error) {
+            console.error('상품 데이터 로드 실패:', error);
+        }
+    }
+
+    // 페이지 내용 업데이트
+    function updatePageWithProductData(product) {
+        // 상품명
+        const titleEl = document.querySelector('.product-title-detail');
+        if (titleEl) titleEl.textContent = product.name;
+
+        // 가격
+        const price = parseFloat(product.price_dealer_krw || product.price_krw);
+        currentPrice = price;
+        const originalPrice = parseFloat(product.price_krw);
+
+        const priceOriginalEl = document.querySelector('.price-original-detail');
+        const priceSaleEl = document.querySelector('.price-sale-detail');
+        const discountRateEl = document.querySelector('.discount-rate');
+
+        if (price < originalPrice) {
+            const discountRate = Math.round((1 - price / originalPrice) * 100);
+            if (priceOriginalEl) priceOriginalEl.textContent = '₩' + originalPrice.toLocaleString();
+            if (discountRateEl) discountRateEl.textContent = discountRate + '%';
+        } else {
+            if (priceOriginalEl) priceOriginalEl.style.display = 'none';
+            if (discountRateEl) discountRateEl.style.display = 'none';
+        }
+        if (priceSaleEl) priceSaleEl.textContent = '₩' + price.toLocaleString();
+
+        // PV
+        const pvEl = document.querySelector('.price-pv-detail');
+        if (pvEl) pvEl.textContent = 'PV ' + (product.pv_value || 0);
+
+        // 총 가격
+        const totalPriceEl = document.getElementById('totalPrice');
+        if (totalPriceEl) totalPriceEl.textContent = '₩' + price.toLocaleString();
+
+        // 이미지
+        const mainImage = document.getElementById('mainImage');
+        if (mainImage && product.image_url) {
+            mainImage.src = product.image_url;
+        }
+
+        // 카테고리/브랜드
+        const brandEl = document.querySelector('.product-brand-detail');
+        if (brandEl) brandEl.textContent = product.category || 'X-MALL';
+
+        // 옵션 버튼 숨기기 (패키지 상품은 옵션 없음)
+        if (product.product_type === 'package') {
+            const optionsEl = document.querySelector('.product-options');
+            if (optionsEl) optionsEl.style.display = 'none';
+
+            // 패키지 구성품 표시
+            if (product.package_items && product.package_items.length > 0) {
+                const packageInfo = document.createElement('div');
+                packageInfo.className = 'package-items-info';
+                packageInfo.innerHTML = `
+                    <h4 style="margin-bottom: 10px; font-size: 14px; color: #666;">패키지 구성품</h4>
+                    <ul style="list-style: none; padding: 0; background: #f9f9f9; border-radius: 8px; padding: 15px;">
+                        ${product.package_items.map(item => `
+                            <li style="padding: 5px 0; display: flex; justify-content: space-between;">
+                                <span>${item.single_product_name}</span>
+                                <span style="color: #6c63ff; font-weight: 500;">x${item.quantity}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                const priceDetail = document.querySelector('.product-price-detail');
+                if (priceDetail) {
+                    priceDetail.insertAdjacentElement('afterend', packageInfo);
+                }
+            }
+        }
+
+        // 배지 업데이트
+        const badgesEl = document.querySelector('.product-badges-detail');
+        if (badgesEl) {
+            if (product.product_type === 'package') {
+                badgesEl.innerHTML = '<span class="badge" style="background: #6c63ff; color: white;">PACKAGE</span>';
+            }
+        }
+    }
 
     function changeImage(thumb, src) {
         document.getElementById('mainImage').src = src;
@@ -1148,8 +1255,7 @@
 
     function updateTotalPrice() {
         const quantity = parseInt(document.getElementById('quantity').value);
-        const price = 89000;
-        const total = price * quantity;
+        const total = currentPrice * quantity;
         document.getElementById('totalPrice').textContent = '₩' + total.toLocaleString();
     }
 
@@ -1176,6 +1282,46 @@
             alert('대리점 회원만 장바구니 및 구매가 가능합니다.\n대리점 가입 문의: 1588-0000');
             return;
         }
+
+        // 상품 정보 추출
+        const name = document.querySelector('.product-title-detail').textContent;
+        const image = document.getElementById('mainImage').src;
+        const quantity = parseInt(document.getElementById('quantity').value) || 1;
+        const activeOption = document.querySelector('.option-btn.active');
+        const option = activeOption ? activeOption.textContent.trim() : '기본';
+
+        // currentProduct가 있으면 사용, 없으면 페이지에서 추출
+        let price, originalPrice, pv, category, productId;
+
+        if (currentProduct) {
+            price = parseFloat(currentProduct.price_dealer_krw || currentProduct.price_krw);
+            originalPrice = parseFloat(currentProduct.price_krw);
+            pv = parseFloat(currentProduct.pv_value) || 0;
+            category = currentProduct.category || 'X-MALL';
+            productId = currentProduct.id + '_' + option;
+        } else {
+            const priceText = document.querySelector('.price-sale-detail').textContent;
+            price = parseInt(priceText.replace(/[^\d]/g, ''));
+            const originalPriceEl = document.querySelector('.price-original-detail');
+            originalPrice = originalPriceEl ? parseInt(originalPriceEl.textContent.replace(/[^\d]/g, '')) : price;
+            const pvText = document.querySelector('.price-pv-detail').textContent;
+            pv = parseInt(pvText.replace(/[^\d]/g, '')) || 0;
+            category = document.querySelector('.product-brand-detail')?.textContent || '건강식품';
+            productId = window.location.pathname + '_' + option;
+        }
+
+        // 장바구니에 추가
+        cartApi.addItem({
+            id: productId,
+            name: name,
+            price: price,
+            originalPrice: originalPrice,
+            pv: pv,
+            image: image,
+            category: category,
+            option: option,
+            quantity: quantity
+        });
 
         alert('장바구니에 추가되었습니다.');
     }

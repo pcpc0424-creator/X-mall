@@ -533,9 +533,10 @@
     function updateQuantity(change) { const input = document.getElementById('quantity'); let value = parseInt(input.value) + change; if (value < 1) value = 1; input.value = value; updateTotalPrice(); }
     function updateTotalPrice() { const quantity = parseInt(document.getElementById('quantity').value); const price = 38000; const total = price * quantity; document.getElementById('totalPrice').textContent = '₩' + total.toLocaleString(); }
     function toggleWishlist(btn) { btn.classList.toggle('active'); const icon = btn.querySelector('i'); icon.classList.toggle('far'); icon.classList.toggle('fas'); }
-    function addToCart() { alert('장바구니에 추가되었습니다.'); }
+    function addToCart() { window.addToCartUtil(); }
     function openTab(evt, tabName) { document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); document.getElementById(tabName).classList.add('active'); evt.currentTarget.classList.add('active'); }
     </script>
+    <script src="frontend/js/api.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

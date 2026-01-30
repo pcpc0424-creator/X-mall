@@ -543,7 +543,7 @@
         const imageUrl = product.image_url || 'https://images.unsplash.com/photo-1607082349566-187342175e2f?w=400&h=400&fit=crop';
 
         card.innerHTML = `
-            <a href="product-detail.html?id=${product.id}">
+            <a href="product-package-detail.html?id=${product.id}">
                 <div class="product-image">
                     <img src="${imageUrl}" alt="${product.name}">
                     <div class="product-badges">
@@ -560,7 +560,7 @@
             <div class="product-info">
                 <span class="product-brand">X-MALL</span>
                 <h3 class="product-name">
-                    <a href="product-detail.html?id=${product.id}">${product.name}</a>
+                    <a href="product-package-detail.html?id=${product.id}">${product.name}</a>
                 </h3>
                 ${packageItemsHtml}
                 <div class="product-price" style="margin-top: 10px;">
@@ -686,6 +686,7 @@
         });
     }
     </script>
+    <script src="frontend/js/api.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

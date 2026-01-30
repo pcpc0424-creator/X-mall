@@ -651,25 +651,82 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add to Cart Animation
     // ===================================
     const addCartBtns = document.querySelectorAll('.btn-add-cart, .btn-add-cart-mini');
-    const cartCount = document.querySelector('.cart-count');
-    let cartItems = 3;
 
     addCartBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation();
+
+            // 대리점 회원 체크
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+
+            if (!token || !userStr) {
+                alert('대리점 회원만 구매가 가능합니다.\n로그인 후 이용해주세요.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            if (user.grade !== 'dealer') {
+                alert('대리점 회원만 장바구니 및 구매가 가능합니다.\n대리점 가입 문의: 1588-0000');
+                return;
+            }
+
+            // 상품 정보 추출 (product-card에서)
+            const card = btn.closest('.product-card');
+            if (card && typeof cartApi !== 'undefined') {
+                const nameEl = card.querySelector('.product-name a, .product-name');
+                const name = nameEl ? nameEl.textContent.trim() : '상품';
+
+                const linkEl = card.querySelector('.product-name a, .product-image a');
+                const href = linkEl ? linkEl.getAttribute('href') : '';
+                const productId = href ? href.replace('.html', '').replace(/\//g, '_') : 'product_' + Date.now();
+
+                const priceEl = card.querySelector('.price-sale, .current-price');
+                const price = priceEl ? parseInt(priceEl.textContent.replace(/[^\d]/g, '')) : 0;
+
+                const originalPriceEl = card.querySelector('.price-original, .original-price');
+                const originalPrice = originalPriceEl ? parseInt(originalPriceEl.textContent.replace(/[^\d]/g, '')) : price;
+
+                const pvEl = card.querySelector('.price-pv, [class*="pv"]');
+                const pv = pvEl ? parseInt(pvEl.textContent.replace(/[^\d]/g, '')) || 0 : 0;
+
+                const imageEl = card.querySelector('.product-image img');
+                const image = imageEl ? imageEl.src : '';
+
+                const brandEl = card.querySelector('.product-brand');
+                const brand = brandEl ? brandEl.textContent.trim() : '';
+
+                cartApi.addItem({
+                    id: productId,
+                    name: name,
+                    price: price,
+                    originalPrice: originalPrice,
+                    pv: pv,
+                    image: image,
+                    category: brand,
+                    option: '기본',
+                    quantity: 1
+                });
+            }
 
             // Button animation
             btn.classList.add('added');
+            const originalHtml = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-check-circle"></i><span>추가됨</span>';
 
-            // Update cart count
-            cartItems++;
-            cartCount.textContent = cartItems;
-            cartCount.style.transform = 'scale(1.3)';
-
-            setTimeout(() => {
-                cartCount.style.transform = 'scale(1)';
-            }, 200);
+            // Update cart count from cartApi if available
+            if (typeof cartApi !== 'undefined') {
+                cartApi.updateCartCount();
+                const cartCountEl = document.querySelector('.cart-count');
+                if (cartCountEl) {
+                    cartCountEl.style.transform = 'scale(1.3)';
+                    setTimeout(() => {
+                        cartCountEl.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            }
 
             // Reset button
             setTimeout(() => {
@@ -680,6 +737,80 @@ document.addEventListener('DOMContentLoaded', function() {
                     btn.innerHTML = '<i class="fas fa-shopping-bag"></i><span>장바구니</span>';
                 }
             }, 2000);
+
+            alert('장바구니에 추가되었습니다.');
+        });
+    });
+
+    // ===================================
+    // Buy Now Button (바로구매)
+    // ===================================
+    const buyNowBtns = document.querySelectorAll('.btn-buy-detail');
+
+    buyNowBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // 대리점 회원 체크
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+
+            if (!token || !userStr) {
+                alert('대리점 회원만 구매가 가능합니다.\n로그인 후 이용해주세요.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            if (user.grade !== 'dealer') {
+                alert('대리점 회원만 구매가 가능합니다.\n대리점 가입 문의: 1588-0000');
+                return;
+            }
+
+            // 상품 정보 추출 및 장바구니 추가
+            if (typeof cartApi !== 'undefined') {
+                const nameEl = document.querySelector('.product-title-detail, .product-title, h1');
+                const name = nameEl ? nameEl.textContent.trim() : '상품';
+
+                const priceEl = document.querySelector('.price-sale-detail, .price-current, .current-price, .price-sale');
+                const price = priceEl ? parseInt(priceEl.textContent.replace(/[^\d]/g, '')) : 0;
+
+                const originalPriceEl = document.querySelector('.price-original-detail, .price-original, .original-price');
+                const originalPrice = originalPriceEl ? parseInt(originalPriceEl.textContent.replace(/[^\d]/g, '')) : price;
+
+                const pvEl = document.querySelector('.price-pv-detail, .product-pv, .price-pv, [class*="pv"]');
+                const pv = pvEl ? parseInt(pvEl.textContent.replace(/[^\d]/g, '')) || 0 : 0;
+
+                const imageEl = document.getElementById('mainImage') || document.querySelector('.product-image img, .main-image img, .product-gallery img');
+                const image = imageEl ? imageEl.src : '';
+
+                const qtyEl = document.getElementById('quantity') || document.querySelector('.qty-input');
+                const quantity = qtyEl ? parseInt(qtyEl.value) || 1 : 1;
+
+                const optionEl = document.querySelector('.option-btn.active, .option-select option:checked');
+                const option = optionEl ? optionEl.textContent.trim() : '기본';
+
+                const categoryEl = document.querySelector('.product-brand-detail, .product-brand, .product-category');
+                const category = categoryEl ? categoryEl.textContent.trim() : '';
+
+                const productId = window.location.pathname.replace(/\.html$/, '').replace(/\//g, '_') + '_' + option;
+
+                cartApi.addItem({
+                    id: productId,
+                    name: name,
+                    price: price,
+                    originalPrice: originalPrice,
+                    pv: pv,
+                    image: image,
+                    category: category,
+                    option: option,
+                    quantity: quantity
+                });
+            }
+
+            // 장바구니 페이지로 이동
+            window.location.href = 'cart.html';
         });
     });
 
@@ -839,3 +970,76 @@ class Animator {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { Animator };
 }
+
+// ===================================
+// 공통 장바구니 유틸리티
+// ===================================
+window.addToCartUtil = function() {
+    // 대리점 회원 체크
+    const token = localStorage.getItem('token');
+    const userStr = localStorage.getItem('user');
+
+    if (!token || !userStr) {
+        alert('대리점 회원만 구매가 가능합니다.\n로그인 후 이용해주세요.');
+        window.location.href = 'login.html';
+        return false;
+    }
+
+    const user = JSON.parse(userStr);
+    if (user.grade !== 'dealer') {
+        alert('대리점 회원만 장바구니 및 구매가 가능합니다.\n대리점 가입 문의: 1588-0000');
+        return false;
+    }
+
+    // cartApi가 있으면 사용
+    if (typeof cartApi !== 'undefined') {
+        // 상품 정보 추출
+        const nameEl = document.querySelector('.product-title-detail, .product-title, h1');
+        const name = nameEl ? nameEl.textContent.trim() : '상품';
+
+        const priceEl = document.querySelector('.price-sale-detail, .price-current, .current-price');
+        const price = priceEl ? parseInt(priceEl.textContent.replace(/[^\d]/g, '')) : 0;
+
+        const originalPriceEl = document.querySelector('.price-original-detail, .price-original, .original-price');
+        const originalPrice = originalPriceEl ? parseInt(originalPriceEl.textContent.replace(/[^\d]/g, '')) : price;
+
+        const pvEl = document.querySelector('.price-pv-detail, .product-pv, [class*="pv"]');
+        const pv = pvEl ? parseInt(pvEl.textContent.replace(/[^\d]/g, '')) || 0 : 0;
+
+        const imageEl = document.getElementById('mainImage') || document.querySelector('.product-image img, .main-image img');
+        const image = imageEl ? imageEl.src : '';
+
+        const qtyEl = document.getElementById('quantity') || document.querySelector('.qty-input');
+        const quantity = qtyEl ? parseInt(qtyEl.value) || 1 : 1;
+
+        const optionEl = document.querySelector('.option-btn.active, .option-select option:checked');
+        const option = optionEl ? optionEl.textContent.trim() : '기본';
+
+        const categoryEl = document.querySelector('.product-brand-detail, .product-category, .item-category');
+        const category = categoryEl ? categoryEl.textContent.trim() : '';
+
+        // 고유 ID 생성 (페이지 경로 + 옵션)
+        const productId = window.location.pathname.replace(/\.html$/, '').replace(/\//g, '_') + '_' + option;
+
+        cartApi.addItem({
+            id: productId,
+            name: name,
+            price: price,
+            originalPrice: originalPrice,
+            pv: pv,
+            image: image,
+            category: category,
+            option: option,
+            quantity: quantity
+        });
+    }
+
+    alert('장바구니에 추가되었습니다.');
+    return true;
+};
+
+window.buyNowUtil = function() {
+    if (window.addToCartUtil()) {
+        window.location.href = 'cart.html';
+    }
+};

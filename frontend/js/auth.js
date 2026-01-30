@@ -62,6 +62,8 @@ class Auth {
   logout() {
     this.removeToken();
     this.removeUser();
+    // 장바구니 비우기
+    localStorage.removeItem('xmall_cart');
     window.location.href = '/X-mall/login.html';
   }
 

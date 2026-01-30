@@ -167,6 +167,123 @@ const productsApi = {
   },
 };
 
+// Cart API (localStorage 기반)
+const cartApi = {
+  CART_KEY: 'xmall_cart',
+
+  // 장바구니 전체 조회
+  getItems() {
+    const cart = localStorage.getItem(this.CART_KEY);
+    return cart ? JSON.parse(cart) : [];
+  },
+
+  // 장바구니 저장
+  saveItems(items) {
+    localStorage.setItem(this.CART_KEY, JSON.stringify(items));
+    this.updateCartCount();
+  },
+
+  // 상품 추가
+  addItem(product) {
+    const items = this.getItems();
+    const existingIndex = items.findIndex(item =>
+      item.id === product.id && item.option === product.option
+    );
+
+    if (existingIndex > -1) {
+      items[existingIndex].quantity += product.quantity || 1;
+    } else {
+      items.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        originalPrice: product.originalPrice || product.price,
+        pv: product.pv || 0,
+        image: product.image,
+        category: product.category || '',
+        option: product.option || '기본',
+        quantity: product.quantity || 1
+      });
+    }
+
+    this.saveItems(items);
+    return items;
+  },
+
+  // 상품 삭제
+  removeItem(productId, option = null) {
+    let items = this.getItems();
+    if (option) {
+      items = items.filter(item => !(item.id === productId && item.option === option));
+    } else {
+      items = items.filter(item => item.id !== productId);
+    }
+    this.saveItems(items);
+    return items;
+  },
+
+  // 수량 변경
+  updateQuantity(productId, quantity, option = null) {
+    const items = this.getItems();
+    const item = items.find(item =>
+      item.id === productId && (option === null || item.option === option)
+    );
+    if (item) {
+      item.quantity = Math.max(1, Math.min(99, quantity));
+      this.saveItems(items);
+    }
+    return items;
+  },
+
+  // 선택 상품 삭제
+  removeSelected(productIds) {
+    let items = this.getItems();
+    items = items.filter(item => !productIds.includes(item.id));
+    this.saveItems(items);
+    return items;
+  },
+
+  // 장바구니 비우기
+  clear() {
+    localStorage.removeItem(this.CART_KEY);
+    this.updateCartCount();
+  },
+
+  // 총 수량
+  getTotalCount() {
+    const items = this.getItems();
+    return items.reduce((sum, item) => sum + item.quantity, 0);
+  },
+
+  // 헤더 장바구니 카운트 업데이트
+  updateCartCount() {
+    const count = this.getItems().length;
+    const badges = document.querySelectorAll('.cart-count');
+    badges.forEach(badge => {
+      badge.textContent = count;
+    });
+  },
+
+  // 총액 계산
+  getTotal() {
+    const items = this.getItems();
+    let subtotal = 0;
+    let totalPv = 0;
+
+    items.forEach(item => {
+      subtotal += item.price * item.quantity;
+      totalPv += (item.pv || 0) * item.quantity;
+    });
+
+    return { subtotal, totalPv, itemCount: items.length };
+  }
+};
+
+// 페이지 로드 시 장바구니 카운트 업데이트
+document.addEventListener('DOMContentLoaded', () => {
+  cartApi.updateCartCount();
+});
+
 // Export
 window.api = api;
 window.authApi = authApi;
@@ -176,3 +293,4 @@ window.rpayApi = rpayApi;
 window.withdrawalApi = withdrawalApi;
 window.ordersApi = ordersApi;
 window.productsApi = productsApi;
+window.cartApi = cartApi;
