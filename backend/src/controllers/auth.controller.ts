@@ -23,7 +23,20 @@ export class AuthController {
         });
       }
 
-      const user = await userService.createUser(data, 'consumer');
+      // Validate referrer if provided
+      let referrerId: string | undefined;
+      if (data.referrer_email) {
+        const referrer = await userService.findDealerByEmail(data.referrer_email);
+        if (!referrer) {
+          return res.status(400).json({
+            success: false,
+            error: '존재하지 않는 추천인이거나 대리점이 아닙니다.'
+          });
+        }
+        referrerId = referrer.id;
+      }
+
+      const user = await userService.createUser(data, 'consumer', referrerId);
 
       const token = generateUserToken({
         id: user.id,

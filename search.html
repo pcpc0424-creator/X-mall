@@ -11,16 +11,16 @@
     <link rel="stylesheet" href="styles.css?v=23">
 </head>
 <body>
-    <!-- 헤더 -->
-    <header class="header header-solid">
+        <!-- 헤더 -->
+    <header class="header">
         <nav class="nav-container">
-            <a href="index.html" class="logo">
+            <div class="logo">
                 <span class="logo-text">X-mall</span>
                 <span class="logo-dot"></span>
-            </a>
+            </div>
 
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li><a href="index.html" class="nav-link active">홈</a></li>
                 <li class="has-dropdown">
                     <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
                     <div class="mega-menu">
@@ -114,6 +114,7 @@
                         </div>
                     </div>
                 </li>
+                <li><a href="category-package.html" class="nav-link">패키지 상품</a></li>
                 <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
                 <li><a href="event.html" class="nav-link">이벤트</a></li>
             </ul>
@@ -165,6 +166,7 @@
                                 <li><a href="sub-cosmetic-haircare.html">헤어케어</a></li>
                             </ul>
                         </li>
+                        <li><a href="category-package.html">패키지 상품</a></li>
                         <li><a href="brand-story.html">브랜드 스토리</a></li>
                         <li><a href="event.html">이벤트</a></li>
                     </ul>
@@ -313,7 +315,8 @@
             <div class="footer-section">
                 <h4>회사 정보</h4>
                 <ul>
-                    <li><a href="brand-story.html">브랜드 스토리</a></li>
+                    <li><a href="category-package.html">패키지 상품</a></li>
+                        <li><a href="brand-story.html">브랜드 스토리</a></li>
                     <li><a href="#">입점문의</a></li>
                     <li><a href="#">제휴문의</a></li>
                 </ul>
@@ -594,14 +597,14 @@
 
             // 샘플 상품 데이터
             const products = [
-                { id: 1, name: '프리미엄 비타민C 1000mg', price: 28000, originalPrice: 35000, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop', category: '건강식품', keywords: ['비타민', '비타민C'] },
-                { id: 2, name: '6년근 홍삼 진액 스틱', price: 89000, originalPrice: 120000, image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop', category: '건강식품', keywords: ['홍삼', '인삼'] },
-                { id: 3, name: '프로바이오틱스 유산균', price: 32000, originalPrice: 40000, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop', category: '건강식품', keywords: ['프로바이오틱스', '유산균'] },
-                { id: 4, name: '디지털 자동 혈압계', price: 65000, originalPrice: 89000, image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&h=400&fit=crop', category: '의료기기', keywords: ['혈압계', '혈압'] },
-                { id: 5, name: '히알루론산 수분 세럼', price: 45000, originalPrice: 58000, image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop', category: '화장품', keywords: ['히알루론산', '세럼', '스킨케어'] },
-                { id: 6, name: '오메가3 피쉬오일', price: 38000, originalPrice: 48000, image: 'https://images.unsplash.com/photo-1577401239170-897942555fb3?w=400&h=400&fit=crop', category: '건강식품', keywords: ['오메가3', '피쉬오일'] },
-                { id: 7, name: '무선 목 마사지기', price: 78000, originalPrice: 99000, image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&h=400&fit=crop', category: '의료기기', keywords: ['마사지기', '목마사지'] },
-                { id: 8, name: '워터프루프 선크림 SPF50+', price: 28000, originalPrice: 35000, image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop', category: '화장품', keywords: ['선크림', '자외선차단'] },
+                { id: 1, name: '프리미엄 비타민C 1000mg', price: 28000, originalPrice: 35000, pv: 28, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop', category: '건강식품', keywords: ['비타민', '비타민C'] },
+                { id: 2, name: '6년근 홍삼 진액 스틱', price: 89000, originalPrice: 120000, pv: 89, image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop', category: '건강식품', keywords: ['홍삼', '인삼'] },
+                { id: 3, name: '프로바이오틱스 유산균', price: 32000, originalPrice: 40000, pv: 32, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop', category: '건강식품', keywords: ['프로바이오틱스', '유산균'] },
+                { id: 4, name: '디지털 자동 혈압계', price: 65000, originalPrice: 89000, pv: 65, image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&h=400&fit=crop', category: '의료기기', keywords: ['혈압계', '혈압'] },
+                { id: 5, name: '히알루론산 수분 세럼', price: 45000, originalPrice: 58000, pv: 45, image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop', category: '화장품', keywords: ['히알루론산', '세럼', '스킨케어'] },
+                { id: 6, name: '오메가3 피쉬오일', price: 38000, originalPrice: 48000, pv: 38, image: 'https://images.unsplash.com/photo-1577401239170-897942555fb3?w=400&h=400&fit=crop', category: '건강식품', keywords: ['오메가3', '피쉬오일'] },
+                { id: 7, name: '무선 목 마사지기', price: 78000, originalPrice: 99000, pv: 78, image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&h=400&fit=crop', category: '의료기기', keywords: ['마사지기', '목마사지'] },
+                { id: 8, name: '워터프루프 선크림 SPF50+', price: 28000, originalPrice: 35000, pv: 28, image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop', category: '화장품', keywords: ['선크림', '자외선차단'] },
             ];
 
             // 최근 검색어 로드
@@ -681,6 +684,7 @@
                                 <div class="product-price">
                                     <span class="current-price">${product.price.toLocaleString()}원</span>
                                     <span class="original-price">${product.originalPrice.toLocaleString()}원</span>
+                                    <span class="price-pv">PV ${product.pv}</span>
                                 </div>
                                 <div class="product-rating">
                                     <div class="stars">

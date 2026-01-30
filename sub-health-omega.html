@@ -11,17 +11,18 @@
     <link rel="stylesheet" href="styles.css?v=23">
 </head>
 <body class="category-page">
-    <!-- 헤더 -->
+        <!-- 헤더 -->
     <header class="header scrolled">
         <nav class="nav-container">
-            <a href="index.html" class="logo">
+            <div class="logo">
                 <span class="logo-text">X-mall</span>
                 <span class="logo-dot"></span>
-            </a>
+            </div>
+
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li><a href="index.html" class="nav-link active">홈</a></li>
                 <li class="has-dropdown">
-                    <a href="category-health.html" class="nav-link active">건강식품 <i class="fas fa-chevron-down"></i></a>
+                    <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-col">
@@ -113,12 +114,18 @@
                         </div>
                     </div>
                 </li>
+                <li><a href="category-package.html" class="nav-link">패키지 상품</a></li>
                 <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
                 <li><a href="event.html" class="nav-link">이벤트</a></li>
             </ul>
+
             <div class="nav-actions">
-                <a href="search.html" class="search-btn" aria-label="검색"><i class="fas fa-search"></i></a>
-                <a href="login.html" class="user-btn" aria-label="로그인"><i class="fas fa-user"></i></a>
+                <a href="search.html" class="search-btn" aria-label="검색">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="login.html" class="user-btn" aria-label="로그인">
+                    <i class="fas fa-user"></i>
+                </a>
                 <a href="cart.html" class="cart-btn" aria-label="장바구니">
                     <i class="fas fa-shopping-bag"></i>
                     <span class="cart-count">0</span>
@@ -159,6 +166,7 @@
                                 <li><a href="sub-cosmetic-haircare.html">헤어케어</a></li>
                             </ul>
                         </li>
+                        <li><a href="category-package.html">패키지 상품</a></li>
                         <li><a href="brand-story.html">브랜드 스토리</a></li>
                         <li><a href="event.html">이벤트</a></li>
                     </ul>
@@ -256,7 +264,8 @@
                                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                                     <span class="rating-count">(4,521)</span>
                                 </div>
-                                <div class="product-price"><span class="price-sale">₩38,000</span></div>
+                                <div class="product-price"><span class="price-sale">₩38,000</span>
+                                    <span class="price-pv">PV 38</span></div>
                                 <button class="btn-add-cart"><i class="fas fa-shopping-bag"></i><span>장바구니</span></button>
                             </div>
                         </div>
@@ -277,7 +286,8 @@
                                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
                                     <span class="rating-count">(1,876)</span>
                                 </div>
-                                <div class="product-price"><span class="price-sale">₩52,000</span></div>
+                                <div class="product-price"><span class="price-sale">₩52,000</span>
+                                    <span class="price-pv">PV 52</span></div>
                                 <button class="btn-add-cart"><i class="fas fa-shopping-bag"></i><span>장바구니</span></button>
                             </div>
                         </div>
@@ -301,6 +311,7 @@
                                 <div class="product-price">
                                     <span class="price-original">₩48,000</span>
                                     <span class="price-sale">₩36,000</span>
+                                    <span class="price-pv">PV 36</span>
                                 </div>
                                 <button class="btn-add-cart"><i class="fas fa-shopping-bag"></i><span>장바구니</span></button>
                             </div>
@@ -321,7 +332,8 @@
                                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                                     <span class="rating-count">(987)</span>
                                 </div>
-                                <div class="product-price"><span class="price-sale">₩42,000</span></div>
+                                <div class="product-price"><span class="price-sale">₩42,000</span>
+                                    <span class="price-pv">PV 42</span></div>
                                 <button class="btn-add-cart"><i class="fas fa-shopping-bag"></i><span>장바구니</span></button>
                             </div>
                         </div>
@@ -342,7 +354,8 @@
                                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
                                     <span class="rating-count">(3,210)</span>
                                 </div>
-                                <div class="product-price"><span class="price-sale">₩35,000</span></div>
+                                <div class="product-price"><span class="price-sale">₩35,000</span>
+                                    <span class="price-pv">PV 35</span></div>
                                 <button class="btn-add-cart"><i class="fas fa-shopping-bag"></i><span>장바구니</span></button>
                             </div>
                         </div>
@@ -363,7 +376,8 @@
                                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div>
                                     <span class="rating-count">(756)</span>
                                 </div>
-                                <div class="product-price"><span class="price-sale">₩28,000</span></div>
+                                <div class="product-price"><span class="price-sale">₩28,000</span>
+                                    <span class="price-pv">PV 28</span></div>
                                 <button class="btn-add-cart"><i class="fas fa-shopping-bag"></i><span>장바구니</span></button>
                             </div>
                         </div>

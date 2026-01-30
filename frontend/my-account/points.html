@@ -144,11 +144,12 @@
             <h1>포인트 관리</h1>
         </div>
 
-        <nav class="my-account-nav">
+        <nav class="my-account-nav" id="navMenu">
             <a href="dashboard.html">대시보드</a>
             <a href="points.html" class="active">포인트</a>
             <a href="orders.html">주문내역</a>
             <a href="withdraw.html">출금신청</a>
+            <a href="genealogy.html" id="genealogyLink" style="display: none;">계보도</a>
         </nav>
 
         <div class="card">
@@ -233,6 +234,12 @@
 
         document.addEventListener('DOMContentLoaded', async () => {
             if (!auth.requireAuth()) return;
+
+            // Show genealogy link for dealers
+            const user = auth.getUser();
+            if (user && user.grade === 'dealer') {
+                document.getElementById('genealogyLink').style.display = '';
+            }
 
             await loadBalances();
             await loadHistory();

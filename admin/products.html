@@ -6,6 +6,7 @@
     <title>상품 관리 - X-mall 관리자</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/admin.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="admin-wrapper">
@@ -32,6 +33,18 @@
                 <a href="products.html" class="nav-item active">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
                     상품 관리
+                </a>
+                <a href="categories.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+                    카테고리 관리
+                </a>
+                <a href="banners.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+                    배너 관리
+                </a>
+                <a href="events.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    이벤트 관리
                 </a>
                 <a href="points.html" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
@@ -82,9 +95,28 @@
                 <!-- Filters -->
                 <div class="filter-bar">
                     <input type="text" class="form-control search" id="searchInput" placeholder="상품명 검색..." onkeyup="searchProducts()">
+                    <select class="form-control form-select" id="productTypeFilter" onchange="loadProducts()">
+                        <option value="">전체 타입</option>
+                        <option value="single">단품</option>
+                        <option value="package">패키지</option>
+                    </select>
                     <select class="form-control form-select" id="categoryFilter" onchange="loadProducts()">
                         <option value="">전체 카테고리</option>
                     </select>
+                    <div style="margin-left: auto; display: flex; gap: 0.5rem;">
+                        <button class="btn btn-outline" onclick="downloadProductsTemplate()" style="white-space: nowrap;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            양식 다운로드
+                        </button>
+                        <button class="btn btn-outline" onclick="openBulkUpload()" style="white-space: nowrap;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            일괄 등록
+                        </button>
+                        <button class="btn btn-primary" onclick="openAddProduct()" style="white-space: nowrap;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            상품 추가
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Products Table -->
@@ -95,15 +127,18 @@
                                 <thead>
                                     <tr>
                                         <th>상품명</th>
+                                        <th>타입</th>
                                         <th>카테고리</th>
                                         <th>소비자가</th>
                                         <th>대리점가</th>
+                                        <th>PV</th>
                                         <th>재고</th>
                                         <th>상태</th>
+                                        <th>작업</th>
                                     </tr>
                                 </thead>
                                 <tbody id="productsBody">
-                                    <tr><td colspan="6" class="text-center text-muted">로딩 중...</td></tr>
+                                    <tr><td colspan="9" class="text-center text-muted">로딩 중...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -119,45 +154,317 @@
         </main>
     </div>
 
+    <!-- Product Add/Edit Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal" style="max-width: 560px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="productModalTitle">상품 추가</h3>
+                <button class="modal-close" onclick="closeModal('productModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="productId">
+                <div class="form-row">
+                    <div class="form-group" style="flex: 2;">
+                        <label class="form-label">상품명 <span style="color: #f44336;">*</span></label>
+                        <input type="text" class="form-control" id="productName" placeholder="상품명을 입력하세요">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">상품 타입 <span style="color: #f44336;">*</span></label>
+                        <select class="form-control form-select" id="productType" onchange="onProductTypeChange()">
+                            <option value="single">단품</option>
+                            <option value="package">패키지</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">설명</label>
+                    <textarea class="form-control" id="productDescription" rows="3" placeholder="상품 설명을 입력하세요" style="resize: vertical;"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">소비자가 (원) <span style="color: #f44336;">*</span></label>
+                        <input type="number" class="form-control" id="productPriceKrw" placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">대리점가 (원) <span style="color: #f44336;">*</span></label>
+                        <input type="number" class="form-control" id="productPriceDealerKrw" placeholder="0" min="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">PV <span style="color: #f44336;">*</span></label>
+                        <input type="number" class="form-control" id="productPvValue" placeholder="0" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">재고 수량</label>
+                        <input type="number" class="form-control" id="productStock" placeholder="0" min="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">카테고리</label>
+                        <input type="text" class="form-control" id="productCategory" placeholder="카테고리">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상태</label>
+                        <select class="form-control form-select" id="productIsActive">
+                            <option value="true">활성</option>
+                            <option value="false">비활성</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">이미지 URL</label>
+                    <input type="text" class="form-control" id="productImageUrl" placeholder="https://...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('productModal')">취소</button>
+                <button class="btn btn-primary" id="productSaveBtn" onclick="saveProduct()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Package Items Modal -->
+    <div class="modal-overlay" id="packageModal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title">패키지 구성 관리</h3>
+                <button class="modal-close" onclick="closeModal('packageModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="packageProductId">
+                <p style="margin-bottom: 1rem; color: var(--text-muted);">
+                    <strong id="packageProductName"></strong> 패키지에 포함될 단품을 선택하세요.
+                </p>
+
+                <!-- Add Item Form -->
+                <div class="form-row" style="margin-bottom: 1rem;">
+                    <div class="form-group" style="flex: 3;">
+                        <select class="form-control form-select" id="addItemSelect">
+                            <option value="">단품 선택...</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <input type="number" class="form-control" id="addItemQuantity" value="1" min="1" placeholder="수량">
+                    </div>
+                    <div class="form-group" style="flex: 0;">
+                        <button class="btn btn-primary" onclick="addPackageItem()" style="white-space: nowrap;">추가</button>
+                    </div>
+                </div>
+
+                <!-- Package Items Table -->
+                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                    <table class="data-table" style="margin: 0;">
+                        <thead>
+                            <tr>
+                                <th>단품명</th>
+                                <th>소비자가</th>
+                                <th>PV</th>
+                                <th>수량</th>
+                                <th>소계</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="packageItemsBody">
+                            <tr><td colspan="6" class="text-center text-muted">구성품이 없습니다</td></tr>
+                        </tbody>
+                        <tfoot id="packageItemsFoot" style="display: none;">
+                            <tr style="background: var(--bg-secondary); font-weight: 600;">
+                                <td colspan="4" style="text-align: right;">합계</td>
+                                <td id="packageTotalPrice">₩0</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('packageModal')">닫기</button>
+                <button class="btn btn-primary" id="savePackageBtn" onclick="savePackageItems()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Upload Modal -->
+    <div class="modal-overlay" id="bulkUploadModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">상품 일괄 등록</h3>
+                <button class="modal-close" onclick="closeModal('bulkUploadModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="file-upload-area" id="fileUploadArea" onclick="document.getElementById('bulkFileInput').click()">
+                    <input type="file" id="bulkFileInput" accept=".xlsx,.xls" style="display: none;" onchange="handleFileSelect(event)">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--text-muted);">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <p style="margin: 0.5rem 0;">파일을 드래그하거나 클릭하여 선택</p>
+                    <small style="color: var(--text-muted);">엑셀 파일(.xlsx, .xls)만 가능</small>
+                </div>
+                <p id="selectedFileName" style="margin-top: 0.5rem; color: var(--primary);"></p>
+                <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem;">엑셀 양식 안내</h4>
+                    <table style="width: 100%; font-size: 0.85rem;">
+                        <tr><td style="padding: 0.25rem 0;"><strong>name</strong></td><td style="color: #f44336;">(필수)</td><td>상품명</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>price_krw</strong></td><td style="color: #f44336;">(필수)</td><td>소비자가</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>price_dealer_krw</strong></td><td style="color: #f44336;">(필수)</td><td>대리점가</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>pv_value</strong></td><td style="color: #f44336;">(필수)</td><td>PV</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>stock_quantity</strong></td><td style="color: var(--text-muted);">(선택)</td><td>재고수량</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>category</strong></td><td style="color: var(--text-muted);">(선택)</td><td>카테고리</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>description</strong></td><td style="color: var(--text-muted);">(선택)</td><td>설명</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>product_type</strong></td><td style="color: var(--text-muted);">(선택)</td><td>single / package</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('bulkUploadModal')">취소</button>
+                <button class="btn btn-primary" id="bulkUploadBtn" onclick="uploadProducts()" disabled>업로드</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Result Modal -->
+    <div class="modal-overlay" id="bulkResultModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">상품 일괄 등록 결과</h3>
+                <button class="modal-close" onclick="closeModal('bulkResultModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="bulkResultBody">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal('bulkResultModal'); loadProducts();">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .type-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .type-badge.single { background: #e3f2fd; color: #1976d2; }
+        .type-badge.package { background: #f3e5f5; color: #7b1fa2; }
+    </style>
+
     <script src="js/admin.js"></script>
     <script>
         let currentPage = 1;
         let allProducts = [];
+        let editingProductId = null;
+        let singleProducts = [];
+        let currentPackageItems = [];
 
         async function loadProducts() {
             try {
                 const category = document.getElementById('categoryFilter').value;
+                const productType = document.getElementById('productTypeFilter').value;
                 let url = `/admin/products?page=${currentPage}&limit=20`;
                 if (category) url += `&category=${category}`;
+                if (productType) url += `&product_type=${productType}`;
 
                 const result = await api.get(url);
                 allProducts = result.data?.products || [];
                 renderProducts(allProducts);
                 updatePagination(result.data?.pagination);
+                updateCategoryFilter(allProducts);
             } catch (error) {
                 console.error('Load products error:', error);
                 document.getElementById('productsBody').innerHTML =
-                    '<tr><td colspan="6" class="text-center text-danger">데이터를 불러올 수 없습니다</td></tr>';
+                    '<tr><td colspan="9" class="text-center text-danger">데이터를 불러올 수 없습니다</td></tr>';
+            }
+        }
+
+        async function loadSingleProducts() {
+            try {
+                const result = await api.get('/admin/products/singles');
+                singleProducts = result.data || [];
+            } catch (error) {
+                console.error('Load single products error:', error);
+                singleProducts = [];
+            }
+        }
+
+        function updateCategoryFilter(products) {
+            const select = document.getElementById('categoryFilter');
+            const currentVal = select.value;
+            const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
+            // Only update if no options besides the default
+            if (select.options.length <= 1) {
+                categories.forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat;
+                    opt.textContent = cat;
+                    select.appendChild(opt);
+                });
+                select.value = currentVal;
             }
         }
 
         function renderProducts(products) {
             const tbody = document.getElementById('productsBody');
             if (products.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">상품이 없습니다</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">상품이 없습니다</td></tr>';
                 return;
             }
 
             tbody.innerHTML = products.map(p => `
                 <tr>
-                    <td class="fw-500">${p.name}</td>
-                    <td>${p.category || '-'}</td>
-                    <td>${formatCurrency(p.consumer_price)}</td>
-                    <td>${formatCurrency(p.dealer_price)}</td>
-                    <td>${p.stock ?? '-'}</td>
-                    <td><span class="status-badge ${p.is_active ? 'active' : 'inactive'}">${p.is_active ? '활성' : '비활성'}</span></td>
+                    <td class="fw-500">${escapeHtml(p.name)}</td>
+                    <td>
+                        <span class="type-badge ${p.product_type || 'single'}">
+                            ${p.product_type === 'package' ? '패키지' : '단품'}
+                        </span>
+                    </td>
+                    <td>${escapeHtml(p.category || '-')}</td>
+                    <td>${formatCurrency(p.price_krw)}</td>
+                    <td>${formatCurrency(p.price_dealer_krw)}</td>
+                    <td>${p.pv_value ?? '-'}</td>
+                    <td>${p.stock_quantity ?? '-'}</td>
+                    <td>
+                        <span class="status-badge ${p.is_active ? 'active' : 'inactive'}"
+                              style="cursor: pointer;"
+                              onclick="toggleActive('${p.id}', ${!p.is_active})"
+                              title="클릭하여 상태 변경">
+                            ${p.is_active ? '활성' : '비활성'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-btns">
+                            ${p.product_type === 'package' ? `
+                            <button class="action-btn" onclick="openPackageModal('${p.id}', '${escapeHtml(p.name)}')" title="패키지 구성">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27,6.96 12,12.01 20.73,6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                            </button>
+                            ` : ''}
+                            <button class="action-btn" onclick="openEditProduct('${p.id}')" title="수정">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
+                            <button class="action-btn" onclick="deleteProduct('${p.id}', '${escapeHtml(p.name)}')" title="삭제">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                            </button>
+                        </div>
+                    </td>
                 </tr>
             `).join('');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
         }
 
         function searchProducts() {
@@ -171,6 +478,371 @@
         function updatePagination(pagination) {
             if (!pagination) return;
             document.getElementById('paginationInfo').textContent = `${pagination.total}개의 상품`;
+        }
+
+        // --- Add Product ---
+        function openAddProduct() {
+            editingProductId = null;
+            document.getElementById('productModalTitle').textContent = '상품 추가';
+            document.getElementById('productId').value = '';
+            document.getElementById('productName').value = '';
+            document.getElementById('productType').value = 'single';
+            document.getElementById('productType').disabled = false;
+            document.getElementById('productDescription').value = '';
+            document.getElementById('productPriceKrw').value = '';
+            document.getElementById('productPriceDealerKrw').value = '';
+            document.getElementById('productPvValue').value = '';
+            document.getElementById('productStock').value = '0';
+            document.getElementById('productCategory').value = '';
+            document.getElementById('productIsActive').value = 'true';
+            document.getElementById('productImageUrl').value = '';
+            document.getElementById('productSaveBtn').textContent = '추가';
+            openModal('productModal');
+        }
+
+        // --- Edit Product ---
+        function openEditProduct(id) {
+            const product = allProducts.find(p => p.id === id);
+            if (!product) return;
+
+            editingProductId = id;
+            document.getElementById('productModalTitle').textContent = '상품 수정';
+            document.getElementById('productId').value = id;
+            document.getElementById('productName').value = product.name || '';
+            document.getElementById('productType').value = product.product_type || 'single';
+            document.getElementById('productType').disabled = true; // Cannot change type after creation
+            document.getElementById('productDescription').value = product.description || '';
+            document.getElementById('productPriceKrw').value = product.price_krw || '';
+            document.getElementById('productPriceDealerKrw').value = product.price_dealer_krw || '';
+            document.getElementById('productPvValue').value = product.pv_value ?? '';
+            document.getElementById('productStock').value = product.stock_quantity ?? 0;
+            document.getElementById('productCategory').value = product.category || '';
+            document.getElementById('productIsActive').value = product.is_active ? 'true' : 'false';
+            document.getElementById('productImageUrl').value = product.image_url || '';
+            document.getElementById('productSaveBtn').textContent = '저장';
+            openModal('productModal');
+        }
+
+        function onProductTypeChange() {
+            // Can be used for additional UI logic when type changes
+        }
+
+        // --- Save Product (Create or Update) ---
+        async function saveProduct() {
+            const name = document.getElementById('productName').value.trim();
+            const product_type = document.getElementById('productType').value;
+            const description = document.getElementById('productDescription').value.trim();
+            const price_krw = parseFloat(document.getElementById('productPriceKrw').value);
+            const price_dealer_krw = parseFloat(document.getElementById('productPriceDealerKrw').value);
+            const pv_value = parseFloat(document.getElementById('productPvValue').value);
+            const stock_quantity = parseInt(document.getElementById('productStock').value) || 0;
+            const category = document.getElementById('productCategory').value.trim();
+            const is_active = document.getElementById('productIsActive').value === 'true';
+            const image_url = document.getElementById('productImageUrl').value.trim();
+
+            if (!name) {
+                showToast('상품명을 입력해주세요.', 'error');
+                return;
+            }
+            if (isNaN(price_krw) || price_krw < 0) {
+                showToast('소비자가를 올바르게 입력해주세요.', 'error');
+                return;
+            }
+            if (isNaN(price_dealer_krw) || price_dealer_krw < 0) {
+                showToast('대리점가를 올바르게 입력해주세요.', 'error');
+                return;
+            }
+            if (isNaN(pv_value) || pv_value < 0) {
+                showToast('PV를 올바르게 입력해주세요.', 'error');
+                return;
+            }
+
+            const data = { name, product_type, description, price_krw, price_dealer_krw, pv_value, stock_quantity, category, is_active, image_url };
+            const btn = document.getElementById('productSaveBtn');
+
+            try {
+                setLoading(btn, true);
+                if (editingProductId) {
+                    // Don't send product_type on update
+                    delete data.product_type;
+                    await api.put(`/admin/products/${editingProductId}`, data);
+                    showToast('상품이 수정되었습니다.', 'success');
+                } else {
+                    await api.post('/admin/products', data);
+                    showToast('상품이 추가되었습니다.', 'success');
+                }
+                closeModal('productModal');
+                loadProducts();
+            } catch (error) {
+                showToast(error.message || '저장에 실패했습니다.', 'error');
+            } finally {
+                setLoading(btn, false);
+            }
+        }
+
+        // --- Delete Product ---
+        async function deleteProduct(id, name) {
+            if (!confirmDelete(name)) return;
+
+            try {
+                await api.delete(`/admin/products/${id}`);
+                showToast('상품이 삭제되었습니다.', 'success');
+                loadProducts();
+            } catch (error) {
+                showToast(error.message || '삭제에 실패했습니다.', 'error');
+            }
+        }
+
+        // --- Toggle Active/Inactive ---
+        async function toggleActive(id, newActive) {
+            try {
+                await api.put(`/admin/products/${id}`, { is_active: newActive });
+                showToast(newActive ? '상품이 활성화되었습니다.' : '상품이 비활성화되었습니다.', 'success');
+                loadProducts();
+            } catch (error) {
+                showToast(error.message || '상태 변경에 실패했습니다.', 'error');
+            }
+        }
+
+        // ========== Package Functions ==========
+
+        async function openPackageModal(productId, productName) {
+            document.getElementById('packageProductId').value = productId;
+            document.getElementById('packageProductName').textContent = productName;
+
+            // Load single products for dropdown
+            await loadSingleProducts();
+            populateSingleProductsDropdown();
+
+            // Load current package items
+            await loadPackageItems(productId);
+
+            openModal('packageModal');
+        }
+
+        function populateSingleProductsDropdown() {
+            const select = document.getElementById('addItemSelect');
+            select.innerHTML = '<option value="">단품 선택...</option>';
+            singleProducts.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = `${p.name} (${formatCurrency(p.price_krw)})`;
+                select.appendChild(opt);
+            });
+        }
+
+        async function loadPackageItems(packageId) {
+            try {
+                const result = await api.get(`/admin/products/${packageId}/items`);
+                currentPackageItems = result.data || [];
+                renderPackageItems();
+            } catch (error) {
+                console.error('Load package items error:', error);
+                currentPackageItems = [];
+                renderPackageItems();
+            }
+        }
+
+        function renderPackageItems() {
+            const tbody = document.getElementById('packageItemsBody');
+            const tfoot = document.getElementById('packageItemsFoot');
+
+            if (currentPackageItems.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">구성품이 없습니다</td></tr>';
+                tfoot.style.display = 'none';
+                return;
+            }
+
+            let totalPrice = 0;
+
+            tbody.innerHTML = currentPackageItems.map(item => {
+                const subtotal = (item.single_product_price || 0) * item.quantity;
+                totalPrice += subtotal;
+                return `
+                    <tr>
+                        <td>${escapeHtml(item.single_product_name)}</td>
+                        <td>${formatCurrency(item.single_product_price)}</td>
+                        <td>${item.single_product_pv ?? '-'}</td>
+                        <td>
+                            <input type="number" class="form-control" style="width: 70px;" value="${item.quantity}" min="1"
+                                   onchange="updateItemQuantity('${item.single_product_id}', this.value)">
+                        </td>
+                        <td>${formatCurrency(subtotal)}</td>
+                        <td>
+                            <button class="action-btn" onclick="removeItem('${item.single_product_id}')" title="삭제">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('packageTotalPrice').textContent = formatCurrency(totalPrice);
+            tfoot.style.display = '';
+        }
+
+        function addPackageItem() {
+            const select = document.getElementById('addItemSelect');
+            const quantityInput = document.getElementById('addItemQuantity');
+            const productId = select.value;
+            const quantity = parseInt(quantityInput.value) || 1;
+
+            if (!productId) {
+                showToast('단품을 선택해주세요.', 'error');
+                return;
+            }
+
+            // Check if already exists
+            const existing = currentPackageItems.find(item => item.single_product_id === productId);
+            if (existing) {
+                existing.quantity += quantity;
+            } else {
+                const product = singleProducts.find(p => p.id === productId);
+                if (product) {
+                    currentPackageItems.push({
+                        single_product_id: productId,
+                        single_product_name: product.name,
+                        single_product_price: product.price_krw,
+                        single_product_pv: product.pv_value,
+                        quantity: quantity
+                    });
+                }
+            }
+
+            renderPackageItems();
+
+            // Reset form
+            select.value = '';
+            quantityInput.value = '1';
+        }
+
+        function updateItemQuantity(singleProductId, newQuantity) {
+            const quantity = parseInt(newQuantity) || 1;
+            const item = currentPackageItems.find(i => i.single_product_id === singleProductId);
+            if (item) {
+                item.quantity = Math.max(1, quantity);
+                renderPackageItems();
+            }
+        }
+
+        function removeItem(singleProductId) {
+            currentPackageItems = currentPackageItems.filter(i => i.single_product_id !== singleProductId);
+            renderPackageItems();
+        }
+
+        async function savePackageItems() {
+            const packageId = document.getElementById('packageProductId').value;
+            const items = currentPackageItems.map(item => ({
+                single_product_id: item.single_product_id,
+                quantity: item.quantity
+            }));
+
+            const btn = document.getElementById('savePackageBtn');
+
+            try {
+                setLoading(btn, true);
+                await api.put(`/admin/products/${packageId}/items`, { items });
+                showToast('패키지 구성이 저장되었습니다.', 'success');
+                closeModal('packageModal');
+            } catch (error) {
+                showToast(error.message || '저장에 실패했습니다.', 'error');
+            } finally {
+                setLoading(btn, false);
+            }
+        }
+
+        // --- Bulk Upload Functions ---
+        let selectedFile = null;
+
+        function openBulkUpload() {
+            selectedFile = null;
+            document.getElementById('bulkFileInput').value = '';
+            document.getElementById('selectedFileName').textContent = '';
+            document.getElementById('bulkUploadBtn').disabled = true;
+            openModal('bulkUploadModal');
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const allowedExtensions = ['.xlsx', '.xls'];
+            const fileName = file.name.toLowerCase();
+            const isValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+
+            if (!isValidExtension) {
+                showToast('엑셀 파일(.xlsx, .xls)만 업로드 가능합니다.', 'error');
+                event.target.value = '';
+                return;
+            }
+
+            selectedFile = file;
+            document.getElementById('selectedFileName').textContent = `선택된 파일: ${file.name}`;
+            document.getElementById('bulkUploadBtn').disabled = false;
+        }
+
+        async function uploadProducts() {
+            if (!selectedFile) {
+                showToast('파일을 선택해주세요.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('bulkUploadBtn');
+            try {
+                setLoading(btn, true);
+                const result = await uploadFile('/admin/products/bulk-upload', selectedFile);
+                closeModal('bulkUploadModal');
+                showBulkResult(result);
+            } catch (error) {
+                showToast(error.message || '업로드에 실패했습니다.', 'error');
+            } finally {
+                setLoading(btn, false);
+            }
+        }
+
+        function showBulkResult(result) {
+            const body = document.getElementById('bulkResultBody');
+            const data = result.data || {};
+
+            let html = `
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="flex: 1; text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                        <div style="font-size: 2rem; font-weight: 600;">${data.total || 0}</div>
+                        <div style="color: var(--text-muted);">총 건수</div>
+                    </div>
+                    <div style="flex: 1; text-align: center; padding: 1rem; background: rgba(76,175,80,0.1); border-radius: 8px;">
+                        <div style="font-size: 2rem; font-weight: 600; color: #4caf50;">${data.success_count || 0}</div>
+                        <div style="color: var(--text-muted);">성공</div>
+                    </div>
+                    <div style="flex: 1; text-align: center; padding: 1rem; background: rgba(244,67,54,0.1); border-radius: 8px;">
+                        <div style="font-size: 2rem; font-weight: 600; color: #f44336;">${data.fail_count || 0}</div>
+                        <div style="color: var(--text-muted);">실패</div>
+                    </div>
+                </div>
+            `;
+
+            if (data.errors && data.errors.length > 0) {
+                html += `
+                    <div style="margin-top: 1rem;">
+                        <h4 style="margin-bottom: 0.5rem;">오류 목록</h4>
+                        <div style="max-height: 200px; overflow-y: auto; background: var(--bg-secondary); border-radius: 8px; padding: 0.5rem;">
+                            <table style="width: 100%; font-size: 0.85rem;">
+                                <tr style="background: var(--bg-primary);"><th style="padding: 0.5rem;">행</th><th style="padding: 0.5rem;">상품명</th><th style="padding: 0.5rem;">오류</th></tr>
+                                ${data.errors.map(e => `
+                                    <tr>
+                                        <td style="padding: 0.5rem; text-align: center;">${e.row}</td>
+                                        <td style="padding: 0.5rem;">${escapeHtml(e.name || '-')}</td>
+                                        <td style="padding: 0.5rem; color: #f44336;">${escapeHtml(e.error)}</td>
+                                    </tr>
+                                `).join('')}
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+
+            body.innerHTML = html;
+            openModal('bulkResultModal');
         }
 
         document.addEventListener('DOMContentLoaded', loadProducts);

@@ -11,16 +11,16 @@
     <link rel="stylesheet" href="styles.css?v=23">
 </head>
 <body>
-    <!-- 헤더 -->
-    <header class="header header-solid">
+        <!-- 헤더 -->
+    <header class="header">
         <nav class="nav-container">
-            <a href="index.html" class="logo">
+            <div class="logo">
                 <span class="logo-text">X-mall</span>
                 <span class="logo-dot"></span>
-            </a>
+            </div>
 
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li><a href="index.html" class="nav-link active">홈</a></li>
                 <li class="has-dropdown">
                     <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
                     <div class="mega-menu">
@@ -114,6 +114,7 @@
                         </div>
                     </div>
                 </li>
+                <li><a href="category-package.html" class="nav-link">패키지 상품</a></li>
                 <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
                 <li><a href="event.html" class="nav-link">이벤트</a></li>
             </ul>
@@ -165,6 +166,7 @@
                                 <li><a href="sub-cosmetic-haircare.html">헤어케어</a></li>
                             </ul>
                         </li>
+                        <li><a href="category-package.html">패키지 상품</a></li>
                         <li><a href="brand-story.html">브랜드 스토리</a></li>
                         <li><a href="event.html">이벤트</a></li>
                     </ul>
@@ -277,6 +279,15 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label for="referrerEmail">추천인 이메일</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-user-plus"></i>
+                                    <input type="email" id="referrerEmail" name="referrerEmail" placeholder="추천인 이메일 (선택사항)">
+                                </div>
+                                <p class="input-hint">추천인이 있으시면 입력해주세요 (대리점 회원만 가능)</p>
+                            </div>
+
                             <button type="button" class="auth-submit-btn" id="nextStep1">
                                 다음 단계 <i class="fas fa-arrow-right"></i>
                             </button>
@@ -370,7 +381,6 @@
 
                     <div class="auth-footer" id="authFooter">
                         <p>이미 회원이신가요? <a href="login.html">로그인</a></p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1001,12 +1011,19 @@
                 submitBtn.innerHTML = '가입 처리 중... <i class="fas fa-spinner fa-spin"></i>';
 
                 try {
-                    await auth.signup({
+                    const signupData = {
                         email: document.getElementById('email').value,
                         password: document.getElementById('password').value,
                         name: document.getElementById('name').value,
                         phone: document.getElementById('phone').value
-                    });
+                    };
+
+                    const referrerEmail = document.getElementById('referrerEmail').value.trim();
+                    if (referrerEmail) {
+                        signupData.referrer_email = referrerEmail;
+                    }
+
+                    await auth.signup(signupData);
 
                     showStep(3);
                     authFooter.style.display = 'none';

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배너 관리 - X-mall 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">X-<span>mall</span></a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section"><div class="nav-section-title">메인</div></div>
+                <a href="index.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+                    대시보드
+                </a>
+                <div class="nav-section"><div class="nav-section-title">관리</div></div>
+                <a href="members.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    회원 관리
+                </a>
+                <a href="orders.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+                    주문 관리
+                </a>
+                <a href="products.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                    상품 관리
+                </a>
+                <a href="categories.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+                    카테고리 관리
+                </a>
+                <a href="banners.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+                    배너 관리
+                </a>
+                <a href="events.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    이벤트 관리
+                </a>
+                <a href="points.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    포인트 관리
+                </a>
+                <a href="withdrawals.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    출금 관리
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                    설정
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="adminUserName">관리자</div>
+                        <div class="sidebar-user-role">최고 관리자</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    </button>
+                    <h1 class="page-title">배너 관리</h1>
+                </div>
+                <div class="header-right">
+                    <a href="/X-mall/index.html" class="back-to-site">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        사이트 보기
+                    </a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <input type="text" class="form-control search" id="searchInput" placeholder="배너 제목 검색..." onkeyup="searchBanners()">
+                    <select class="form-control form-select" id="positionFilter" onchange="loadBanners()">
+                        <option value="">전체 위치</option>
+                        <option value="hero">히어로 슬라이더</option>
+                        <option value="category">카테고리 배너</option>
+                        <option value="promotion">프로모션 배너</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="openAddBanner()" style="margin-left: auto; white-space: nowrap;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        배너 추가
+                    </button>
+                </div>
+
+                <!-- Banners Grid -->
+                <div class="banner-grid" id="bannersGrid">
+                    <div class="text-center text-muted" style="padding: 3rem;">로딩 중...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Banner Add/Edit Modal -->
+    <div class="modal-overlay" id="bannerModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="bannerModalTitle">배너 추가</h3>
+                <button class="modal-close" onclick="closeModal('bannerModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="bannerId">
+                <div class="form-group">
+                    <label class="form-label">제목 <span style="color: #f44336;">*</span></label>
+                    <input type="text" class="form-control" id="bannerTitle" placeholder="배너 제목">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">부제목</label>
+                    <input type="text" class="form-control" id="bannerSubtitle" placeholder="배너 부제목">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">설명</label>
+                    <textarea class="form-control" id="bannerDescription" rows="2" placeholder="배너 설명" style="resize: vertical;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">이미지 URL <span style="color: #f44336;">*</span></label>
+                    <input type="text" class="form-control" id="bannerImageUrl" placeholder="https://...">
+                    <div id="bannerPreview" style="margin-top: 0.5rem; display: none;">
+                        <img id="bannerPreviewImg" style="max-width: 100%; max-height: 150px; border-radius: 8px;">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">링크 URL</label>
+                        <input type="text" class="form-control" id="bannerLinkUrl" placeholder="/X-mall/...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">버튼 텍스트</label>
+                        <input type="text" class="form-control" id="bannerButtonText" placeholder="자세히 보기">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">위치</label>
+                        <select class="form-control form-select" id="bannerPosition">
+                            <option value="hero">히어로 슬라이더</option>
+                            <option value="category">카테고리 배너</option>
+                            <option value="promotion">프로모션 배너</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">정렬 순서</label>
+                        <input type="number" class="form-control" id="bannerSortOrder" value="0" min="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">시작일</label>
+                        <input type="datetime-local" class="form-control" id="bannerStartDate">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">종료일</label>
+                        <input type="datetime-local" class="form-control" id="bannerEndDate">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">상태</label>
+                    <select class="form-control form-select" id="bannerIsActive">
+                        <option value="true">활성</option>
+                        <option value="false">비활성</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('bannerModal')">취소</button>
+                <button class="btn btn-primary" id="bannerSaveBtn" onclick="saveBanner()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .banner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        .banner-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .banner-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        .banner-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+        .banner-content {
+            padding: 1rem;
+        }
+        .banner-content h4 {
+            margin: 0 0 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .banner-content p {
+            margin: 0 0 0.75rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .banner-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.75rem;
+            border-top: 1px solid #eee;
+        }
+        .position-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .position-badge.hero { background: #e8f5e9; color: #388e3c; }
+        .position-badge.category { background: #fff3e0; color: #f57c00; }
+        .position-badge.promotion { background: #fce4ec; color: #c2185b; }
+    </style>
+
+    <script src="js/admin.js"></script>
+    <script>
+        let allBanners = [];
+        let editingBannerId = null;
+
+        async function loadBanners() {
+            try {
+                const position = document.getElementById('positionFilter').value;
+                let url = '/admin/banners';
+                if (position) url += `?position=${position}`;
+
+                const result = await api.get(url);
+                allBanners = result.data || [];
+                renderBanners(allBanners);
+            } catch (error) {
+                console.error('Load banners error:', error);
+                document.getElementById('bannersGrid').innerHTML =
+                    '<div class="text-center text-danger" style="padding: 3rem;">데이터를 불러올 수 없습니다</div>';
+            }
+        }
+
+        function renderBanners(banners) {
+            const grid = document.getElementById('bannersGrid');
+            if (banners.length === 0) {
+                grid.innerHTML = '<div class="text-center text-muted" style="padding: 3rem;">배너가 없습니다</div>';
+                return;
+            }
+
+            grid.innerHTML = banners.map(b => `
+                <div class="banner-card">
+                    <img src="${escapeHtml(b.image_url)}" alt="${escapeHtml(b.title)}" class="banner-image"
+                         onerror="this.src='https://via.placeholder.com/400x180?text=No+Image'">
+                    <div class="banner-content">
+                        <h4>${escapeHtml(b.title)}</h4>
+                        <p>${escapeHtml(b.subtitle || b.description || '-')}</p>
+                        <div class="banner-meta">
+                            <div>
+                                <span class="position-badge ${b.position}">${getPositionLabel(b.position)}</span>
+                                <span class="status-badge ${b.is_active ? 'active' : 'inactive'}" style="margin-left: 0.5rem;">
+                                    ${b.is_active ? '활성' : '비활성'}
+                                </span>
+                            </div>
+                            <div class="action-btns">
+                                <button class="action-btn" onclick="openEditBanner('${b.id}')" title="수정">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                </button>
+                                <button class="action-btn" onclick="deleteBanner('${b.id}', '${escapeHtml(b.title)}')" title="삭제">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getPositionLabel(position) {
+            const labels = {
+                hero: '히어로',
+                category: '카테고리',
+                promotion: '프로모션'
+            };
+            return labels[position] || position;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function searchBanners() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allBanners.filter(b =>
+                b.title.toLowerCase().includes(search) ||
+                (b.subtitle && b.subtitle.toLowerCase().includes(search))
+            );
+            renderBanners(filtered);
+        }
+
+        function openAddBanner() {
+            editingBannerId = null;
+            document.getElementById('bannerModalTitle').textContent = '배너 추가';
+            document.getElementById('bannerId').value = '';
+            document.getElementById('bannerTitle').value = '';
+            document.getElementById('bannerSubtitle').value = '';
+            document.getElementById('bannerDescription').value = '';
+            document.getElementById('bannerImageUrl').value = '';
+            document.getElementById('bannerLinkUrl').value = '';
+            document.getElementById('bannerButtonText').value = '';
+            document.getElementById('bannerPosition').value = 'hero';
+            document.getElementById('bannerSortOrder').value = '0';
+            document.getElementById('bannerStartDate').value = '';
+            document.getElementById('bannerEndDate').value = '';
+            document.getElementById('bannerIsActive').value = 'true';
+            document.getElementById('bannerPreview').style.display = 'none';
+            document.getElementById('bannerSaveBtn').textContent = '추가';
+            openModal('bannerModal');
+        }
+
+        function openEditBanner(id) {
+            const banner = allBanners.find(b => b.id === id);
+            if (!banner) return;
+
+            editingBannerId = id;
+            document.getElementById('bannerModalTitle').textContent = '배너 수정';
+            document.getElementById('bannerId').value = id;
+            document.getElementById('bannerTitle').value = banner.title || '';
+            document.getElementById('bannerSubtitle').value = banner.subtitle || '';
+            document.getElementById('bannerDescription').value = banner.description || '';
+            document.getElementById('bannerImageUrl').value = banner.image_url || '';
+            document.getElementById('bannerLinkUrl').value = banner.link_url || '';
+            document.getElementById('bannerButtonText').value = banner.button_text || '';
+            document.getElementById('bannerPosition').value = banner.position || 'hero';
+            document.getElementById('bannerSortOrder').value = banner.sort_order || 0;
+            document.getElementById('bannerStartDate').value = banner.start_date ? formatDateTimeLocal(banner.start_date) : '';
+            document.getElementById('bannerEndDate').value = banner.end_date ? formatDateTimeLocal(banner.end_date) : '';
+            document.getElementById('bannerIsActive').value = banner.is_active ? 'true' : 'false';
+            document.getElementById('bannerSaveBtn').textContent = '저장';
+
+            // Show preview
+            if (banner.image_url) {
+                document.getElementById('bannerPreviewImg').src = banner.image_url;
+                document.getElementById('bannerPreview').style.display = 'block';
+            } else {
+                document.getElementById('bannerPreview').style.display = 'none';
+            }
+
+            openModal('bannerModal');
+        }
+
+        function formatDateTimeLocal(dateStr) {
+            const d = new Date(dateStr);
+            return d.toISOString().slice(0, 16);
+        }
+
+        async function saveBanner() {
+            const title = document.getElementById('bannerTitle').value.trim();
+            const subtitle = document.getElementById('bannerSubtitle').value.trim();
+            const description = document.getElementById('bannerDescription').value.trim();
+            const image_url = document.getElementById('bannerImageUrl').value.trim();
+            const link_url = document.getElementById('bannerLinkUrl').value.trim();
+            const button_text = document.getElementById('bannerButtonText').value.trim();
+            const position = document.getElementById('bannerPosition').value;
+            const sort_order = parseInt(document.getElementById('bannerSortOrder').value) || 0;
+            const start_date = document.getElementById('bannerStartDate').value || null;
+            const end_date = document.getElementById('bannerEndDate').value || null;
+            const is_active = document.getElementById('bannerIsActive').value === 'true';
+
+            if (!title) {
+                showToast('제목을 입력해주세요.', 'error');
+                return;
+            }
+            if (!image_url) {
+                showToast('이미지 URL을 입력해주세요.', 'error');
+                return;
+            }
+
+            const data = { title, subtitle, description, image_url, link_url, button_text, position, sort_order, start_date, end_date, is_active };
+            const btn = document.getElementById('bannerSaveBtn');
+
+            try {
+                setLoading(btn, true);
+                if (editingBannerId) {
+                    await api.put(`/admin/banners/${editingBannerId}`, data);
+                    showToast('배너가 수정되었습니다.', 'success');
+                } else {
+                    await api.post('/admin/banners', data);
+                    showToast('배너가 추가되었습니다.', 'success');
+                }
+                closeModal('bannerModal');
+                loadBanners();
+            } catch (error) {
+                showToast(error.message || '저장에 실패했습니다.', 'error');
+            } finally {
+                setLoading(btn, false);
+            }
+        }
+
+        async function deleteBanner(id, title) {
+            if (!confirmDelete(title)) return;
+
+            try {
+                await api.delete(`/admin/banners/${id}`);
+                showToast('배너가 삭제되었습니다.', 'success');
+                loadBanners();
+            } catch (error) {
+                showToast(error.message || '삭제에 실패했습니다.', 'error');
+            }
+        }
+
+        // Preview image on URL input
+        document.getElementById('bannerImageUrl').addEventListener('input', function() {
+            const url = this.value.trim();
+            const preview = document.getElementById('bannerPreview');
+            const img = document.getElementById('bannerPreviewImg');
+
+            if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+                img.src = url;
+                preview.style.display = 'block';
+                img.onerror = () => { preview.style.display = 'none'; };
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', loadBanners);
+    </script>
+</body>
+</html>

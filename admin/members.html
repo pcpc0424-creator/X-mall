@@ -6,6 +6,7 @@
     <title>회원 관리 - X-mall 관리자</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/admin.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="admin-wrapper">
@@ -32,6 +33,18 @@
                 <a href="products.html" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
                     상품 관리
+                </a>
+                <a href="categories.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+                    카테고리 관리
+                </a>
+                <a href="banners.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+                    배너 관리
+                </a>
+                <a href="events.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    이벤트 관리
                 </a>
                 <a href="points.html" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
@@ -87,6 +100,20 @@
                         <option value="dealer">대리점</option>
                         <option value="consumer">소비자</option>
                     </select>
+                    <div style="margin-left: auto; display: flex; gap: 0.5rem;">
+                        <button class="btn btn-outline" onclick="downloadMembersTemplate()" style="white-space: nowrap;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            양식 다운로드
+                        </button>
+                        <button class="btn btn-outline" onclick="openBulkUpload()" style="white-space: nowrap;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            일괄 등록
+                        </button>
+                        <button class="btn btn-primary" onclick="openAddMember()" style="white-space: nowrap;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            회원 추가
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Members Table -->
@@ -170,10 +197,237 @@
         </div>
     </div>
 
+    <!-- Add Member Modal -->
+    <div class="modal-overlay" id="addMemberModal">
+        <div class="modal" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3 class="modal-title">회원 추가</h3>
+                <button class="modal-close" onclick="closeModal('addMemberModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">이름 <span style="color: #f44336;">*</span></label>
+                    <input type="text" class="form-control" id="addName" placeholder="이름을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">이메일 <span style="color: #f44336;">*</span></label>
+                    <input type="email" class="form-control" id="addEmail" placeholder="이메일을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">비밀번호 <span style="color: #f44336;">*</span></label>
+                    <input type="password" class="form-control" id="addPassword" placeholder="비밀번호를 입력하세요">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">전화번호 <span style="color: #f44336;">*</span></label>
+                        <input type="tel" class="form-control" id="addPhone" placeholder="010-0000-0000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">등급</label>
+                        <select class="form-control form-select" id="addGrade">
+                            <option value="consumer">소비자</option>
+                            <option value="dealer">대리점</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">추천인 (대리점)</label>
+                    <input type="email" class="form-control" id="addReferrer" list="dealersList" placeholder="추천인 이메일 (선택사항)">
+                    <datalist id="dealersList"></datalist>
+                    <small style="color: var(--text-muted);">대리점 회원만 추천인으로 지정 가능</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('addMemberModal')">취소</button>
+                <button class="btn btn-primary" id="addMemberBtn" onclick="createMember()">추가</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Upload Modal -->
+    <div class="modal-overlay" id="bulkUploadModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">회원 일괄 등록</h3>
+                <button class="modal-close" onclick="closeModal('bulkUploadModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">엑셀 파일 업로드</label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" id="bulkFileInput" accept=".xlsx,.xls" style="display: none;" onchange="handleFileSelect(event)">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--text-muted);">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        <p style="margin: 1rem 0 0.5rem;">파일을 드래그하거나 클릭하여 선택</p>
+                        <small style="color: var(--text-muted);">엑셀 파일(.xlsx, .xls)만 가능</small>
+                    </div>
+                    <p id="selectedFileName" style="margin-top: 0.5rem; color: var(--primary);"></p>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem;">엑셀 양식 안내</h4>
+                    <table style="width: 100%; font-size: 0.85rem;">
+                        <tr><td style="padding: 0.25rem 0;"><strong>email</strong></td><td style="color: #f44336;">(필수)</td><td>이메일</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>password</strong></td><td style="color: #f44336;">(필수)</td><td>비밀번호</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>name</strong></td><td style="color: #f44336;">(필수)</td><td>이름</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>phone</strong></td><td style="color: #f44336;">(필수)</td><td>전화번호</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>grade</strong></td><td style="color: var(--text-muted);">(선택)</td><td>dealer / consumer</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('bulkUploadModal')">취소</button>
+                <button class="btn btn-primary" id="bulkUploadBtn" onclick="uploadMembers()" disabled>업로드</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Upload Result Modal -->
+    <div class="modal-overlay" id="bulkResultModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">업로드 결과</h3>
+                <button class="modal-close" onclick="closeModal('bulkResultModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="bulkResultBody">
+                <!-- Result will be dynamically loaded -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal('bulkResultModal'); loadMembers();">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Genealogy Modal -->
+    <div class="modal-overlay" id="genealogyModal">
+        <div class="modal" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3 class="modal-title">계보도 - <span id="genealogyDealerName"></span></h3>
+                <button class="modal-close" onclick="closeModal('genealogyModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="genealogyModalBody">
+                <!-- Summary Cards -->
+                <div class="genealogy-summary" id="genealogySummary">
+                    <div class="summary-card">
+                        <div class="summary-value" id="totalMembers">0</div>
+                        <div class="summary-label">총 추천회원</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="totalPurchase">0원</div>
+                        <div class="summary-label">총 누적 구매금액</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="totalPV">0</div>
+                        <div class="summary-label">총 누적 PV</div>
+                    </div>
+                </div>
+                <!-- Search -->
+                <div style="margin-bottom: 1rem;">
+                    <input type="text" class="form-control" id="genealogySearch" placeholder="이름 또는 이메일로 검색..." style="max-width: 300px;">
+                </div>
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table class="data-table" id="genealogyTable">
+                        <thead>
+                            <tr>
+                                <th>이름</th>
+                                <th>이메일</th>
+                                <th>전화번호</th>
+                                <th>등급</th>
+                                <th>누적 구매금액</th>
+                                <th>누적 PV</th>
+                                <th>가입일</th>
+                            </tr>
+                        </thead>
+                        <tbody id="genealogyBody">
+                            <tr><td colspan="7" class="text-center text-muted">데이터 없음</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('genealogyModal')">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .genealogy-summary {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .summary-card {
+            flex: 1;
+            background: var(--bg-secondary);
+            padding: 1.25rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .summary-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-upload-area:hover, .file-upload-area.dragover {
+            border-color: var(--primary);
+            background: var(--primary-alpha);
+        }
+        .result-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .result-stat {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .result-stat.total { background: var(--bg-secondary); }
+        .result-stat.success { background: #52c41a20; color: #52c41a; }
+        .result-stat.fail { background: #f5222d20; color: #f5222d; }
+        .result-stat .stat-value { font-size: 1.5rem; font-weight: 700; }
+        .result-stat .stat-label { font-size: 0.85rem; color: var(--text-muted); }
+        .error-list {
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+        }
+        .error-item {
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+
     <script src="js/admin.js"></script>
     <script>
         let currentPage = 1;
         let allMembers = [];
+        let selectedFile = null;
 
         async function loadMembers() {
             try {
@@ -215,6 +469,11 @@
                             <button class="action-btn" onclick="editMember('${m.id}', '${m.name}', '${m.grade}')" title="등급 수정">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
+                            ${m.grade === 'dealer' ? `
+                            <button class="action-btn" onclick="viewGenealogy('${m.id}', '${m.name}')" title="계보도 보기" style="color: var(--primary);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                            </button>
+                            ` : ''}
                         </div>
                     </td>
                 </tr>
@@ -315,6 +574,228 @@
                 showToast(error.message || '등급 변경에 실패했습니다.', 'error');
             }
         }
+
+        async function openAddMember() {
+            document.getElementById('addName').value = '';
+            document.getElementById('addEmail').value = '';
+            document.getElementById('addPassword').value = '';
+            document.getElementById('addPhone').value = '';
+            document.getElementById('addGrade').value = 'consumer';
+            document.getElementById('addReferrer').value = '';
+            openModal('addMemberModal');
+            // Load dealers for datalist
+            await populateDealersDatalist('dealersList');
+        }
+
+        async function createMember() {
+            const name = document.getElementById('addName').value.trim();
+            const email = document.getElementById('addEmail').value.trim();
+            const password = document.getElementById('addPassword').value;
+            const phone = document.getElementById('addPhone').value.trim();
+            const grade = document.getElementById('addGrade').value;
+            const referrer_email = document.getElementById('addReferrer').value.trim();
+
+            if (!name) { showToast('이름을 입력해주세요.', 'error'); return; }
+            if (!email) { showToast('이메일을 입력해주세요.', 'error'); return; }
+            if (!password) { showToast('비밀번호를 입력해주세요.', 'error'); return; }
+            if (!phone) { showToast('전화번호를 입력해주세요.', 'error'); return; }
+
+            const btn = document.getElementById('addMemberBtn');
+            try {
+                setLoading(btn, true);
+                const data = { email, password, name, phone, grade };
+                if (referrer_email) {
+                    data.referrer_email = referrer_email;
+                }
+                await api.post('/admin/users', data);
+                showToast('회원이 추가되었습니다.', 'success');
+                closeModal('addMemberModal');
+                loadMembers();
+            } catch (error) {
+                showToast(error.message || '회원 추가에 실패했습니다.', 'error');
+            } finally {
+                setLoading(btn, false);
+            }
+        }
+
+        // Bulk Upload Functions
+        function openBulkUpload() {
+            selectedFile = null;
+            document.getElementById('bulkFileInput').value = '';
+            document.getElementById('selectedFileName').textContent = '';
+            document.getElementById('bulkUploadBtn').disabled = true;
+            openModal('bulkUploadModal');
+            initFileUploadArea();
+        }
+
+        function initFileUploadArea() {
+            const area = document.getElementById('fileUploadArea');
+            const input = document.getElementById('bulkFileInput');
+
+            area.onclick = () => input.click();
+
+            area.ondragover = (e) => {
+                e.preventDefault();
+                area.classList.add('dragover');
+            };
+
+            area.ondragleave = () => {
+                area.classList.remove('dragover');
+            };
+
+            area.ondrop = (e) => {
+                e.preventDefault();
+                area.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            };
+        }
+
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        }
+
+        function handleFile(file) {
+            const allowedExtensions = ['.xlsx', '.xls'];
+            const ext = file.name.toLowerCase().slice(file.name.lastIndexOf('.'));
+
+            if (!allowedExtensions.includes(ext)) {
+                showToast('엑셀 파일(.xlsx, .xls)만 업로드 가능합니다.', 'error');
+                return;
+            }
+
+            selectedFile = file;
+            document.getElementById('selectedFileName').textContent = file.name;
+            document.getElementById('bulkUploadBtn').disabled = false;
+        }
+
+        async function uploadMembers() {
+            if (!selectedFile) {
+                showToast('파일을 선택해주세요.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('bulkUploadBtn');
+            try {
+                setLoading(btn, true);
+                const result = await uploadFile('/admin/users/bulk-upload', selectedFile);
+                closeModal('bulkUploadModal');
+                showBulkResult(result.data);
+            } catch (error) {
+                showToast(error.message || '업로드에 실패했습니다.', 'error');
+            } finally {
+                setLoading(btn, false);
+            }
+        }
+
+        function showBulkResult(data) {
+            const body = document.getElementById('bulkResultBody');
+            let errorsHtml = '';
+
+            if (data.errors && data.errors.length > 0) {
+                errorsHtml = `
+                    <h4 style="margin-top: 1rem; margin-bottom: 0.5rem;">오류 목록</h4>
+                    <div class="error-list">
+                        ${data.errors.map(e => `
+                            <div class="error-item">
+                                <strong>행 ${e.row}</strong>${e.email ? ` (${e.email})` : ''}: ${e.error}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            body.innerHTML = `
+                <div class="result-stats">
+                    <div class="result-stat total">
+                        <div class="stat-value">${data.total}</div>
+                        <div class="stat-label">총 건수</div>
+                    </div>
+                    <div class="result-stat success">
+                        <div class="stat-value">${data.success_count}</div>
+                        <div class="stat-label">성공</div>
+                    </div>
+                    <div class="result-stat fail">
+                        <div class="stat-value">${data.fail_count}</div>
+                        <div class="stat-label">실패</div>
+                    </div>
+                </div>
+                ${errorsHtml}
+            `;
+
+            openModal('bulkResultModal');
+        }
+
+        // Genealogy functions
+        let currentGenealogyDealerId = null;
+
+        async function viewGenealogy(dealerId, dealerName) {
+            currentGenealogyDealerId = dealerId;
+            document.getElementById('genealogyDealerName').textContent = dealerName;
+            document.getElementById('genealogySearch').value = '';
+            openModal('genealogyModal');
+            await loadGenealogy();
+        }
+
+        async function loadGenealogy(search = '') {
+            if (!currentGenealogyDealerId) return;
+
+            try {
+                let url = `/admin/users/${currentGenealogyDealerId}/genealogy?limit=50`;
+                if (search) {
+                    url += `&search=${encodeURIComponent(search)}`;
+                }
+                const result = await api.get(url);
+                const data = result.data;
+
+                // Update summary
+                document.getElementById('totalMembers').textContent = data.summary.total_members;
+                document.getElementById('totalPurchase').textContent = formatCurrency(data.summary.total_purchase_krw);
+                document.getElementById('totalPV').textContent = data.summary.total_pv.toLocaleString();
+
+                // Render table
+                const tbody = document.getElementById('genealogyBody');
+                if (data.members.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">추천 회원이 없습니다</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.members.map(m => `
+                    <tr>
+                        <td class="fw-500">${m.name}</td>
+                        <td>${m.email}</td>
+                        <td>${m.phone || '-'}</td>
+                        <td>${gradeBadge(m.grade)}</td>
+                        <td>${formatCurrency(m.total_purchase_krw)}</td>
+                        <td>${m.total_pv.toLocaleString()}</td>
+                        <td>${formatDate(m.created_at)}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Load genealogy error:', error);
+                document.getElementById('genealogyBody').innerHTML =
+                    '<tr><td colspan="7" class="text-center text-danger">데이터를 불러올 수 없습니다</td></tr>';
+            }
+        }
+
+        // Genealogy search handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('genealogySearch');
+            if (searchInput) {
+                let timeout;
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        loadGenealogy(this.value);
+                    }, 300);
+                });
+            }
+        });
 
         document.addEventListener('DOMContentLoaded', loadMembers);
     </script>

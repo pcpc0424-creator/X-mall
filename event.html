@@ -363,16 +363,16 @@
     </style>
 </head>
 <body class="category-page">
-    <!-- 헤더 -->
+        <!-- 헤더 -->
     <header class="header scrolled">
         <nav class="nav-container">
-            <a href="index.html" class="logo">
+            <div class="logo">
                 <span class="logo-text">X-mall</span>
                 <span class="logo-dot"></span>
-            </a>
+            </div>
 
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li><a href="index.html" class="nav-link active">홈</a></li>
                 <li class="has-dropdown">
                     <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
                     <div class="mega-menu">
@@ -466,8 +466,9 @@
                         </div>
                     </div>
                 </li>
+                <li><a href="category-package.html" class="nav-link">패키지 상품</a></li>
                 <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
-                <li><a href="event.html" class="nav-link active">이벤트</a></li>
+                <li><a href="event.html" class="nav-link">이벤트</a></li>
             </ul>
 
             <div class="nav-actions">
@@ -517,6 +518,7 @@
                                 <li><a href="sub-cosmetic-haircare.html">헤어케어</a></li>
                             </ul>
                         </li>
+                        <li><a href="category-package.html">패키지 상품</a></li>
                         <li><a href="brand-story.html">브랜드 스토리</a></li>
                         <li><a href="event.html">이벤트</a></li>
                     </ul>
@@ -547,159 +549,11 @@
                 <button class="event-tab" data-tab="ended">종료</button>
             </div>
 
-            <div class="event-grid">
-                <!-- Featured Event -->
-                <div class="featured-event event-card" data-status="ongoing">
-                    <div class="event-card-image">
-                        <img src="https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=800&q=80" alt="신년 이벤트">
-                        <span class="event-status ongoing">진행중</span>
-                    </div>
-                    <div class="event-card-content">
-                        <span class="featured-badge">HOT EVENT</span>
-                        <h3>2024 새해맞이 메가세일!<br>최대 50% 할인</h3>
-                        <p>새해를 맞아 X-mall에서 준비한 초특가 할인 이벤트! 건강식품, 의료기기, 화장품 전 카테고리 최대 50% 할인 혜택을 누려보세요.</p>
-
-                        <div class="countdown">
-                            <div class="countdown-item">
-                                <span class="countdown-value" id="days">03</span>
-                                <span class="countdown-label">일</span>
-                            </div>
-                            <div class="countdown-item">
-                                <span class="countdown-value" id="hours">12</span>
-                                <span class="countdown-label">시간</span>
-                            </div>
-                            <div class="countdown-item">
-                                <span class="countdown-value" id="minutes">45</span>
-                                <span class="countdown-label">분</span>
-                            </div>
-                            <div class="countdown-item">
-                                <span class="countdown-value" id="seconds">30</span>
-                                <span class="countdown-label">초</span>
-                            </div>
-                        </div>
-
-                        <div class="event-meta">
-                            <div class="event-date">
-                                <i class="far fa-calendar-alt"></i>
-                                <span>2024.01.01 ~ 2024.01.31</span>
-                            </div>
-                            <button class="event-btn">참여하기</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Event Card 1 -->
-                <div class="event-card" data-status="ongoing">
-                    <div class="event-card-image">
-                        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80" alt="건강식품 이벤트">
-                        <span class="event-status ongoing">진행중</span>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>건강식품 1+1 이벤트</h3>
-                        <p>인기 비타민, 프로바이오틱스 제품 1+1 행사! 가족 건강을 위한 특별 혜택.</p>
-                        <div class="event-meta">
-                            <div class="event-date">
-                                <i class="far fa-calendar-alt"></i>
-                                <span>2024.01.15 ~ 2024.02.15</span>
-                            </div>
-                            <button class="event-btn">참여하기</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Event Card 2 -->
-                <div class="event-card" data-status="ongoing">
-                    <div class="event-card-image">
-                        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&q=80" alt="뷰티 이벤트">
-                        <span class="event-status ongoing">진행중</span>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>스프링 뷰티 페스티벌</h3>
-                        <p>봄맞이 화장품 특가전! 스킨케어, 메이크업 베스트셀러 최대 40% 할인.</p>
-                        <div class="event-meta">
-                            <div class="event-date">
-                                <i class="far fa-calendar-alt"></i>
-                                <span>2024.01.20 ~ 2024.02.28</span>
-                            </div>
-                            <button class="event-btn">참여하기</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Event Card 3 -->
-                <div class="event-card" data-status="upcoming">
-                    <div class="event-card-image">
-                        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80" alt="의료기기 이벤트">
-                        <span class="event-status upcoming">예정</span>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>스마트 헬스케어 기획전</h3>
-                        <p>최신 스마트 의료기기 런칭 기념! 얼리버드 할인 및 무료 배송 혜택.</p>
-                        <div class="event-meta">
-                            <div class="event-date">
-                                <i class="far fa-calendar-alt"></i>
-                                <span>2024.02.01 ~ 2024.02.29</span>
-                            </div>
-                            <button class="event-btn">알림신청</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Event Card 4 -->
-                <div class="event-card" data-status="upcoming">
-                    <div class="event-card-image">
-                        <img src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=600&q=80" alt="회원 이벤트">
-                        <span class="event-status upcoming">예정</span>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>VIP 회원 감사 이벤트</h3>
-                        <p>VIP 회원 대상 특별 사은품 증정 및 더블 적립 혜택!</p>
-                        <div class="event-meta">
-                            <div class="event-date">
-                                <i class="far fa-calendar-alt"></i>
-                                <span>2024.02.14 ~ 2024.02.28</span>
-                            </div>
-                            <button class="event-btn">알림신청</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Event Card 5 - Ended -->
-                <div class="event-card" data-status="ended">
-                    <div class="event-card-image">
-                        <img src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?w=600&q=80" alt="크리스마스 이벤트">
-                        <span class="event-status ended">종료</span>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>크리스마스 선물 대잔치</h3>
-                        <p>크리스마스 시즌 한정 기프트 세트 및 특별 할인 이벤트</p>
-                        <div class="event-meta">
-                            <div class="event-date">
-                                <i class="far fa-calendar-alt"></i>
-                                <span>2023.12.01 ~ 2023.12.25</span>
-                            </div>
-                            <button class="event-btn disabled">종료됨</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Event Card 6 - Ended -->
-                <div class="event-card" data-status="ended">
-                    <div class="event-card-image">
-                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="블랙프라이데이">
-                        <span class="event-status ended">종료</span>
-                    </div>
-                    <div class="event-card-content">
-                        <h3>블랙프라이데이 세일</h3>
-                        <p>연중 최대 할인! 전 상품 최대 70% 할인 빅세일 이벤트</p>
-                        <div class="event-meta">
-                            <div class="event-date">
-                                <i class="far fa-calendar-alt"></i>
-                                <span>2023.11.20 ~ 2023.11.30</span>
-                            </div>
-                            <button class="event-btn disabled">종료됨</button>
-                        </div>
-                    </div>
+            <div class="event-grid" id="eventGrid">
+                <!-- Events will be loaded dynamically from API -->
+                <div class="loading-events" style="grid-column: span 2; text-align: center; padding: 60px;">
+                    <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--primary);"></i>
+                    <p style="margin-top: 15px; color: var(--gray-600);">이벤트를 불러오는 중...</p>
                 </div>
             </div>
         </div>
@@ -870,63 +724,190 @@
             });
         }
 
-        // Event Tab Filter
-        const eventTabs = document.querySelectorAll('.event-tab');
-        const eventCards = document.querySelectorAll('.event-card');
+        // Load events from API
+        let allEvents = [];
+        const API_BASE = '/X-mall/api';
 
-        eventTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                eventTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-
-                const filter = tab.dataset.tab;
-
-                eventCards.forEach(card => {
-                    if (filter === 'all' || card.dataset.status === filter) {
-                        card.style.display = 'grid';
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        }, 50);
-                    } else {
-                        card.style.opacity = '0';
-                        card.style.transform = 'translateY(20px)';
-                        setTimeout(() => {
-                            card.style.display = 'none';
-                        }, 300);
-                    }
-                });
-            });
-        });
-
-        // Countdown Timer
-        const endDate = new Date();
-        endDate.setDate(endDate.getDate() + 3);
-        endDate.setHours(endDate.getHours() + 12);
-        endDate.setMinutes(endDate.getMinutes() + 45);
-
-        function updateCountdown() {
-            const now = new Date();
-            const diff = endDate - now;
-
-            if (diff <= 0) return;
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = String(days).padStart(2, '0');
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        async function loadEvents() {
+            try {
+                const response = await fetch(`${API_BASE}/content/events`);
+                const result = await response.json();
+                if (result.success) {
+                    allEvents = result.data || [];
+                    renderEvents(allEvents);
+                }
+            } catch (error) {
+                console.error('Failed to load events:', error);
+                document.getElementById('eventGrid').innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; padding: 60px;">
+                        <p style="color: var(--gray-600);">이벤트를 불러올 수 없습니다.</p>
+                    </div>`;
+            }
         }
 
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+        function getEventStatus(event) {
+            const now = new Date();
+            const start = new Date(event.start_date);
+            const end = new Date(event.end_date);
+            if (now < start) return 'upcoming';
+            if (now > end) return 'ended';
+            return 'ongoing';
+        }
 
-        // Animate on scroll
-        const observer = new IntersectionObserver((entries) => {
+        function getStatusLabel(status) {
+            const labels = { ongoing: '진행중', upcoming: '예정', ended: '종료' };
+            return labels[status] || status;
+        }
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+        }
+
+        function getDiscountText(event) {
+            if (!event.discount_type || !event.discount_value) return '';
+            if (event.discount_type === 'percentage') return `최대 ${event.discount_value}% 할인`;
+            return `${Number(event.discount_value).toLocaleString()}원 할인`;
+        }
+
+        function renderEvents(events) {
+            const grid = document.getElementById('eventGrid');
+            if (events.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; padding: 60px;">
+                        <p style="color: var(--gray-600);">등록된 이벤트가 없습니다.</p>
+                    </div>`;
+                return;
+            }
+
+            // First event as featured
+            const featured = events[0];
+            const others = events.slice(1);
+            const featuredStatus = getEventStatus(featured);
+            const featuredDiscount = getDiscountText(featured);
+
+            let html = `
+                <div class="featured-event event-card" data-status="${featuredStatus}">
+                    <div class="event-card-image">
+                        <img src="${featured.image_url || 'https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=800&q=80'}" alt="${featured.title}">
+                        <span class="event-status ${featuredStatus}">${getStatusLabel(featuredStatus)}</span>
+                    </div>
+                    <div class="event-card-content">
+                        <span class="featured-badge">HOT EVENT</span>
+                        <h3>${featured.title}${featuredDiscount ? '<br>' + featuredDiscount : ''}</h3>
+                        <p>${featured.description || ''}</p>
+                        ${featuredStatus === 'ongoing' ? `
+                        <div class="countdown">
+                            <div class="countdown-item"><span class="countdown-value" id="days">00</span><span class="countdown-label">일</span></div>
+                            <div class="countdown-item"><span class="countdown-value" id="hours">00</span><span class="countdown-label">시간</span></div>
+                            <div class="countdown-item"><span class="countdown-value" id="minutes">00</span><span class="countdown-label">분</span></div>
+                            <div class="countdown-item"><span class="countdown-value" id="seconds">00</span><span class="countdown-label">초</span></div>
+                        </div>` : ''}
+                        <div class="event-meta">
+                            <div class="event-date"><i class="far fa-calendar-alt"></i><span>${formatDate(featured.start_date)} ~ ${formatDate(featured.end_date)}</span></div>
+                            <button class="event-btn ${featuredStatus === 'ended' ? 'disabled' : ''}">${featuredStatus === 'ended' ? '종료됨' : featuredStatus === 'upcoming' ? '알림신청' : '참여하기'}</button>
+                        </div>
+                    </div>
+                </div>`;
+
+            others.forEach(event => {
+                const status = getEventStatus(event);
+                html += `
+                <div class="event-card" data-status="${status}">
+                    <div class="event-card-image">
+                        <img src="${event.image_url || 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80'}" alt="${event.title}">
+                        <span class="event-status ${status}">${getStatusLabel(status)}</span>
+                    </div>
+                    <div class="event-card-content">
+                        <h3>${event.title}</h3>
+                        <p>${event.description || ''}</p>
+                        <div class="event-meta">
+                            <div class="event-date"><i class="far fa-calendar-alt"></i><span>${formatDate(event.start_date)} ~ ${formatDate(event.end_date)}</span></div>
+                            <button class="event-btn ${status === 'ended' ? 'disabled' : ''}">${status === 'ended' ? '종료됨' : status === 'upcoming' ? '알림신청' : '참여하기'}</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            grid.innerHTML = html;
+
+            // Start countdown if featured is ongoing
+            if (featuredStatus === 'ongoing') {
+                startCountdown(new Date(featured.end_date));
+            }
+
+            // Re-attach tab filter to new cards
+            attachTabFilter();
+            observeCards();
+        }
+
+        function attachTabFilter() {
+            const eventTabs = document.querySelectorAll('.event-tab');
+            eventTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    eventTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    const filter = tab.dataset.tab;
+                    const eventCards = document.querySelectorAll('.event-card');
+                    eventCards.forEach(card => {
+                        if (filter === 'all' || card.dataset.status === filter) {
+                            card.style.display = 'grid';
+                            setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 50);
+                        } else {
+                            card.style.opacity = '0'; card.style.transform = 'translateY(20px)';
+                            setTimeout(() => { card.style.display = 'none'; }, 300);
+                        }
+                    });
+                });
+            });
+        }
+
+        function observeCards() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.event-card').forEach(el => {
+                el.style.opacity = '0'; el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        }
+
+        // Countdown Timer
+        let countdownInterval;
+        function startCountdown(endDate) {
+            if (countdownInterval) clearInterval(countdownInterval);
+            function update() {
+                const now = new Date();
+                const diff = endDate - now;
+                if (diff <= 0) { clearInterval(countdownInterval); return; }
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                const daysEl = document.getElementById('days');
+                const hoursEl = document.getElementById('hours');
+                const minutesEl = document.getElementById('minutes');
+                const secondsEl = document.getElementById('seconds');
+                if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+                if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+                if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+                if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+            }
+            update();
+            countdownInterval = setInterval(update, 1000);
+        }
+
+        // Load events on page load
+        loadEvents();
+
+        // Animate winner cards on scroll
+        const winnerObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
@@ -935,11 +916,11 @@
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.event-card, .winner-card').forEach(el => {
+        document.querySelectorAll('.winner-card').forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(30px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
+            winnerObserver.observe(el);
         });
     });
     </script>

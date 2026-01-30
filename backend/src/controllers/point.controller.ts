@@ -3,6 +3,7 @@ import { pointService } from '../services/point.service';
 import { userService } from '../services/user.service';
 import { query } from '../config/database';
 import { AuthRequest, AdminAuthRequest, PointTransferBody, AdminGrantPointsBody } from '../types';
+import { parsePointsExcel } from '../utils/excel';
 
 export class PointController {
   // Get point summary
@@ -244,6 +245,59 @@ export class PointController {
       res.status(500).json({
         success: false,
         error: error.message
+      });
+    }
+  }
+
+  // Admin: Bulk grant points
+  async bulkGrant(req: AdminAuthRequest, res: Response) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          error: '엑셀 파일을 업로드해주세요.'
+        });
+      }
+
+      const adminId = req.admin!.id;
+
+      // Parse Excel file
+      const parseResult = parsePointsExcel(req.file.buffer);
+
+      if (parseResult.data.length === 0 && parseResult.errors.length === 0) {
+        return res.status(400).json({
+          success: false,
+          error: '엑셀 파일에 데이터가 없습니다.'
+        });
+      }
+
+      // Combine parse errors
+      const allErrors = parseResult.errors.map(e => ({
+        row: e.row,
+        email: '',
+        error: e.message
+      }));
+
+      // Bulk grant points
+      const bulkResult = await pointService.bulkGrantPoints(adminId, parseResult.data);
+
+      // Merge errors
+      const finalErrors = [...allErrors, ...bulkResult.errors];
+
+      res.json({
+        success: true,
+        data: {
+          total: parseResult.data.length + parseResult.errors.length,
+          success_count: bulkResult.success_count,
+          fail_count: parseResult.errors.length + bulkResult.fail_count,
+          errors: finalErrors.slice(0, 100) // Limit error list
+        },
+        message: `총 ${bulkResult.success_count}건의 포인트가 지급되었습니다.`
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message || '파일 처리 중 오류가 발생했습니다.'
       });
     }
   }

@@ -7,4 +7,7 @@ const router = Router();
 // Protected routes
 router.get('/profile', authenticateUser, (req, res) => userController.getProfile(req, res));
 
+// Genealogy (dealer only) - view my downline
+router.get('/genealogy', authenticateUser, (req, res) => userController.getMyGenealogy(req, res));
+
 export default router;

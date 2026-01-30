@@ -182,11 +182,12 @@
             </div>
         </div>
 
-        <nav class="my-account-nav">
+        <nav class="my-account-nav" id="navMenu">
             <a href="dashboard.html" class="active">대시보드</a>
             <a href="points.html">포인트</a>
             <a href="orders.html">주문내역</a>
             <a href="withdraw.html">출금신청</a>
+            <a href="genealogy.html" id="genealogyLink" style="display: none;">계보도</a>
         </nav>
 
         <div class="balance-cards">
@@ -260,6 +261,11 @@
                     document.getElementById('user-phone').textContent = user.phone;
                     document.getElementById('user-grade').innerHTML =
                         `<span class="grade-badge grade-${user.grade}">${user.grade === 'dealer' ? '대리점' : '소비자'}</span>`;
+
+                    // Show genealogy link for dealers
+                    if (user.grade === 'dealer') {
+                        document.getElementById('genealogyLink').style.display = '';
+                    }
 
                     // Update balances
                     document.getElementById('balance-rpay').textContent = user.balances.rpay.toLocaleString() + '원';

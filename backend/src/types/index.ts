@@ -2,6 +2,7 @@ import { Request } from 'express';
 
 export type UserGrade = 'dealer' | 'consumer';
 export type PointType = 'P' | 'C' | 'T';
+export type ProductType = 'single' | 'package';
 export type OrderStatus = 'pending' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
 export type WithdrawalStatus = 'pending' | 'approved' | 'rejected' | 'completed';
 export type PendingPointStatus = 'pending' | 'released' | 'cancelled';
@@ -14,6 +15,7 @@ export interface User {
   phone: string;
   grade: UserGrade;
   is_active: boolean;
+  referrer_id?: string;
   created_at: Date;
 }
 
@@ -35,7 +37,20 @@ export interface Product {
   description?: string;
   image_url?: string;
   category?: string;
+  product_type: ProductType;
   is_active: boolean;
+}
+
+export interface PackageItem {
+  id: string;
+  package_id: string;
+  single_product_id: string;
+  quantity: number;
+  created_at: Date;
+  // Joined fields
+  single_product_name?: string;
+  single_product_price?: number;
+  single_product_pv?: number;
 }
 
 export interface RpayBalance {
@@ -158,6 +173,7 @@ export interface SignupBody {
   password: string;
   name: string;
   phone: string;
+  referrer_email?: string;
 }
 
 export interface LoginBody {

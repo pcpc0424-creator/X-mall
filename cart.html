@@ -11,16 +11,16 @@
     <link rel="stylesheet" href="styles.css?v=23">
 </head>
 <body>
-    <!-- 헤더 -->
-    <header class="header header-solid">
+        <!-- 헤더 -->
+    <header class="header">
         <nav class="nav-container">
-            <a href="index.html" class="logo">
+            <div class="logo">
                 <span class="logo-text">X-mall</span>
                 <span class="logo-dot"></span>
-            </a>
+            </div>
 
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li><a href="index.html" class="nav-link active">홈</a></li>
                 <li class="has-dropdown">
                     <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
                     <div class="mega-menu">
@@ -114,6 +114,7 @@
                         </div>
                     </div>
                 </li>
+                <li><a href="category-package.html" class="nav-link">패키지 상품</a></li>
                 <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
                 <li><a href="event.html" class="nav-link">이벤트</a></li>
             </ul>
@@ -127,7 +128,7 @@
                 </a>
                 <a href="cart.html" class="cart-btn" aria-label="장바구니">
                     <i class="fas fa-shopping-bag"></i>
-                    <span class="cart-count" id="headerCartCount">3</span>
+                    <span class="cart-count">0</span>
                 </a>
                 <div class="menu-toggle-wrap">
                     <button class="menu-toggle" aria-label="메뉴">
@@ -165,6 +166,7 @@
                                 <li><a href="sub-cosmetic-haircare.html">헤어케어</a></li>
                             </ul>
                         </li>
+                        <li><a href="category-package.html">패키지 상품</a></li>
                         <li><a href="brand-story.html">브랜드 스토리</a></li>
                         <li><a href="event.html">이벤트</a></li>
                     </ul>
@@ -234,6 +236,7 @@
                             <div class="item-price">
                                 <span class="current-price">28,000원</span>
                                 <span class="original-price">35,000원</span>
+                                <span class="item-pv">PV 28</span>
                             </div>
                             <button class="item-delete"><i class="fas fa-times"></i></button>
                         </div>
@@ -264,6 +267,7 @@
                             <div class="item-price">
                                 <span class="current-price">89,000원</span>
                                 <span class="original-price">120,000원</span>
+                                <span class="item-pv">PV 89</span>
                             </div>
                             <button class="item-delete"><i class="fas fa-times"></i></button>
                         </div>
@@ -294,6 +298,7 @@
                             <div class="item-price">
                                 <span class="current-price">90,000원</span>
                                 <span class="original-price">116,000원</span>
+                                <span class="item-pv">PV 90</span>
                             </div>
                             <button class="item-delete"><i class="fas fa-times"></i></button>
                         </div>
@@ -462,7 +467,8 @@
             <div class="footer-section">
                 <h4>회사 정보</h4>
                 <ul>
-                    <li><a href="brand-story.html">브랜드 스토리</a></li>
+                    <li><a href="category-package.html">패키지 상품</a></li>
+                        <li><a href="brand-story.html">브랜드 스토리</a></li>
                     <li><a href="#">입점문의</a></li>
                     <li><a href="#">제휴문의</a></li>
                 </ul>
@@ -705,6 +711,14 @@
             font-size: 0.85rem;
             color: #999;
             text-decoration: line-through;
+        }
+
+        .item-price .item-pv {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #4f46e5;
+            margin-top: 4px;
         }
 
         .item-delete {

@@ -6,6 +6,7 @@ import rpayRoutes from './rpay.routes';
 import withdrawalRoutes from './withdrawal.routes';
 import orderRoutes from './order.routes';
 import productRoutes from './product.routes';
+import contentRoutes from './content.routes';
 import adminRoutes from './admin.routes';
 
 const router = Router();
@@ -18,6 +19,7 @@ router.use('/rpay', rpayRoutes);
 router.use('/withdrawals', withdrawalRoutes);
 router.use('/orders', orderRoutes);
 router.use('/products', productRoutes);
+router.use('/content', contentRoutes);
 
 // Admin routes
 router.use('/admin', adminRoutes);

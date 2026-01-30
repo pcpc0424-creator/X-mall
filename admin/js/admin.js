@@ -370,4 +370,182 @@ spinnerStyle.textContent = `
 `;
 document.head.appendChild(spinnerStyle);
 
+/**
+ * File Upload API Helper
+ */
+async function uploadFile(endpoint, file, fieldName = 'file') {
+    const token = api.getToken();
+    const formData = new FormData();
+    formData.append(fieldName, file);
+
+    try {
+        const response = await fetch(`${API_BASE}${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                logout();
+                return;
+            }
+            throw new Error(data.error || 'Upload failed');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Upload Error:', error);
+        throw error;
+    }
+}
+
+/**
+ * Download Members Excel Template
+ */
+function downloadMembersTemplate() {
+    // Create workbook with SheetJS (loaded via CDN in HTML)
+    if (typeof XLSX === 'undefined') {
+        showToast('엑셀 라이브러리를 로드하는 중입니다. 잠시 후 다시 시도해주세요.', 'error');
+        return;
+    }
+
+    const data = [
+        { email: 'user@example.com', password: 'password123', name: '홍길동', phone: '010-1234-5678', grade: 'consumer' }
+    ];
+
+    const ws = XLSX.utils.json_to_sheet(data, {
+        header: ['email', 'password', 'name', 'phone', 'grade']
+    });
+
+    // Set column widths
+    ws['!cols'] = [
+        { wch: 25 }, // email
+        { wch: 15 }, // password
+        { wch: 12 }, // name
+        { wch: 15 }, // phone
+        { wch: 10 }  // grade
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '회원목록');
+
+    XLSX.writeFile(wb, 'members_template.xlsx');
+    showToast('양식이 다운로드되었습니다.', 'success');
+}
+
+/**
+ * Download Points Excel Template
+ */
+function downloadPointsTemplate() {
+    if (typeof XLSX === 'undefined') {
+        showToast('엑셀 라이브러리를 로드하는 중입니다. 잠시 후 다시 시도해주세요.', 'error');
+        return;
+    }
+
+    const data = [
+        { email: 'user@example.com', point_type: 'P', amount: 1000, reason: '이벤트 지급' }
+    ];
+
+    const ws = XLSX.utils.json_to_sheet(data, {
+        header: ['email', 'point_type', 'amount', 'reason']
+    });
+
+    // Set column widths
+    ws['!cols'] = [
+        { wch: 25 }, // email
+        { wch: 12 }, // point_type
+        { wch: 12 }, // amount
+        { wch: 25 }  // reason
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '포인트지급');
+
+    XLSX.writeFile(wb, 'points_template.xlsx');
+    showToast('양식이 다운로드되었습니다.', 'success');
+}
+
+/**
+ * Download Products Excel Template
+ */
+function downloadProductsTemplate() {
+    if (typeof XLSX === 'undefined') {
+        showToast('엑셀 라이브러리를 로드하는 중입니다. 잠시 후 다시 시도해주세요.', 'error');
+        return;
+    }
+
+    const data = [
+        {
+            name: '테스트 상품',
+            price_krw: 50000,
+            price_dealer_krw: 40000,
+            pv_value: 100,
+            stock_quantity: 100,
+            category: '건강식품',
+            description: '상품 설명입니다',
+            product_type: 'single'
+        }
+    ];
+
+    const ws = XLSX.utils.json_to_sheet(data, {
+        header: ['name', 'price_krw', 'price_dealer_krw', 'pv_value', 'stock_quantity', 'category', 'description', 'product_type']
+    });
+
+    // Set column widths
+    ws['!cols'] = [
+        { wch: 25 }, // name
+        { wch: 12 }, // price_krw
+        { wch: 15 }, // price_dealer_krw
+        { wch: 10 }, // pv_value
+        { wch: 12 }, // stock_quantity
+        { wch: 15 }, // category
+        { wch: 30 }, // description
+        { wch: 12 }  // product_type
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '상품목록');
+
+    XLSX.writeFile(wb, 'products_template.xlsx');
+    showToast('양식이 다운로드되었습니다.', 'success');
+}
+
+/**
+ * Load Dealers for Referrer Selection
+ */
+let dealersCache = null;
+
+async function loadDealers(forceReload = false) {
+    if (dealersCache && !forceReload) {
+        return dealersCache;
+    }
+
+    try {
+        const result = await api.get('/admin/dealers');
+        dealersCache = result.data?.dealers || [];
+        return dealersCache;
+    } catch (error) {
+        console.error('Failed to load dealers:', error);
+        return [];
+    }
+}
+
+/**
+ * Populate Dealers Datalist
+ */
+async function populateDealersDatalist(datalistId) {
+    const datalist = document.getElementById(datalistId);
+    if (!datalist) return;
+
+    const dealers = await loadDealers();
+    datalist.innerHTML = dealers.map(d =>
+        `<option value="${d.email}">${d.name} (${d.email})</option>`
+    ).join('');
+}
+
 console.log('X-mall Admin Dashboard initialized');

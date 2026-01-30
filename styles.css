@@ -1697,11 +1697,16 @@ body:hover .cursor-dot {
     justify-content: center;
     align-items: center;
     opacity: 0;
+    pointer-events: none;
     transition: var(--transition-normal);
 }
 
 .product-card:hover .product-overlay {
     opacity: 1;
+}
+
+.product-overlay .quick-view {
+    pointer-events: auto;
 }
 
 .quick-view {
@@ -1793,6 +1798,15 @@ body:hover .cursor-dot {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--dark);
+}
+
+.price-pv {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: rgba(79, 70, 229, 0.08);
+    padding: 2px 8px;
+    border-radius: 4px;
 }
 
 .btn-add-cart {

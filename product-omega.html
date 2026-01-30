@@ -34,6 +34,16 @@
         .price-original-detail { font-size: 18px; color: var(--gray-400); text-decoration: line-through; margin-bottom: 4px; }
         .price-row { display: flex; align-items: center; gap: 12px; }
         .discount-rate { font-size: 28px; font-weight: 800; color: var(--secondary); }
+        .price-pv-detail {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-color, #4f46e5);
+            background: rgba(79, 70, 229, 0.08);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
         .price-sale-detail { font-size: 36px; font-weight: 800; color: var(--gray-900); }
         .product-options { margin-bottom: 32px; }
         .option-group { margin-bottom: 20px; }
@@ -107,17 +117,41 @@
 <body class="category-page">
     <header class="header scrolled">
         <nav class="nav-container">
-            <a href="index.html" class="logo"><span class="logo-text">X-mall</span><span class="logo-dot"></span></a>
+            <div class="logo">
+                <span class="logo-text">X-mall</span>
+                <span class="logo-dot"></span>
+            </div>
+
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li><a href="index.html" class="nav-link active">홈</a></li>
                 <li class="has-dropdown">
-                    <a href="category-health.html" class="nav-link active">건강식품 <i class="fas fa-chevron-down"></i></a>
+                    <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
-                            <div class="mega-col"><h4>비타민 & 미네랄</h4><a href="sub-health-vitamin.html">멀티비타민</a><a href="sub-health-vitamin.html">비타민C</a><a href="sub-health-vitamin.html">비타민D</a><a href="sub-health-vitamin.html">철분제</a></div>
-                            <div class="mega-col"><h4>다이어트</h4><a href="sub-health-probiotics.html">다이어트 보조제</a><a href="sub-health-probiotics.html">단백질 쉐이크</a><a href="sub-health-probiotics.html">식이섬유</a></div>
-                            <div class="mega-col"><h4>피로회복</h4><a href="sub-health-ginseng.html">홍삼</a><a href="sub-health-ginseng.html">녹용</a><a href="sub-health-ginseng.html">흑마늘</a></div>
-                            <div class="mega-col featured"><img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop" alt="건강식품"><h4>이달의 추천</h4><p>프리미엄 홍삼 정 BEST</p></div>
+                            <div class="mega-col">
+                                <h4>비타민 & 미네랄</h4>
+                                <a href="sub-health-vitamin.html">멀티비타민</a>
+                                <a href="sub-health-vitamin.html">비타민C</a>
+                                <a href="sub-health-vitamin.html">비타민D</a>
+                                <a href="sub-health-vitamin.html">철분제</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>다이어트</h4>
+                                <a href="sub-health-probiotics.html">다이어트 보조제</a>
+                                <a href="sub-health-probiotics.html">단백질 쉐이크</a>
+                                <a href="sub-health-probiotics.html">식이섬유</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>피로회복</h4>
+                                <a href="sub-health-ginseng.html">홍삼</a>
+                                <a href="sub-health-ginseng.html">녹용</a>
+                                <a href="sub-health-ginseng.html">흑마늘</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop" alt="건강식품">
+                                <h4>이달의 추천</h4>
+                                <p>프리미엄 홍삼 정 BEST</p>
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -125,10 +159,30 @@
                     <a href="category-medical.html" class="nav-link">의료기기 <i class="fas fa-chevron-down"></i></a>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
-                            <div class="mega-col"><h4>건강측정기</h4><a href="sub-medical-bp.html">혈압계</a><a href="sub-medical-thermo.html">체온계</a><a href="sub-medical-glucose.html">혈당계</a><a href="sub-medical-glucose.html">체중계</a></div>
-                            <div class="mega-col"><h4>치료기기</h4><a href="sub-medical-massager.html">마사지기</a><a href="sub-medical-massager.html">저주파자극기</a><a href="sub-medical-massager.html">온열기</a></div>
-                            <div class="mega-col"><h4>재활/보조기</h4><a href="sub-medical-massager.html">보호대</a><a href="sub-medical-massager.html">교정기</a><a href="sub-medical-massager.html">워커</a></div>
-                            <div class="mega-col featured"><img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=200&fit=crop" alt="의료기기"><h4>신제품</h4><p>스마트 혈압계 출시</p></div>
+                            <div class="mega-col">
+                                <h4>건강측정기</h4>
+                                <a href="sub-medical-bp.html">혈압계</a>
+                                <a href="sub-medical-thermo.html">체온계</a>
+                                <a href="sub-medical-glucose.html">혈당계</a>
+                                <a href="sub-medical-glucose.html">체중계</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>치료기기</h4>
+                                <a href="sub-medical-massager.html">마사지기</a>
+                                <a href="sub-medical-massager.html">저주파자극기</a>
+                                <a href="sub-medical-massager.html">온열기</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>재활/보조기</h4>
+                                <a href="sub-medical-massager.html">보호대</a>
+                                <a href="sub-medical-massager.html">교정기</a>
+                                <a href="sub-medical-massager.html">워커</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300&h=200&fit=crop" alt="의료기기">
+                                <h4>신제품</h4>
+                                <p>스마트 혈압계 출시</p>
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -136,20 +190,49 @@
                     <a href="category-cosmetic.html" class="nav-link">화장품 <i class="fas fa-chevron-down"></i></a>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
-                            <div class="mega-col"><h4>스킨케어</h4><a href="sub-cosmetic-skincare.html">토너/스킨</a><a href="sub-cosmetic-skincare.html">에센스/세럼</a><a href="sub-cosmetic-skincare.html">크림</a><a href="sub-cosmetic-skincare.html">선케어</a></div>
-                            <div class="mega-col"><h4>메이크업</h4><a href="sub-cosmetic-makeup.html">베이스</a><a href="sub-cosmetic-makeup.html">립</a><a href="sub-cosmetic-makeup.html">아이</a></div>
-                            <div class="mega-col"><h4>바디케어</h4><a href="sub-cosmetic-bodycare.html">바디로션</a><a href="sub-cosmetic-bodycare.html">핸드케어</a><a href="sub-cosmetic-haircare.html">헤어케어</a></div>
-                            <div class="mega-col featured"><img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=200&fit=crop" alt="화장품"><h4>베스트셀러</h4><p>히알루론산 세럼</p></div>
+                            <div class="mega-col">
+                                <h4>스킨케어</h4>
+                                <a href="sub-cosmetic-skincare.html">토너/스킨</a>
+                                <a href="sub-cosmetic-skincare.html">에센스/세럼</a>
+                                <a href="sub-cosmetic-skincare.html">크림</a>
+                                <a href="sub-cosmetic-skincare.html">선케어</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>메이크업</h4>
+                                <a href="sub-cosmetic-makeup.html">베이스</a>
+                                <a href="sub-cosmetic-makeup.html">립</a>
+                                <a href="sub-cosmetic-makeup.html">아이</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>바디케어</h4>
+                                <a href="sub-cosmetic-bodycare.html">바디로션</a>
+                                <a href="sub-cosmetic-bodycare.html">핸드케어</a>
+                                <a href="sub-cosmetic-haircare.html">헤어케어</a>
+                            </div>
+                            <div class="mega-col featured">
+                                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=200&fit=crop" alt="화장품">
+                                <h4>베스트셀러</h4>
+                                <p>히알루론산 세럼</p>
+                            </div>
                         </div>
                     </div>
                 </li>
+                <li><a href="category-package.html" class="nav-link">패키지 상품</a></li>
                 <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
                 <li><a href="event.html" class="nav-link">이벤트</a></li>
             </ul>
+
             <div class="nav-actions">
-                <a href="search.html" class="search-btn" aria-label="검색"><i class="fas fa-search"></i></a>
-                <a href="login.html" class="user-btn" aria-label="로그인"><i class="fas fa-user"></i></a>
-                <a href="cart.html" class="cart-btn" aria-label="장바구니"><i class="fas fa-shopping-bag"></i><span class="cart-count">0</span></a>
+                <a href="search.html" class="search-btn" aria-label="검색">
+                    <i class="fas fa-search"></i>
+                </a>
+                <a href="login.html" class="user-btn" aria-label="로그인">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="cart.html" class="cart-btn" aria-label="장바구니">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </a>
                 <div class="menu-toggle-wrap">
                     <button class="menu-toggle" aria-label="메뉴">
                         <span></span>
@@ -186,6 +269,7 @@
                                 <li><a href="sub-cosmetic-haircare.html">헤어케어</a></li>
                             </ul>
                         </li>
+                        <li><a href="category-package.html">패키지 상품</a></li>
                         <li><a href="brand-story.html">브랜드 스토리</a></li>
                         <li><a href="event.html">이벤트</a></li>
                     </ul>
@@ -245,6 +329,7 @@
                         <span class="discount-rate">25%</span>
                         <span class="price-sale-detail">₩45,000</span>
                     </div>
+                    <p class="price-pv-detail">PV 45</p>
                 </div>
 
                 <div class="product-options">
@@ -320,7 +405,6 @@
                         </ul>
                         <h3>섭취 방법</h3>
                         <p>1일 2회, 1회 1캡슐을 식후에 충분한 물과 함께 섭취하세요.</p>
-                    </div>
                 </div>
 
                 <div class="tab-panel" id="reviews">
@@ -351,7 +435,6 @@
                             <div class="review-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                         </div>
                         <p class="review-content">건강검진에서 중성지방 수치가 개선되었어요. 꾸준히 먹은 보람이 있네요. 앞으로도 계속 먹을 예정입니다!</p>
-                    </div>
                 </div>
 
                 <div class="tab-panel" id="qna">
@@ -389,19 +472,23 @@
             <div class="related-grid">
                 <div class="product-card">
                     <a href="product-vitamin.html"><div class="product-image"><img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop" alt="비타민C"><button class="product-wishlist"><i class="far fa-heart"></i></button></div></a>
-                    <div class="product-info"><span class="product-brand">X-MALL</span><h3 class="product-name"><a href="product-vitamin.html">고함량 비타민C 1000</a></h3><div class="product-rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><span class="rating-count">(12,345)</span></div><div class="product-price"><span class="price-sale">₩29,800</span></div></div>
+                    <div class="product-info"><span class="product-brand">X-MALL</span><h3 class="product-name"><a href="product-vitamin.html">고함량 비타민C 1000</a></h3><div class="product-rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><span class="rating-count">(12,345)</span></div><div class="product-price"><span class="price-sale">₩29,800</span>
+                                    <span class="price-pv">PV 29.8</span></div></div>
                 </div>
                 <div class="product-card">
                     <a href="product-probiotics.html"><div class="product-image"><img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400&h=400&fit=crop" alt="프로바이오틱스"><button class="product-wishlist"><i class="far fa-heart"></i></button></div></a>
-                    <div class="product-info"><span class="product-brand">X-MALL</span><h3 class="product-name"><a href="product-probiotics.html">프로바이오틱스 골드</a></h3><div class="product-rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><span class="rating-count">(6,543)</span></div><div class="product-price"><span class="price-sale">₩38,000</span></div></div>
+                    <div class="product-info"><span class="product-brand">X-MALL</span><h3 class="product-name"><a href="product-probiotics.html">프로바이오틱스 골드</a></h3><div class="product-rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><span class="rating-count">(6,543)</span></div><div class="product-price"><span class="price-sale">₩38,000</span>
+                                    <span class="price-pv">PV 38</span></div></div>
                 </div>
                 <div class="product-card">
                     <a href="product-detail.html"><div class="product-image"><img src="https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=400&h=400&fit=crop" alt="홍삼정"><button class="product-wishlist"><i class="far fa-heart"></i></button></div></a>
-                    <div class="product-info"><span class="product-brand">정관장</span><h3 class="product-name"><a href="product-detail.html">프리미엄 홍삼정</a></h3><div class="product-rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><span class="rating-count">(8,765)</span></div><div class="product-price"><span class="price-sale">₩89,000</span></div></div>
+                    <div class="product-info"><span class="product-brand">정관장</span><h3 class="product-name"><a href="product-detail.html">프리미엄 홍삼정</a></h3><div class="product-rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><span class="rating-count">(8,765)</span></div><div class="product-price"><span class="price-sale">₩89,000</span>
+                                    <span class="price-pv">PV 89</span></div></div>
                 </div>
                 <div class="product-card">
                     <a href="sub-health-vitamin.html"><div class="product-image"><img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop" alt="멀티비타민"><button class="product-wishlist"><i class="far fa-heart"></i></button></div></a>
-                    <div class="product-info"><span class="product-brand">X-MALL</span><h3 class="product-name"><a href="sub-health-vitamin.html">종합 멀티비타민</a></h3><div class="product-rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div><span class="rating-count">(4,321)</span></div><div class="product-price"><span class="price-sale">₩32,000</span></div></div>
+                    <div class="product-info"><span class="product-brand">X-MALL</span><h3 class="product-name"><a href="sub-health-vitamin.html">종합 멀티비타민</a></h3><div class="product-rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div><span class="rating-count">(4,321)</span></div><div class="product-price"><span class="price-sale">₩32,000</span>
+                                    <span class="price-pv">PV 32</span></div></div>
                 </div>
             </div>
         </div>

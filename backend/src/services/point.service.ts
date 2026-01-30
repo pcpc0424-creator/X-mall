@@ -1,6 +1,14 @@
 import { query, getClient } from '../config/database';
 import { generateUUID } from '../utils/helpers';
 import { PointType, PointBalance } from '../types';
+import { PointExcelRow } from '../utils/excel';
+
+export interface BulkGrantResult {
+  total: number;
+  success_count: number;
+  fail_count: number;
+  errors: { row: number; email: string; error: string }[];
+}
 
 export class PointService {
   async getBalances(userId: string): Promise<{
@@ -253,6 +261,60 @@ export class PointService {
   ): Promise<number> {
     const description = `관리자 지급${reason ? `: ${reason}` : ''}`;
     return this.addPoints(userId, pointType, amount, 'grant', adminId, description);
+  }
+
+  async bulkGrantPoints(
+    adminId: string,
+    rows: PointExcelRow[],
+    startRowOffset: number = 2
+  ): Promise<BulkGrantResult> {
+    const result: BulkGrantResult = {
+      total: rows.length,
+      success_count: 0,
+      fail_count: 0,
+      errors: []
+    };
+
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const rowNumber = i + startRowOffset;
+
+      try {
+        // Find user by email
+        const userResult = await query(
+          'SELECT id, name FROM users WHERE email = $1 AND is_active = true',
+          [row.email]
+        );
+
+        if (userResult.rows.length === 0) {
+          result.errors.push({
+            row: rowNumber,
+            email: row.email,
+            error: '존재하지 않는 회원'
+          });
+          result.fail_count++;
+          continue;
+        }
+
+        const userId = userResult.rows[0].id;
+        const pointType = row.point_type as PointType;
+        const amount = row.amount;
+        const reason = row.reason || '일괄 지급';
+
+        // Grant points
+        await this.adminGrantPoints(adminId, userId, pointType, amount, reason);
+        result.success_count++;
+      } catch (error: any) {
+        result.errors.push({
+          row: rowNumber,
+          email: row.email,
+          error: error.message || '포인트 지급 실패'
+        });
+        result.fail_count++;
+      }
+    }
+
+    return result;
   }
 }
 

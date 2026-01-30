@@ -3,6 +3,7 @@ import { userService } from '../services/user.service';
 import { pointService } from '../services/point.service';
 import { rpayService } from '../services/rpay.service';
 import { AuthRequest, AdminAuthRequest } from '../types';
+import { parseMembersExcel } from '../utils/excel';
 
 export class UserController {
   // Get current user profile
@@ -99,7 +100,7 @@ export class UserController {
   // Admin: Create user with grade
   async createUser(req: AdminAuthRequest, res: Response) {
     try {
-      const { email, password, name, phone, grade } = req.body;
+      const { email, password, name, phone, grade, referrer_email } = req.body;
 
       if (!email || !password || !name || !phone) {
         return res.status(400).json({
@@ -108,9 +109,23 @@ export class UserController {
         });
       }
 
+      // Validate referrer if provided
+      let referrerId: string | undefined;
+      if (referrer_email) {
+        const referrer = await userService.findDealerByEmail(referrer_email);
+        if (!referrer) {
+          return res.status(400).json({
+            success: false,
+            error: '존재하지 않는 추천인이거나 대리점이 아닙니다.'
+          });
+        }
+        referrerId = referrer.id;
+      }
+
       const user = await userService.createUser(
         { email, password, name, phone },
-        grade || 'consumer'
+        grade || 'consumer',
+        referrerId
       );
 
       res.status(201).json({
@@ -177,6 +192,153 @@ export class UserController {
       });
     } catch (error: any) {
       res.status(400).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+  // Admin: Bulk upload users
+  async bulkUpload(req: AdminAuthRequest, res: Response) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          error: '엑셀 파일을 업로드해주세요.'
+        });
+      }
+
+      // Parse Excel file
+      const parseResult = parseMembersExcel(req.file.buffer);
+
+      if (parseResult.data.length === 0 && parseResult.errors.length === 0) {
+        return res.status(400).json({
+          success: false,
+          error: '엑셀 파일에 데이터가 없습니다.'
+        });
+      }
+
+      // Combine parse errors
+      const allErrors = parseResult.errors.map(e => ({
+        row: e.row,
+        email: '',
+        error: e.message
+      }));
+
+      // Bulk create users
+      const bulkResult = await userService.bulkCreateUsers(parseResult.data);
+
+      // Merge errors
+      const finalErrors = [...allErrors, ...bulkResult.errors];
+
+      res.json({
+        success: true,
+        data: {
+          total: parseResult.data.length + parseResult.errors.length,
+          success_count: bulkResult.success_count,
+          fail_count: parseResult.errors.length + bulkResult.fail_count,
+          errors: finalErrors.slice(0, 100) // Limit error list
+        },
+        message: `총 ${bulkResult.success_count}명의 회원이 등록되었습니다.`
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message || '파일 처리 중 오류가 발생했습니다.'
+      });
+    }
+  }
+
+  // Admin: Get all dealers for referrer selection
+  async getDealers(req: AdminAuthRequest, res: Response) {
+    try {
+      const { page, limit, search } = req.query;
+
+      const result = await userService.getDealers({
+        page: page ? parseInt(page as string) : undefined,
+        limit: limit ? parseInt(limit as string) : undefined,
+        search: search as string | undefined
+      });
+
+      res.json({
+        success: true,
+        data: result
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+  // Admin: Get genealogy for a specific dealer
+  async getGenealogyByDealerId(req: AdminAuthRequest, res: Response) {
+    try {
+      const { dealerId } = req.params;
+      const { page, limit, search } = req.query;
+
+      // Verify the user is a dealer
+      const dealer = await userService.findById(dealerId);
+      if (!dealer) {
+        return res.status(404).json({
+          success: false,
+          error: '대리점을 찾을 수 없습니다.'
+        });
+      }
+
+      if (dealer.grade !== 'dealer') {
+        return res.status(400).json({
+          success: false,
+          error: '해당 회원은 대리점이 아닙니다.'
+        });
+      }
+
+      const result = await userService.getGenealogy(dealerId, {
+        page: page ? parseInt(page as string) : undefined,
+        limit: limit ? parseInt(limit as string) : undefined,
+        search: search as string | undefined
+      });
+
+      res.json({
+        success: true,
+        data: result
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+  // User (dealer): Get my genealogy
+  async getMyGenealogy(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const userGrade = req.user!.grade;
+
+      if (userGrade !== 'dealer') {
+        return res.status(403).json({
+          success: false,
+          error: '대리점 회원만 계보도를 조회할 수 있습니다.'
+        });
+      }
+
+      const { page, limit, search } = req.query;
+
+      const result = await userService.getGenealogy(userId, {
+        page: page ? parseInt(page as string) : undefined,
+        limit: limit ? parseInt(limit as string) : undefined,
+        search: search as string | undefined
+      });
+
+      res.json({
+        success: true,
+        data: result
+      });
+    } catch (error: any) {
+      res.status(500).json({
         success: false,
         error: error.message
       });

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>계보도 - X-mall</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Header Styles */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+        .main-nav {
+            display: flex;
+            gap: 30px;
+        }
+        .main-nav a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: #6c63ff;
+        }
+        body {
+            background: #f5f5f5;
+            margin: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .my-account-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .my-account-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #333;
+        }
+        .my-account-nav {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .my-account-nav a {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 5px;
+            background: #f5f5f5;
+        }
+        .my-account-nav a.active {
+            background: #333;
+            color: white;
+        }
+        .grade-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .grade-dealer {
+            background: #fff7e6;
+            color: #d46b08;
+        }
+        .grade-consumer {
+            background: #e6f7ff;
+            color: #0050b3;
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .summary-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .summary-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .summary-card .amount {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .summary-card.members .amount { color: #6c63ff; }
+        .summary-card.purchase .amount { color: #1890ff; }
+        .summary-card.pv .amount { color: #52c41a; }
+
+        /* Table Container */
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+        }
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .content-header h2 {
+            margin: 0;
+        }
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+        .search-box input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 250px;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #6c63ff;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+        .data-table .fw-500 {
+            font-weight: 500;
+        }
+        .data-table .text-center {
+            text-align: center;
+        }
+        .data-table .text-muted {
+            color: #999;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-badge.dealer {
+            background: #fff7e6;
+            color: #d46b08;
+        }
+        .status-badge.consumer {
+            background: #e6f7ff;
+            color: #0050b3;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-nav {
+                display: none;
+            }
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+            .search-box input {
+                width: 100%;
+            }
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        /* Access Denied */
+        .access-denied {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .access-denied i {
+            font-size: 60px;
+            color: #ff4444;
+            margin-bottom: 20px;
+        }
+        .access-denied h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .access-denied p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+        .access-denied a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #6c63ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="/X-mall/index.html" class="logo">X-mall</a>
+            <nav class="main-nav">
+                <a href="/X-mall/index.html">홈</a>
+                <a href="dashboard.html" class="active">마이페이지</a>
+                <a href="/X-mall/cart.html">장바구니</a>
+                <a href="#" class="logout-link" onclick="handleLogout(event)">로그아웃</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="my-account-container">
+        <div class="my-account-header">
+            <h1>마이페이지</h1>
+            <div>
+                <span class="user-name"></span>님 환영합니다
+                <span class="grade-badge user-grade"></span>
+            </div>
+        </div>
+
+        <nav class="my-account-nav" id="navMenu">
+            <a href="dashboard.html">대시보드</a>
+            <a href="points.html">포인트</a>
+            <a href="orders.html">주문내역</a>
+            <a href="withdraw.html">출금신청</a>
+            <a href="genealogy.html" class="active">계보도</a>
+        </nav>
+
+        <!-- Access Denied for Non-Dealers -->
+        <div id="accessDenied" style="display: none;">
+            <div class="content-card">
+                <div class="access-denied">
+                    <i class="fas fa-lock"></i>
+                    <h2>접근 권한이 없습니다</h2>
+                    <p>계보도 기능은 대리점 회원만 이용 가능합니다.</p>
+                    <a href="dashboard.html">대시보드로 돌아가기</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dealer Content -->
+        <div id="dealerContent" style="display: none;">
+            <div class="summary-cards">
+                <div class="summary-card members">
+                    <h3>총 추천회원</h3>
+                    <div class="amount" id="totalMembers">0명</div>
+                </div>
+                <div class="summary-card purchase">
+                    <h3>총 누적 구매금액</h3>
+                    <div class="amount" id="totalPurchase">0원</div>
+                </div>
+                <div class="summary-card pv">
+                    <h3>총 누적 PV</h3>
+                    <div class="amount" id="totalPV">0</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="content-header">
+                    <h2>추천 회원 목록</h2>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="이름 또는 이메일로 검색...">
+                    </div>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>이름</th>
+                            <th>이메일</th>
+                            <th>전화번호</th>
+                            <th>등급</th>
+                            <th>누적 구매금액</th>
+                            <th>누적 PV</th>
+                            <th>가입일</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersBody">
+                        <tr><td colspan="7" class="text-center text-muted">로딩 중...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/api.js?v=4"></script>
+    <script src="../js/auth.js?v=4"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!auth.requireAuth()) return;
+
+            const user = auth.getUser();
+
+            // Check if user is a dealer
+            if (user.grade !== 'dealer') {
+                document.getElementById('accessDenied').style.display = 'block';
+                document.getElementById('dealerContent').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('dealerContent').style.display = 'block';
+
+            // Load genealogy data
+            await loadGenealogy();
+
+            // Search handler
+            const searchInput = document.getElementById('searchInput');
+            let timeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    loadGenealogy(this.value);
+                }, 300);
+            });
+        });
+
+        async function loadGenealogy(search = '') {
+            try {
+                let url = '/users/genealogy?limit=100';
+                if (search) {
+                    url += `&search=${encodeURIComponent(search)}`;
+                }
+
+                const result = await api.get(url);
+
+                if (result.success) {
+                    const data = result.data;
+
+                    // Update summary
+                    document.getElementById('totalMembers').textContent = data.summary.total_members + '명';
+                    document.getElementById('totalPurchase').textContent = formatCurrency(data.summary.total_purchase_krw);
+                    document.getElementById('totalPV').textContent = data.summary.total_pv.toLocaleString();
+
+                    // Render table
+                    renderMembers(data.members);
+                }
+            } catch (error) {
+                console.error('Failed to load genealogy:', error);
+                document.getElementById('membersBody').innerHTML =
+                    '<tr><td colspan="7" class="text-center text-muted">데이터를 불러올 수 없습니다</td></tr>';
+            }
+        }
+
+        function renderMembers(members) {
+            const tbody = document.getElementById('membersBody');
+
+            if (members.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">추천 회원이 없습니다</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = members.map(m => `
+                <tr>
+                    <td class="fw-500">${m.name}</td>
+                    <td>${m.email}</td>
+                    <td>${m.phone || '-'}</td>
+                    <td><span class="status-badge ${m.grade}">${m.grade === 'dealer' ? '대리점' : '소비자'}</span></td>
+                    <td>${formatCurrency(m.total_purchase_krw)}</td>
+                    <td>${m.total_pv.toLocaleString()}</td>
+                    <td>${formatDate(m.created_at)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function formatCurrency(amount) {
+            return amount.toLocaleString() + '원';
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+    </script>
+</body>
+</html>

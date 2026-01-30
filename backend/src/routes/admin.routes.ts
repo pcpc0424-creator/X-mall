@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import multer from 'multer';
 import { authController } from '../controllers/auth.controller';
 import { userController } from '../controllers/user.controller';
 import { pointController } from '../controllers/point.controller';
@@ -7,9 +8,36 @@ import { withdrawalController } from '../controllers/withdrawal.controller';
 import { orderController } from '../controllers/order.controller';
 import { productController } from '../controllers/product.controller';
 import { settingsController } from '../controllers/settings.controller';
+import { categoryController } from '../controllers/category.controller';
+import { bannerController } from '../controllers/banner.controller';
+import { eventController } from '../controllers/event.controller';
 import { authenticateAdmin } from '../middleware/auth';
 
 const router = Router();
+
+// Multer configuration for file uploads (memory storage for Excel parsing)
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    // Accept only Excel files
+    const allowedMimes = [
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/octet-stream'
+    ];
+    const allowedExtensions = ['.xls', '.xlsx'];
+    const ext = file.originalname.toLowerCase().slice(file.originalname.lastIndexOf('.'));
+
+    if (allowedMimes.includes(file.mimetype) || allowedExtensions.includes(ext)) {
+      cb(null, true);
+    } else {
+      cb(new Error('엑셀 파일(.xls, .xlsx)만 업로드 가능합니다.'));
+    }
+  }
+});
 
 // Auth
 router.post('/auth/login', (req, res) => authController.adminLogin(req, res));
@@ -18,11 +46,19 @@ router.post('/auth/login', (req, res) => authController.adminLogin(req, res));
 router.get('/users', authenticateAdmin, (req, res) => userController.getUsers(req, res));
 router.get('/users/:id', authenticateAdmin, (req, res) => userController.getUserById(req, res));
 router.post('/users', authenticateAdmin, (req, res) => userController.createUser(req, res));
+router.post('/users/bulk-upload', authenticateAdmin, upload.single('file'), (req, res) => userController.bulkUpload(req, res));
 router.put('/users/:id/grade', authenticateAdmin, (req, res) => userController.updateGrade(req, res));
 router.delete('/users/:id', authenticateAdmin, (req, res) => userController.deactivateUser(req, res));
 
+// Dealers (protected) - for referrer selection
+router.get('/dealers', authenticateAdmin, (req, res) => userController.getDealers(req, res));
+
+// Genealogy (protected) - view a dealer's downline
+router.get('/users/:dealerId/genealogy', authenticateAdmin, (req, res) => userController.getGenealogyByDealerId(req, res));
+
 // Points (protected)
 router.post('/points/grant', authenticateAdmin, (req, res) => pointController.adminGrantPoints(req, res));
+router.post('/points/bulk-grant', authenticateAdmin, upload.single('file'), (req, res) => pointController.bulkGrant(req, res));
 router.get('/points/pending', authenticateAdmin, (req, res) => pointController.getPendingPPoints(req, res));
 router.get('/points/transactions', authenticateAdmin, (req, res) => pointController.getAllTransactions(req, res));
 
@@ -43,10 +79,19 @@ router.put('/orders/:id/invoice', authenticateAdmin, (req, res) => orderControll
 
 // Products (protected)
 router.get('/products', authenticateAdmin, (req, res) => productController.adminGetProducts(req, res));
+router.get('/products/singles', authenticateAdmin, (req, res) => productController.getSingleProducts(req, res));
 router.post('/products', authenticateAdmin, (req, res) => productController.createProduct(req, res));
+router.post('/products/bulk-upload', authenticateAdmin, upload.single('file'), (req, res) => productController.bulkUpload(req, res));
+router.get('/products/:id', authenticateAdmin, (req, res) => productController.getProductWithItems(req, res));
 router.put('/products/:id', authenticateAdmin, (req, res) => productController.updateProduct(req, res));
 router.put('/products/:id/stock', authenticateAdmin, (req, res) => productController.updateStock(req, res));
 router.delete('/products/:id', authenticateAdmin, (req, res) => productController.deleteProduct(req, res));
+
+// Package Items (protected)
+router.get('/products/:id/items', authenticateAdmin, (req, res) => productController.getPackageItems(req, res));
+router.put('/products/:id/items', authenticateAdmin, (req, res) => productController.setPackageItems(req, res));
+router.post('/products/:id/items', authenticateAdmin, (req, res) => productController.addPackageItem(req, res));
+router.delete('/products/:id/items/:itemId', authenticateAdmin, (req, res) => productController.removePackageItem(req, res));
 
 // Dashboard
 router.get('/dashboard/stats', authenticateAdmin, (req, res) => settingsController.getDashboardStats(req, res));
@@ -58,5 +103,29 @@ router.get('/settings/exchange-rate/history', authenticateAdmin, (req, res) => s
 router.get('/settings/holidays', authenticateAdmin, (req, res) => settingsController.getHolidays(req, res));
 router.post('/settings/holidays', authenticateAdmin, (req, res) => settingsController.addHoliday(req, res));
 router.delete('/settings/holidays/:id', authenticateAdmin, (req, res) => settingsController.deleteHoliday(req, res));
+
+// Categories (protected)
+router.get('/categories', authenticateAdmin, (req, res) => categoryController.getCategories(req, res));
+router.get('/categories/:id', authenticateAdmin, (req, res) => categoryController.getCategoryById(req, res));
+router.get('/categories/:id/products', authenticateAdmin, (req, res) => categoryController.getCategoryWithProductCount(req, res));
+router.get('/categories/:id/subcategories', authenticateAdmin, (req, res) => categoryController.getSubcategories(req, res));
+router.post('/categories', authenticateAdmin, (req, res) => categoryController.createCategory(req, res));
+router.put('/categories/:id', authenticateAdmin, (req, res) => categoryController.updateCategory(req, res));
+router.delete('/categories/:id', authenticateAdmin, (req, res) => categoryController.deleteCategory(req, res));
+
+// Banners (protected)
+router.get('/banners', authenticateAdmin, (req, res) => bannerController.getBanners(req, res));
+router.get('/banners/:id', authenticateAdmin, (req, res) => bannerController.getBannerById(req, res));
+router.post('/banners', authenticateAdmin, (req, res) => bannerController.createBanner(req, res));
+router.put('/banners/:id', authenticateAdmin, (req, res) => bannerController.updateBanner(req, res));
+router.delete('/banners/:id', authenticateAdmin, (req, res) => bannerController.deleteBanner(req, res));
+
+// Events (protected)
+router.get('/events', authenticateAdmin, (req, res) => eventController.getEvents(req, res));
+router.get('/events/stats', authenticateAdmin, (req, res) => eventController.getEventStats(req, res));
+router.get('/events/:id', authenticateAdmin, (req, res) => eventController.getEventById(req, res));
+router.post('/events', authenticateAdmin, (req, res) => eventController.createEvent(req, res));
+router.put('/events/:id', authenticateAdmin, (req, res) => eventController.updateEvent(req, res));
+router.delete('/events/:id', authenticateAdmin, (req, res) => eventController.deleteEvent(req, res));
 
 export default router;
