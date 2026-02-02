@@ -52,12 +52,12 @@ export class PointController {
   async transfer(req: AuthRequest, res: Response) {
     try {
       const fromUserId = req.user!.id;
-      const { to_user_email, point_type, amount }: PointTransferBody = req.body;
+      const { to_user_username, point_type, amount }: PointTransferBody = req.body;
 
-      if (!to_user_email || !point_type || !amount) {
+      if (!to_user_username || !point_type || !amount) {
         return res.status(400).json({
           success: false,
-          error: '수신자 이메일, 포인트 종류, 금액은 필수입니다.'
+          error: '수신자 아이디, 포인트 종류, 금액은 필수입니다.'
         });
       }
 
@@ -76,7 +76,7 @@ export class PointController {
       }
 
       // Find recipient
-      const toUser = await userService.findByEmail(to_user_email);
+      const toUser = await userService.findByUsername(to_user_username);
 
       if (!toUser) {
         return res.status(404).json({
@@ -102,13 +102,13 @@ export class PointController {
         data: {
           balances,
           transferred: {
-            to: to_user_email,
+            to: to_user_username,
             from_type: point_type,
             to_type: 'T',
             amount
           }
         },
-        message: `${amount.toLocaleString()}원이 ${to_user_email}님에게 T포인트로 이체되었습니다.`
+        message: `${amount.toLocaleString()}원이 ${to_user_username}님에게 T포인트로 이체되었습니다.`
       });
     } catch (error: any) {
       res.status(400).json({
@@ -122,12 +122,12 @@ export class PointController {
   async adminGrantPoints(req: AdminAuthRequest, res: Response) {
     try {
       const adminId = req.admin!.id;
-      const { email, user_id, point_type, amount, reason } = req.body;
+      const { username, user_id, point_type, amount, reason } = req.body;
 
-      if ((!email && !user_id) || !point_type || !amount) {
+      if ((!username && !user_id) || !point_type || !amount) {
         return res.status(400).json({
           success: false,
-          error: '사용자 이메일/ID, 포인트 종류, 금액은 필수입니다.'
+          error: '사용자 아이디/ID, 포인트 종류, 금액은 필수입니다.'
         });
       }
 
@@ -145,10 +145,10 @@ export class PointController {
         });
       }
 
-      // Find user by email or id
+      // Find user by username or id
       let user;
-      if (email) {
-        user = await userService.findByEmail(email);
+      if (username) {
+        user = await userService.findByUsername(username);
       } else {
         user = await userService.findById(user_id);
       }
@@ -184,7 +184,7 @@ export class PointController {
   async getPendingPPoints(req: AdminAuthRequest, res: Response) {
     try {
       const result = await query(
-        `SELECT pp.*, u.name as user_name, u.email as user_email, o.order_number
+        `SELECT pp.*, u.name as user_name, u.username as user_username, o.order_number
          FROM pending_ppoints pp
          JOIN users u ON pp.user_id = u.id
          LEFT JOIN orders o ON pp.order_id = o.id
@@ -225,7 +225,7 @@ export class PointController {
 
       params.push(parseInt(limit as string), offset);
       const result = await query(
-        `SELECT pt.*, u.name as user_name, u.email as user_email
+        `SELECT pt.*, u.name as user_name, u.username as user_username
          FROM point_transactions pt
          LEFT JOIN users u ON pt.user_id = u.id
          ${whereClause}
@@ -274,7 +274,7 @@ export class PointController {
       // Combine parse errors
       const allErrors = parseResult.errors.map(e => ({
         row: e.row,
-        email: '',
+        username: '',
         error: e.message
       }));
 

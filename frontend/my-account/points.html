@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>포인트 관리 - X-mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../styles.css">
     <style>
         .my-account-container {
@@ -128,15 +132,22 @@
 </head>
 <body>
     <header class="header header-solid">
-        <div class="header-container">
-            <a href="/X-mall/index.html" class="logo">X-mall</a>
-            <nav class="main-nav">
-                <a href="/X-mall/index.html">홈</a>
-                <a href="dashboard.html">마이페이지</a>
-                <a href="/X-mall/cart.html">장바구니</a>
-                <a href="#" class="logout-link" onclick="handleLogout(event)">로그아웃</a>
-            </nav>
-        </div>
+        <nav class="nav-container">
+            <a href="/X-mall/index.html" class="logo">
+                <span class="logo-text">X-mall</span>
+                <span class="logo-dot"></span>
+            </a>
+            <div class="nav-actions">
+                <a href="/X-mall/index.html" class="nav-link">홈</a>
+                <a href="dashboard.html" class="nav-link">마이페이지</a>
+                <a href="/X-mall/cart.html" class="cart-btn" aria-label="장바구니">
+                    <i class="fas fa-shopping-bag"></i>
+                </a>
+                <a href="#" class="user-btn logout-link" onclick="handleLogout(event)" aria-label="로그아웃">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </nav>
     </header>
 
     <main class="my-account-container">
@@ -156,7 +167,7 @@
             <h2>포인트 잔액</h2>
             <div class="balance-summary">
                 <div class="balance-item">
-                    <label>R페이</label>
+                    <label>X페이</label>
                     <div class="value" id="balance-rpay">0원</div>
                 </div>
                 <div class="balance-item">
@@ -176,7 +187,7 @@
 
         <div class="card">
             <h2>포인트 이체</h2>
-            <p style="margin-bottom: 20px; color: #666;">P포인트 또는 C포인트를 다른 회원에게 T포인트로 이체할 수 있습니다.</p>
+            <p style="margin-bottom: 20px; color: #666;">내 P포인트 또는 C포인트를 차감하여 다른 회원에게 <strong>T포인트</strong>로 전환하여 보낼 수 있습니다.</p>
             <form id="transfer-form" class="transfer-form">
                 <div class="form-group">
                     <label>이체할 포인트 종류</label>
@@ -187,8 +198,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>수신자 이메일</label>
-                    <input type="email" id="transfer-to-email" placeholder="receiver@example.com" required>
+                    <label>수신자 아이디</label>
+                    <input type="text" id="transfer-to-username" placeholder="수신자 아이디 입력" required>
                 </div>
                 <div class="form-group">
                     <label>이체 금액</label>
@@ -307,15 +318,15 @@
             e.preventDefault();
 
             const pointType = document.getElementById('transfer-point-type').value;
-            const toEmail = document.getElementById('transfer-to-email').value;
+            const toUsername = document.getElementById('transfer-to-username').value;
             const amount = document.getElementById('transfer-amount').value;
 
-            if (!confirm(`${toEmail}님에게 ${pointType}포인트 ${parseInt(amount).toLocaleString()}원을 T포인트로 이체하시겠습니까?`)) {
+            if (!confirm(`${toUsername}님에게 ${pointType}포인트 ${parseInt(amount).toLocaleString()}원을 T포인트로 이체하시겠습니까?`)) {
                 return;
             }
 
             try {
-                const res = await pointsApi.transfer(toEmail, pointType, amount);
+                const res = await pointsApi.transfer(toUsername, pointType, amount);
                 if (res.success) {
                     alert(res.message);
                     document.getElementById('transfer-form').reset();

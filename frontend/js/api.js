@@ -78,8 +78,8 @@ const authApi = {
     return api.post('/auth/signup', data);
   },
 
-  async login(email, password) {
-    return api.post('/auth/login', { email, password });
+  async login(username, password) {
+    return api.post('/auth/login', { username, password });
   },
 };
 
@@ -87,6 +87,13 @@ const authApi = {
 const userApi = {
   async getProfile() {
     return api.get('/users/profile');
+  },
+
+  async changePassword(currentPassword, newPassword) {
+    return api.put('/users/password', {
+      current_password: currentPassword,
+      new_password: newPassword,
+    });
   },
 };
 
@@ -102,9 +109,9 @@ const pointsApi = {
     return api.get(endpoint);
   },
 
-  async transfer(toUserEmail, pointType, amount) {
+  async transfer(toUsername, pointType, amount) {
     return api.post('/points/transfer', {
-      to_user_email: toUserEmail,
+      to_user_username: toUsername,
       point_type: pointType,
       amount: parseFloat(amount),
     });
@@ -195,8 +202,10 @@ const cartApi = {
     } else {
       items.push({
         id: product.id,
+        product_id: product.product_id || product.id, // 실제 상품 ID 저장
         name: product.name,
         price: product.price,
+        dealerPrice: product.dealerPrice || product.price, // 대리점 가격 저장
         originalPrice: product.originalPrice || product.price,
         pv: product.pv || 0,
         image: product.image,

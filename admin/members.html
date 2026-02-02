@@ -30,13 +30,13 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
                     주문 관리
                 </a>
+                <a href="payments.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    결제 내역
+                </a>
                 <a href="products.html" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
                     상품 관리
-                </a>
-                <a href="categories.html" class="nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-                    카테고리 관리
                 </a>
                 <a href="banners.html" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
@@ -94,7 +94,7 @@
             <div class="content-area">
                 <!-- Filters -->
                 <div class="filter-bar">
-                    <input type="text" class="form-control search" id="searchInput" placeholder="이름, 이메일 검색..." onkeyup="searchMembers()">
+                    <input type="text" class="form-control search" id="searchInput" placeholder="이름, 아이디, 전화번호 검색..." onkeyup="searchMembers()">
                     <select class="form-control form-select" id="gradeFilter" onchange="loadMembers()">
                         <option value="">전체 등급</option>
                         <option value="dealer">대리점</option>
@@ -124,16 +124,17 @@
                                 <thead>
                                     <tr>
                                         <th>이름</th>
-                                        <th>이메일</th>
+                                        <th>아이디</th>
                                         <th>전화번호</th>
                                         <th>등급</th>
+                                        <th>추천인</th>
                                         <th>R-pay 잔액</th>
                                         <th>가입일</th>
                                         <th>작업</th>
                                     </tr>
                                 </thead>
                                 <tbody id="membersBody">
-                                    <tr><td colspan="7" class="text-center text-muted">로딩 중...</td></tr>
+                                    <tr><td colspan="8" class="text-center text-muted">로딩 중...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -212,8 +213,8 @@
                     <input type="text" class="form-control" id="addName" placeholder="이름을 입력하세요">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">이메일 <span style="color: #f44336;">*</span></label>
-                    <input type="email" class="form-control" id="addEmail" placeholder="이메일을 입력하세요">
+                    <label class="form-label">아이디 <span style="color: #f44336;">*</span></label>
+                    <input type="text" class="form-control" id="addUsername" placeholder="영문, 숫자 4~20자">
                 </div>
                 <div class="form-group">
                     <label class="form-label">비밀번호 <span style="color: #f44336;">*</span></label>
@@ -234,7 +235,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">추천인 (대리점)</label>
-                    <input type="email" class="form-control" id="addReferrer" list="dealersList" placeholder="추천인 이메일 (선택사항)">
+                    <input type="text" class="form-control" id="addReferrer" list="dealersList" placeholder="추천인 아이디 (선택사항)">
                     <datalist id="dealersList"></datalist>
                     <small style="color: var(--text-muted);">대리점 회원만 추천인으로 지정 가능</small>
                 </div>
@@ -271,7 +272,7 @@
                 <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
                     <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem;">엑셀 양식 안내</h4>
                     <table style="width: 100%; font-size: 0.85rem;">
-                        <tr><td style="padding: 0.25rem 0;"><strong>email</strong></td><td style="color: #f44336;">(필수)</td><td>이메일</td></tr>
+                        <tr><td style="padding: 0.25rem 0;"><strong>username</strong></td><td style="color: #f44336;">(필수)</td><td>아이디 (영문, 숫자 4~20자)</td></tr>
                         <tr><td style="padding: 0.25rem 0;"><strong>password</strong></td><td style="color: #f44336;">(필수)</td><td>비밀번호</td></tr>
                         <tr><td style="padding: 0.25rem 0;"><strong>name</strong></td><td style="color: #f44336;">(필수)</td><td>이름</td></tr>
                         <tr><td style="padding: 0.25rem 0;"><strong>phone</strong></td><td style="color: #f44336;">(필수)</td><td>전화번호</td></tr>
@@ -304,6 +305,37 @@
         </div>
     </div>
 
+    <!-- Password Reset Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">비밀번호 변경</h3>
+                <button class="modal-close" onclick="closeModal('passwordModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="passwordUserId">
+                <div class="form-group">
+                    <label class="form-label">회원명</label>
+                    <p id="passwordUserName" class="fw-500"></p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">새 비밀번호 <span style="color: #f44336;">*</span></label>
+                    <input type="password" class="form-control" id="newPassword" placeholder="새 비밀번호 (4자 이상)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">비밀번호 확인 <span style="color: #f44336;">*</span></label>
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="새 비밀번호 확인">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('passwordModal')">취소</button>
+                <button class="btn btn-primary" id="resetPasswordBtn" onclick="resetPassword()">변경</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Genealogy Modal -->
     <div class="modal-overlay" id="genealogyModal">
         <div class="modal" style="max-width: 900px;">
@@ -331,7 +363,7 @@
                 </div>
                 <!-- Search -->
                 <div style="margin-bottom: 1rem;">
-                    <input type="text" class="form-control" id="genealogySearch" placeholder="이름 또는 이메일로 검색..." style="max-width: 300px;">
+                    <input type="text" class="form-control" id="genealogySearch" placeholder="이름 또는 아이디로 검색..." style="max-width: 300px;">
                 </div>
                 <!-- Table -->
                 <div class="table-responsive">
@@ -339,7 +371,7 @@
                         <thead>
                             <tr>
                                 <th>이름</th>
-                                <th>이메일</th>
+                                <th>아이디</th>
                                 <th>전화번호</th>
                                 <th>등급</th>
                                 <th>누적 구매금액</th>
@@ -438,27 +470,28 @@
                 const result = await api.get(url);
                 allMembers = result.data?.users || [];
                 renderMembers(allMembers);
-                updatePagination(result.data?.pagination);
+                updatePagination(result.data);
             } catch (error) {
                 console.error('Load members error:', error);
                 document.getElementById('membersBody').innerHTML =
-                    '<tr><td colspan="7" class="text-center text-danger">데이터를 불러올 수 없습니다</td></tr>';
+                    '<tr><td colspan="8" class="text-center text-danger">데이터를 불러올 수 없습니다</td></tr>';
             }
         }
 
         function renderMembers(members) {
             const tbody = document.getElementById('membersBody');
             if (members.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">회원이 없습니다</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">회원이 없습니다</td></tr>';
                 return;
             }
 
             tbody.innerHTML = members.map(m => `
                 <tr>
                     <td class="fw-500">${m.name}</td>
-                    <td>${m.email}</td>
+                    <td>${m.username || '-'}</td>
                     <td>${m.phone || '-'}</td>
                     <td>${gradeBadge(m.grade)}</td>
+                    <td>${m.referrer_name ? `${m.referrer_name} (${m.referrer_username})` : '-'}</td>
                     <td>${formatCurrency(m.rpay_balance || 0)}</td>
                     <td>${formatDate(m.created_at)}</td>
                     <td>
@@ -469,11 +502,17 @@
                             <button class="action-btn" onclick="editMember('${m.id}', '${m.name}', '${m.grade}')" title="등급 수정">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
+                            <button class="action-btn" onclick="openPasswordModal('${m.id}', '${m.name}')" title="비밀번호 변경" style="color: #faad14;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                            </button>
                             ${m.grade === 'dealer' ? `
                             <button class="action-btn" onclick="viewGenealogy('${m.id}', '${m.name}')" title="계보도 보기" style="color: var(--primary);">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
                             </button>
                             ` : ''}
+                            <button class="action-btn" onclick="deleteMember('${m.id}', '${m.name}')" title="회원 탈퇴" style="color: #f44336;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -484,7 +523,8 @@
             const search = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allMembers.filter(m =>
                 m.name.toLowerCase().includes(search) ||
-                m.email.toLowerCase().includes(search)
+                (m.username && m.username.toLowerCase().includes(search)) ||
+                (m.phone && m.phone.includes(search))
             );
             renderMembers(filtered);
         }
@@ -495,28 +535,30 @@
                 const m = result.data;
 
                 document.getElementById('memberModalBody').innerHTML = `
-                    <div class="form-group">
-                        <label class="form-label">이름</label>
-                        <p>${m.name}</p>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">이름</label>
+                            <p>${m.name}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">아이디</label>
+                            <p>${m.username || '-'}</p>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">이메일</label>
-                            <p>${m.email}</p>
-                        </div>
-                        <div class="form-group">
                             <label class="form-label">전화번호</label>
                             <p>${m.phone || '-'}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">가입일</label>
+                            <p>${formatDateTime(m.created_at)}</p>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">등급</label>
                             <p>${gradeBadge(m.grade)}</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">가입일</label>
-                            <p>${formatDateTime(m.created_at)}</p>
                         </div>
                     </div>
                     <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
@@ -577,7 +619,7 @@
 
         async function openAddMember() {
             document.getElementById('addName').value = '';
-            document.getElementById('addEmail').value = '';
+            document.getElementById('addUsername').value = '';
             document.getElementById('addPassword').value = '';
             document.getElementById('addPhone').value = '';
             document.getElementById('addGrade').value = 'consumer';
@@ -589,23 +631,31 @@
 
         async function createMember() {
             const name = document.getElementById('addName').value.trim();
-            const email = document.getElementById('addEmail').value.trim();
+            const username = document.getElementById('addUsername').value.trim();
             const password = document.getElementById('addPassword').value;
             const phone = document.getElementById('addPhone').value.trim();
             const grade = document.getElementById('addGrade').value;
-            const referrer_email = document.getElementById('addReferrer').value.trim();
+            const referrer_username = document.getElementById('addReferrer').value.trim();
 
             if (!name) { showToast('이름을 입력해주세요.', 'error'); return; }
-            if (!email) { showToast('이메일을 입력해주세요.', 'error'); return; }
+            if (!username) { showToast('아이디를 입력해주세요.', 'error'); return; }
+
+            // 아이디 유효성 검사
+            const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
+            if (!usernameRegex.test(username)) {
+                showToast('아이디는 4~20자의 영문, 숫자만 사용 가능합니다.', 'error');
+                return;
+            }
+
             if (!password) { showToast('비밀번호를 입력해주세요.', 'error'); return; }
             if (!phone) { showToast('전화번호를 입력해주세요.', 'error'); return; }
 
             const btn = document.getElementById('addMemberBtn');
             try {
                 setLoading(btn, true);
-                const data = { email, password, name, phone, grade };
-                if (referrer_email) {
-                    data.referrer_email = referrer_email;
+                const data = { username, password, name, phone, grade };
+                if (referrer_username) {
+                    data.referrer_username = referrer_username;
                 }
                 await api.post('/admin/users', data);
                 showToast('회원이 추가되었습니다.', 'success');
@@ -768,7 +818,7 @@
                 tbody.innerHTML = data.members.map(m => `
                     <tr>
                         <td class="fw-500">${m.name}</td>
-                        <td>${m.email}</td>
+                        <td>${m.username || '-'}</td>
                         <td>${m.phone || '-'}</td>
                         <td>${gradeBadge(m.grade)}</td>
                         <td>${formatCurrency(m.total_purchase_krw)}</td>
@@ -796,6 +846,61 @@
                 });
             }
         });
+
+        // Delete member function
+        async function deleteMember(id, name) {
+            if (!confirm(`"${name}" 회원을 탈퇴 처리하시겠습니까?\n\n이 작업은 되돌릴 수 없으며, 해당 회원은 더 이상 로그인할 수 없게 됩니다.`)) {
+                return;
+            }
+
+            try {
+                await api.delete(`/admin/users/${id}`);
+                showToast('회원이 탈퇴 처리되었습니다.', 'success');
+                loadMembers();
+            } catch (error) {
+                showToast(error.message || '회원 탈퇴 처리에 실패했습니다.', 'error');
+            }
+        }
+
+        // Password reset functions
+        function openPasswordModal(id, name) {
+            document.getElementById('passwordUserId').value = id;
+            document.getElementById('passwordUserName').textContent = name;
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            openModal('passwordModal');
+        }
+
+        async function resetPassword() {
+            const userId = document.getElementById('passwordUserId').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!newPassword) {
+                showToast('새 비밀번호를 입력해주세요.', 'error');
+                return;
+            }
+            if (newPassword.length < 4) {
+                showToast('비밀번호는 4자 이상이어야 합니다.', 'error');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                showToast('비밀번호가 일치하지 않습니다.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('resetPasswordBtn');
+            try {
+                setLoading(btn, true);
+                await api.put(`/admin/users/${userId}/password`, { new_password: newPassword });
+                showToast('비밀번호가 변경되었습니다.', 'success');
+                closeModal('passwordModal');
+            } catch (error) {
+                showToast(error.message || '비밀번호 변경에 실패했습니다.', 'error');
+            } finally {
+                setLoading(btn, false);
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', loadMembers);
     </script>

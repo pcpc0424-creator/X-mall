@@ -28,11 +28,6 @@ export const calculateVat = (priceWithVat: number): number => {
   return Math.round(priceWithVat - calculateVatExcluded(priceWithVat));
 };
 
-export const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
-
 export const validatePhone = (phone: string): boolean => {
   const phoneRegex = /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
   return phoneRegex.test(phone.replace(/-/g, ''));
@@ -40,14 +35,6 @@ export const validatePhone = (phone: string): boolean => {
 
 export const sanitizePhone = (phone: string): string => {
   return phone.replace(/[^0-9]/g, '');
-};
-
-export const maskEmail = (email: string): string => {
-  const [local, domain] = email.split('@');
-  if (local.length <= 2) {
-    return `${local[0]}*@${domain}`;
-  }
-  return `${local.slice(0, 2)}${'*'.repeat(local.length - 2)}@${domain}`;
 };
 
 export const maskAccountNumber = (accountNumber: string): string => {

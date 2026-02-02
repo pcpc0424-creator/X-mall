@@ -220,11 +220,11 @@
 
                 <div class="checkout-section">
                     <h2>결제 수단</h2>
-                    <p style="color: #666; margin-bottom: 15px; font-size: 14px;">보유한 포인트/R페이를 먼저 사용하고 부족한 금액은 카드/무통장으로 결제합니다.</p>
+                    <p style="color: #666; margin-bottom: 15px; font-size: 14px;">보유한 포인트/X페이를 먼저 사용하고 부족한 금액은 카드/무통장으로 결제합니다.</p>
 
                     <div class="payment-option">
                         <label>
-                            <span>R페이</span>
+                            <span>X페이</span>
                             <span class="balance" id="available-rpay">0원</span>
                         </label>
                         <input type="number" id="payment-rpay" value="0" min="0">
@@ -265,6 +265,48 @@
                                 <input type="radio" name="payment-method" value="bank">
                                 <span>무통장입금</span>
                             </label>
+                        </div>
+
+                        <!-- 카드 결제 정보 입력 -->
+                        <div id="card-input-section" style="display: none; margin-top: 20px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+                            <h4 style="margin-bottom: 15px; font-size: 14px;">카드 정보 입력</h4>
+                            <div class="form-group">
+                                <label>카드번호</label>
+                                <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" autocomplete="cc-number">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>유효기간</label>
+                                    <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp">
+                                </div>
+                                <div class="form-group">
+                                    <label>비밀번호 앞 2자리</label>
+                                    <input type="password" id="card-pwd" placeholder="**" maxlength="2" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>생년월일 (6자리) / 사업자번호 (10자리)</label>
+                                    <input type="text" id="card-auth" placeholder="YYMMDD 또는 사업자번호" maxlength="10">
+                                </div>
+                                <div class="form-group">
+                                    <label>할부</label>
+                                    <select id="card-quota" style="width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px;">
+                                        <option value="00">일시불</option>
+                                        <option value="02">2개월</option>
+                                        <option value="03">3개월</option>
+                                        <option value="04">4개월</option>
+                                        <option value="05">5개월</option>
+                                        <option value="06">6개월</option>
+                                        <option value="10">10개월</option>
+                                        <option value="12">12개월</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <p style="font-size: 12px; color: #888; margin-top: 10px;">
+                                * 개인카드: 생년월일 6자리 (예: 900101)<br>
+                                * 법인카드: 사업자등록번호 10자리
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -345,7 +387,31 @@
                     document.querySelectorAll('.method-option').forEach(o => o.classList.remove('selected'));
                     this.classList.add('selected');
                     this.querySelector('input').checked = true;
+
+                    // 카드 선택 시 카드 입력 섹션 표시
+                    const cardInputSection = document.getElementById('card-input-section');
+                    if (this.querySelector('input').value === 'card') {
+                        cardInputSection.style.display = 'block';
+                    } else {
+                        cardInputSection.style.display = 'none';
+                    }
                 });
+            });
+
+            // 카드번호 포맷팅
+            document.getElementById('card-number').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+                e.target.value = value.substring(0, 19);
+            });
+
+            // 유효기간 포맷팅
+            document.getElementById('card-expiry').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                e.target.value = value;
             });
         });
 
@@ -459,8 +525,22 @@
                 }
             }
 
+            // 상품 ID 검증 - product_id가 없거나 유효한 UUID가 아닌 경우 체크
+            const invalidItems = cart.filter(item => {
+                const productId = item.product_id || item.id;
+                // UUID 형식 체크 (간단한 검증)
+                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+                return !productId || !uuidRegex.test(productId);
+            });
+
+            if (invalidItems.length > 0) {
+                const itemNames = invalidItems.map(item => item.name).join(', ');
+                alert(`다음 상품은 현재 주문이 불가능합니다:\n${itemNames}\n\n장바구니를 비우고 상품 페이지에서 다시 담아주세요.`);
+                return;
+            }
+
             const items = cart.map(item => ({
-                product_id: item.id,
+                product_id: item.product_id || item.id,
                 quantity: item.quantity,
             }));
 
@@ -469,6 +549,79 @@
             submitBtn.textContent = '주문 처리 중...';
 
             try {
+                // 카드 결제인 경우 페이링 수기결제 진행
+                if (paymentMethod === 'card' && cardBankAmount > 0) {
+                    // 카드 정보 수집
+                    const cardNumber = document.getElementById('card-number').value;
+                    const cardExpiry = document.getElementById('card-expiry').value;
+                    const cardPwd = document.getElementById('card-pwd').value;
+                    const cardAuth = document.getElementById('card-auth').value;
+                    const cardQuota = document.getElementById('card-quota').value;
+
+                    // 카드 정보 검증
+                    if (!cardNumber || cardNumber.replace(/\D/g, '').length < 13) {
+                        alert('카드번호를 정확히 입력해주세요.');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '결제하기';
+                        return;
+                    }
+                    if (!cardExpiry || cardExpiry.replace(/\D/g, '').length !== 4) {
+                        alert('유효기간을 정확히 입력해주세요. (MM/YY)');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '결제하기';
+                        return;
+                    }
+                    if (!cardPwd || cardPwd.length !== 2) {
+                        alert('카드 비밀번호 앞 2자리를 입력해주세요.');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '결제하기';
+                        return;
+                    }
+                    if (!cardAuth || (cardAuth.length !== 6 && cardAuth.length !== 10)) {
+                        alert('생년월일(6자리) 또는 사업자번호(10자리)를 입력해주세요.');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '결제하기';
+                        return;
+                    }
+
+                    submitBtn.textContent = '결제 처리 중...';
+
+                    // 주문번호 생성
+                    const orderId = 'XM' + Date.now();
+
+                    // 페이링 수기결제 API 호출
+                    const payringRes = await fetch('/X-mall/api/payring/payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${auth.getToken()}`
+                        },
+                        body: JSON.stringify({
+                            order_id: orderId,
+                            product_name: `X-mall 주문 (${cart.length}개 상품)`,
+                            amount: cardBankAmount,
+                            card_number: cardNumber,
+                            card_expiry: cardExpiry,
+                            card_auth: cardAuth,
+                            card_pwd: cardPwd,
+                            quota: cardQuota,
+                            customer_name: shipping.name,
+                            customer_email: ''
+                        })
+                    });
+
+                    const payringData = await payringRes.json();
+
+                    if (!payringData.success) {
+                        throw new Error(payringData.error || '카드 결제에 실패했습니다.');
+                    }
+
+                    // 카드 결제 성공 후 주문 생성
+                    payment.payring_order_id = orderId;
+                    payment.payring_transaction_id = payringData.data.transactionId;
+                }
+
+                // 주문 생성
                 const response = await ordersApi.create({ items, payment, shipping });
 
                 if (response.success) {

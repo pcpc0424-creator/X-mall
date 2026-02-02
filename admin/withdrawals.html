@@ -29,13 +29,13 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
                     주문 관리
                 </a>
+                <a href="payments.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    결제 내역
+                </a>
                 <a href="products.html" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
                     상품 관리
-                </a>
-                <a href="categories.html" class="nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-                    카테고리 관리
                 </a>
                 <a href="banners.html" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
@@ -191,7 +191,7 @@
         async function approveWithdrawal(id) {
             if (!confirm('이 출금 신청을 승인하시겠습니까?')) return;
             try {
-                await api.put(`/admin/withdrawals/${id}`, { status: 'approved' });
+                await api.put(`/admin/withdrawals/${id}/approve`);
                 showToast('출금이 승인되었습니다.');
                 loadWithdrawals();
             } catch (error) {
@@ -203,7 +203,7 @@
             const reason = prompt('거절 사유를 입력하세요:');
             if (reason === null) return;
             try {
-                await api.put(`/admin/withdrawals/${id}`, { status: 'rejected', reject_reason: reason });
+                await api.put(`/admin/withdrawals/${id}/reject`, { reject_reason: reason });
                 showToast('출금이 거절되었습니다.');
                 loadWithdrawals();
             } catch (error) {

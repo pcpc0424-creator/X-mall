@@ -26,7 +26,7 @@ export class UserController {
         success: true,
         data: {
           id: user.id,
-          email: user.email,
+          username: user.username,
           name: user.name,
           phone: user.phone,
           grade: user.grade,
@@ -100,19 +100,28 @@ export class UserController {
   // Admin: Create user with grade
   async createUser(req: AdminAuthRequest, res: Response) {
     try {
-      const { email, password, name, phone, grade, referrer_email } = req.body;
+      const { username, password, name, phone, grade, referrer_username } = req.body;
 
-      if (!email || !password || !name || !phone) {
+      if (!username || !password || !name || !phone) {
         return res.status(400).json({
           success: false,
-          error: '이메일, 비밀번호, 이름, 전화번호는 필수입니다.'
+          error: '아이디, 비밀번호, 이름, 전화번호는 필수입니다.'
+        });
+      }
+
+      // 아이디 유효성 검사
+      const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
+      if (!usernameRegex.test(username)) {
+        return res.status(400).json({
+          success: false,
+          error: '아이디는 4~20자의 영문, 숫자만 사용 가능합니다.'
         });
       }
 
       // Validate referrer if provided
       let referrerId: string | undefined;
-      if (referrer_email) {
-        const referrer = await userService.findDealerByEmail(referrer_email);
+      if (referrer_username) {
+        const referrer = await userService.findDealerByUsername(referrer_username);
         if (!referrer) {
           return res.status(400).json({
             success: false,
@@ -123,7 +132,7 @@ export class UserController {
       }
 
       const user = await userService.createUser(
-        { email, password, name, phone },
+        { username, password, name, phone },
         grade || 'consumer',
         referrerId
       );
@@ -132,7 +141,7 @@ export class UserController {
         success: true,
         data: {
           id: user.id,
-          email: user.email,
+          username: user.username,
           name: user.name,
           grade: user.grade
         },
@@ -165,7 +174,7 @@ export class UserController {
         success: true,
         data: {
           id: user.id,
-          email: user.email,
+          username: user.username,
           name: user.name,
           grade: user.grade
         },
@@ -221,7 +230,7 @@ export class UserController {
       // Combine parse errors
       const allErrors = parseResult.errors.map(e => ({
         row: e.row,
-        email: '',
+        username: '',
         error: e.message
       }));
 
@@ -306,6 +315,60 @@ export class UserController {
       });
     } catch (error: any) {
       res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+  // User: Change my password
+  async changePassword(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { current_password, new_password } = req.body;
+
+      if (!current_password || !new_password) {
+        return res.status(400).json({
+          success: false,
+          error: '현재 비밀번호와 새 비밀번호를 모두 입력해주세요.'
+        });
+      }
+
+      await userService.changePassword(userId, current_password, new_password);
+
+      res.json({
+        success: true,
+        message: '비밀번호가 변경되었습니다.'
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+  // Admin: Reset user password
+  async adminResetPassword(req: AdminAuthRequest, res: Response) {
+    try {
+      const { id } = req.params;
+      const { new_password } = req.body;
+
+      if (!new_password) {
+        return res.status(400).json({
+          success: false,
+          error: '새 비밀번호를 입력해주세요.'
+        });
+      }
+
+      await userService.adminResetPassword(id, new_password);
+
+      res.json({
+        success: true,
+        message: '비밀번호가 변경되었습니다.'
+      });
+    } catch (error: any) {
+      res.status(400).json({
         success: false,
         error: error.message
       });

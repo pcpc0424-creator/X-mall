@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx';
 
 export interface MemberExcelRow {
-  email: string;
+  username: string;
   password: string;
   name: string;
   phone: string;
@@ -9,7 +9,7 @@ export interface MemberExcelRow {
 }
 
 export interface PointExcelRow {
-  email: string;
+  username: string;
   point_type: string;
   amount: number;
   reason?: string;
@@ -81,14 +81,6 @@ export function parseExcelBuffer<T>(
 }
 
 /**
- * Validate email format
- */
-export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-/**
  * Validate point type
  */
 export function isValidPointType(pointType: string): boolean {
@@ -103,10 +95,18 @@ export function isValidGrade(grade: string): boolean {
 }
 
 /**
+ * Validate username format (4-20 chars, alphanumeric only)
+ */
+export function isValidUsername(username: string): boolean {
+  const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
+  return usernameRegex.test(username);
+}
+
+/**
  * Parse members excel file
  */
 export function parseMembersExcel(buffer: Buffer): ParseResult<MemberExcelRow> {
-  const requiredFields = ['email', 'password', 'name', 'phone'];
+  const requiredFields = ['username', 'password', 'name', 'phone'];
   const result = parseExcelBuffer<MemberExcelRow>(buffer, requiredFields);
 
   // Additional validation
@@ -115,11 +115,11 @@ export function parseMembersExcel(buffer: Buffer): ParseResult<MemberExcelRow> {
   result.data.forEach((row, index) => {
     const rowNumber = index + 2 + result.errors.filter(e => e.row < index + 2).length;
 
-    // Validate email format
-    if (!isValidEmail(row.email)) {
+    // Validate username format
+    if (!isValidUsername(row.username)) {
       result.errors.push({
         row: rowNumber,
-        message: `잘못된 이메일 형식: ${row.email}`
+        message: `잘못된 아이디 형식: ${row.username} (4~20자의 영문, 숫자만 가능)`
       });
       return;
     }
@@ -143,7 +143,7 @@ export function parseMembersExcel(buffer: Buffer): ParseResult<MemberExcelRow> {
  * Parse points excel file
  */
 export function parsePointsExcel(buffer: Buffer): ParseResult<PointExcelRow> {
-  const requiredFields = ['email', 'point_type', 'amount'];
+  const requiredFields = ['username', 'point_type', 'amount'];
   const result = parseExcelBuffer<PointExcelRow>(buffer, requiredFields);
 
   const validatedData: PointExcelRow[] = [];
@@ -151,11 +151,11 @@ export function parsePointsExcel(buffer: Buffer): ParseResult<PointExcelRow> {
   result.data.forEach((row, index) => {
     const originalRowNumber = index + 2;
 
-    // Validate email format
-    if (!isValidEmail(row.email)) {
+    // Validate username format
+    if (!isValidUsername(row.username)) {
       result.errors.push({
         row: originalRowNumber,
-        message: `잘못된 이메일 형식: ${row.email}`
+        message: `잘못된 아이디 형식: ${row.username}`
       });
       return;
     }

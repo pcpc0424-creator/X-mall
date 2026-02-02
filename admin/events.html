@@ -29,13 +29,13 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
                     주문 관리
                 </a>
+                <a href="payments.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    결제 내역
+                </a>
                 <a href="products.html" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
                     상품 관리
-                </a>
-                <a href="categories.html" class="nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-                    카테고리 관리
                 </a>
                 <a href="banners.html" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
@@ -183,11 +183,27 @@
                     <label class="form-label">상세 내용</label>
                     <textarea class="form-control" id="eventContent" rows="4" placeholder="이벤트 상세 내용" style="resize: vertical;"></textarea>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">이미지 URL</label>
-                        <input type="text" class="form-control" id="eventImageUrl" placeholder="https://...">
+                <div class="form-group">
+                    <label class="form-label">이벤트 이미지</label>
+                    <div class="image-upload-area" id="eventUploadArea">
+                        <input type="file" id="eventImageFile" accept="image/*" style="display: none;">
+                        <input type="hidden" id="eventImageUrl">
+                        <div class="image-preview" id="eventPreview" style="display: none;">
+                            <img id="eventPreviewImg" src="" alt="미리보기">
+                            <button type="button" class="remove-image-btn" onclick="removeEventImage()">×</button>
+                        </div>
+                        <div class="image-upload-placeholder" id="eventPlaceholder">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21,15 16,10 5,21"/>
+                            </svg>
+                            <p>클릭하여 이미지 선택</p>
+                            <small>JPG, PNG, GIF, WEBP (최대 10MB)</small>
+                        </div>
                     </div>
+                </div>
+                <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">이벤트 유형</label>
                         <select class="form-control form-select" id="eventType">
@@ -286,6 +302,58 @@
         .progress-badge.active { background: #e8f5e9; color: #2e7d32; }
         .progress-badge.upcoming { background: #e3f2fd; color: #1976d2; }
         .progress-badge.expired { background: #f5f5f5; color: #757575; }
+
+        /* Image Upload Styles */
+        .image-upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-upload-area:hover { border-color: var(--primary); background: rgba(79, 70, 229, 0.02); }
+        .image-upload-area.has-image { border-style: solid; padding: 0.5rem; }
+        .image-upload-area.image-uploading::after {
+            content: '업로드 중...';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            color: var(--primary);
+        }
+        .image-upload-placeholder { color: var(--text-muted); }
+        .image-upload-placeholder svg { margin-bottom: 0.5rem; opacity: 0.5; }
+        .image-upload-placeholder p { margin: 0 0 0.25rem; font-size: 0.875rem; }
+        .image-upload-placeholder small { font-size: 0.75rem; opacity: 0.7; }
+        .image-preview { position: relative; display: inline-block; }
+        .image-preview img { max-width: 100%; max-height: 180px; border-radius: 6px; object-fit: contain; }
+        .remove-image-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remove-image-btn:hover { background: #d32f2f; }
     </style>
 
     <script src="js/admin.js"></script>
@@ -459,6 +527,7 @@
             document.getElementById('eventEndDate').value = '';
             document.getElementById('eventIsActive').value = 'true';
             document.getElementById('eventSaveBtn').textContent = '추가';
+            clearEventImage();
             openModal('eventModal');
         }
 
@@ -481,6 +550,11 @@
             document.getElementById('eventEndDate').value = event.end_date ? formatDateTimeLocal(event.end_date) : '';
             document.getElementById('eventIsActive').value = event.is_active ? 'true' : 'false';
             document.getElementById('eventSaveBtn').textContent = '저장';
+            if (event.image_url) {
+                showEventImagePreview(event.image_url);
+            } else {
+                clearEventImage();
+            }
             openModal('eventModal');
         }
 
@@ -558,7 +632,126 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadEvents);
+        // ========== Image Upload Functions ==========
+        let isUploadingEventImage = false;
+
+        function initEventImageUpload() {
+            const uploadArea = document.getElementById('eventUploadArea');
+            const fileInput = document.getElementById('eventImageFile');
+
+            uploadArea.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-image-btn')) return;
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) handleEventImageFile(file);
+            });
+
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = 'var(--primary)';
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '';
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '';
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    handleEventImageFile(file);
+                }
+            });
+        }
+
+        async function handleEventImageFile(file) {
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                showToast('JPG, PNG, GIF, WEBP 파일만 업로드 가능합니다.', 'error');
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('파일 크기는 10MB 이하여야 합니다.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) { showEventImagePreview(e.target.result); };
+            reader.readAsDataURL(file);
+            await uploadEventImage(file);
+        }
+
+        async function uploadEventImage(file) {
+            if (isUploadingEventImage) return;
+            const uploadArea = document.getElementById('eventUploadArea');
+            isUploadingEventImage = true;
+            uploadArea.classList.add('image-uploading');
+
+            try {
+                const formData = new FormData();
+                formData.append('image', file);
+                const token = api.getToken();
+                const response = await fetch('/X-mall/api/admin/upload/image', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success && result.data) {
+                    document.getElementById('eventImageUrl').value = result.data.url;
+                    showToast('이미지가 업로드되었습니다.', 'success');
+                } else {
+                    throw new Error(result.error || '업로드에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Image upload error:', error);
+                showToast(error.message || '이미지 업로드에 실패했습니다.', 'error');
+                clearEventImage();
+            } finally {
+                isUploadingEventImage = false;
+                uploadArea.classList.remove('image-uploading');
+            }
+        }
+
+        function showEventImagePreview(imageUrl) {
+            const uploadArea = document.getElementById('eventUploadArea');
+            const preview = document.getElementById('eventPreview');
+            const placeholder = document.getElementById('eventPlaceholder');
+            const previewImg = document.getElementById('eventPreviewImg');
+            previewImg.src = imageUrl;
+            preview.style.display = 'inline-block';
+            placeholder.style.display = 'none';
+            uploadArea.classList.add('has-image');
+        }
+
+        function clearEventImage() {
+            const uploadArea = document.getElementById('eventUploadArea');
+            const preview = document.getElementById('eventPreview');
+            const placeholder = document.getElementById('eventPlaceholder');
+            const previewImg = document.getElementById('eventPreviewImg');
+            const fileInput = document.getElementById('eventImageFile');
+            previewImg.src = '';
+            preview.style.display = 'none';
+            placeholder.style.display = 'block';
+            uploadArea.classList.remove('has-image');
+            fileInput.value = '';
+            document.getElementById('eventImageUrl').value = '';
+        }
+
+        function removeEventImage() {
+            clearEventImage();
+            showToast('이미지가 제거되었습니다.', 'info');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEvents();
+            initEventImageUpload();
+        });
     </script>
 </body>
 </html>

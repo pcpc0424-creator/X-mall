@@ -1298,7 +1298,7 @@
             originalPrice = parseFloat(currentProduct.price_krw);
             pv = parseFloat(currentProduct.pv_value) || 0;
             category = currentProduct.category || 'X-MALL';
-            productId = currentProduct.id + '_' + option;
+            productId = currentProduct.id + '_' + option; // 장바구니에서 옵션별 구분용
         } else {
             const priceText = document.querySelector('.price-sale-detail').textContent;
             price = parseInt(priceText.replace(/[^\d]/g, ''));
@@ -1313,8 +1313,10 @@
         // 장바구니에 추가
         cartApi.addItem({
             id: productId,
+            product_id: currentProduct ? currentProduct.id : productId, // 실제 상품 ID
             name: name,
             price: price,
+            dealerPrice: price, // 대리점 가격
             originalPrice: originalPrice,
             pv: pv,
             image: image,

@@ -4,45 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>계보도 - X-mall</title>
-    <link rel="stylesheet" href="../../styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
     <style>
-        /* Header Styles */
-        .header {
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            text-decoration: none;
-        }
-        .main-nav {
-            display: flex;
-            gap: 30px;
-        }
-        .main-nav a {
-            text-decoration: none;
-            color: #666;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        .main-nav a:hover,
-        .main-nav a.active {
-            color: #6c63ff;
-        }
         body {
             background: #f5f5f5;
             margin: 0;
@@ -250,15 +217,22 @@
 </head>
 <body>
     <header class="header header-solid">
-        <div class="header-container">
-            <a href="/X-mall/index.html" class="logo">X-mall</a>
-            <nav class="main-nav">
-                <a href="/X-mall/index.html">홈</a>
-                <a href="dashboard.html" class="active">마이페이지</a>
-                <a href="/X-mall/cart.html">장바구니</a>
-                <a href="#" class="logout-link" onclick="handleLogout(event)">로그아웃</a>
-            </nav>
-        </div>
+        <nav class="nav-container">
+            <a href="/X-mall/index.html" class="logo">
+                <span class="logo-text">X-mall</span>
+                <span class="logo-dot"></span>
+            </a>
+            <div class="nav-actions">
+                <a href="/X-mall/index.html" class="nav-link">홈</a>
+                <a href="dashboard.html" class="nav-link">마이페이지</a>
+                <a href="/X-mall/cart.html" class="cart-btn" aria-label="장바구니">
+                    <i class="fas fa-shopping-bag"></i>
+                </a>
+                <a href="#" class="user-btn logout-link" onclick="handleLogout(event)" aria-label="로그아웃">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </nav>
     </header>
 
     <main class="my-account-container">
@@ -311,7 +285,7 @@
                 <div class="content-header">
                     <h2>추천 회원 목록</h2>
                     <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="이름 또는 이메일로 검색...">
+                        <input type="text" id="searchInput" placeholder="이름 또는 아이디로 검색...">
                     </div>
                 </div>
 
@@ -319,7 +293,7 @@
                     <thead>
                         <tr>
                             <th>이름</th>
-                            <th>이메일</th>
+                            <th>아이디</th>
                             <th>전화번호</th>
                             <th>등급</th>
                             <th>누적 구매금액</th>
@@ -404,7 +378,7 @@
             tbody.innerHTML = members.map(m => `
                 <tr>
                     <td class="fw-500">${m.name}</td>
-                    <td>${m.email}</td>
+                    <td>${m.username || '-'}</td>
                     <td>${m.phone || '-'}</td>
                     <td><span class="status-badge ${m.grade}">${m.grade === 'dealer' ? '대리점' : '소비자'}</span></td>
                     <td>${formatCurrency(m.total_purchase_krw)}</td>

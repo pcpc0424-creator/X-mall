@@ -2,7 +2,12 @@ import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { AuthRequest, AdminAuthRequest } from '../types';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET 환경변수가 설정되지 않았습니다.');
+  process.exit(1);
+}
 
 export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
@@ -19,7 +24,7 @@ export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunc
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as {
       id: string;
-      email: string;
+      username: string;
       grade: 'dealer' | 'consumer';
       type: string;
     };
@@ -33,7 +38,7 @@ export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunc
 
     req.user = {
       id: decoded.id,
-      email: decoded.email,
+      username: decoded.username,
       grade: decoded.grade
     };
 
@@ -61,7 +66,7 @@ export const authenticateAdmin = (req: AdminAuthRequest, res: Response, next: Ne
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as {
       id: string;
-      email: string;
+      username: string;
       role: string;
       type: string;
     };
@@ -75,7 +80,7 @@ export const authenticateAdmin = (req: AdminAuthRequest, res: Response, next: Ne
 
     req.admin = {
       id: decoded.id,
-      email: decoded.email,
+      username: decoded.username,
       role: decoded.role
     };
 
@@ -106,17 +111,17 @@ export const dealerOnly = (req: AuthRequest, res: Response, next: NextFunction) 
   next();
 };
 
-export const generateUserToken = (user: { id: string; email: string; grade: string }): string => {
+export const generateUserToken = (user: { id: string; username: string; grade: string }): string => {
   return jwt.sign(
-    { id: user.id, email: user.email, grade: user.grade, type: 'user' },
+    { id: user.id, username: user.username, grade: user.grade, type: 'user' },
     JWT_SECRET,
     { expiresIn: '7d' } as jwt.SignOptions
   );
 };
 
-export const generateAdminToken = (admin: { id: string; email: string; role: string }): string => {
+export const generateAdminToken = (admin: { id: string; username: string; role: string }): string => {
   return jwt.sign(
-    { id: admin.id, email: admin.email, role: admin.role, type: 'admin' },
+    { id: admin.id, username: admin.username, role: admin.role, type: 'admin' },
     JWT_SECRET,
     { expiresIn: '8h' } as jwt.SignOptions
   );

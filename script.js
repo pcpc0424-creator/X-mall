@@ -974,7 +974,7 @@ if (typeof module !== 'undefined' && module.exports) {
 // ===================================
 // 공통 장바구니 유틸리티
 // ===================================
-window.addToCartUtil = function() {
+window.addToCartUtil = async function() {
     // 대리점 회원 체크
     const token = localStorage.getItem('token');
     const userStr = localStorage.getItem('user');
@@ -997,15 +997,6 @@ window.addToCartUtil = function() {
         const nameEl = document.querySelector('.product-title-detail, .product-title, h1');
         const name = nameEl ? nameEl.textContent.trim() : '상품';
 
-        const priceEl = document.querySelector('.price-sale-detail, .price-current, .current-price');
-        const price = priceEl ? parseInt(priceEl.textContent.replace(/[^\d]/g, '')) : 0;
-
-        const originalPriceEl = document.querySelector('.price-original-detail, .price-original, .original-price');
-        const originalPrice = originalPriceEl ? parseInt(originalPriceEl.textContent.replace(/[^\d]/g, '')) : price;
-
-        const pvEl = document.querySelector('.price-pv-detail, .product-pv, [class*="pv"]');
-        const pv = pvEl ? parseInt(pvEl.textContent.replace(/[^\d]/g, '')) || 0 : 0;
-
         const imageEl = document.getElementById('mainImage') || document.querySelector('.product-image img, .main-image img');
         const image = imageEl ? imageEl.src : '';
 
@@ -1018,13 +1009,49 @@ window.addToCartUtil = function() {
         const categoryEl = document.querySelector('.product-brand-detail, .product-category, .item-category');
         const category = categoryEl ? categoryEl.textContent.trim() : '';
 
-        // 고유 ID 생성 (페이지 경로 + 옵션)
-        const productId = window.location.pathname.replace(/\.html$/, '').replace(/\//g, '_') + '_' + option;
+        // API에서 상품 검색하여 실제 product_id 가져오기
+        let product_id = null;
+        let price = 0;
+        let originalPrice = 0;
+        let pv = 0;
+
+        try {
+            const res = await fetch('/X-mall/api/products?search=' + encodeURIComponent(name));
+            const data = await res.json();
+            if (data.success && data.data.products && data.data.products.length > 0) {
+                const product = data.data.products[0];
+                product_id = product.id;
+                price = parseFloat(product.price_dealer_krw);
+                originalPrice = parseFloat(product.price_krw);
+                pv = parseFloat(product.pv_value) || 0;
+            }
+        } catch (error) {
+            console.error('상품 검색 실패:', error);
+        }
+
+        // 페이지에서 가격 정보 추출 (API 실패 시 fallback)
+        if (!price) {
+            const priceEl = document.querySelector('.price-sale-detail, .price-current, .current-price');
+            price = priceEl ? parseInt(priceEl.textContent.replace(/[^\d]/g, '')) : 0;
+        }
+        if (!originalPrice) {
+            const originalPriceEl = document.querySelector('.price-original-detail, .price-original, .original-price');
+            originalPrice = originalPriceEl ? parseInt(originalPriceEl.textContent.replace(/[^\d]/g, '')) : price;
+        }
+        if (!pv) {
+            const pvEl = document.querySelector('.price-pv-detail, .product-pv, [class*="pv"]');
+            pv = pvEl ? parseInt(pvEl.textContent.replace(/[^\d]/g, '')) || 0 : 0;
+        }
+
+        // 장바구니용 고유 ID (옵션별 구분)
+        const cartItemId = (product_id || window.location.pathname.replace(/\.html$/, '').replace(/\//g, '_')) + '_' + option;
 
         cartApi.addItem({
-            id: productId,
+            id: cartItemId,
+            product_id: product_id, // 실제 데이터베이스 상품 ID
             name: name,
             price: price,
+            dealerPrice: price,
             originalPrice: originalPrice,
             pv: pv,
             image: image,
@@ -1038,8 +1065,8 @@ window.addToCartUtil = function() {
     return true;
 };
 
-window.buyNowUtil = function() {
-    if (window.addToCartUtil()) {
+window.buyNowUtil = async function() {
+    if (await window.addToCartUtil()) {
         window.location.href = 'cart.html';
     }
 };

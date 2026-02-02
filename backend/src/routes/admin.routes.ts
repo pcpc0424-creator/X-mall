@@ -11,9 +11,15 @@ import { settingsController } from '../controllers/settings.controller';
 import { categoryController } from '../controllers/category.controller';
 import { bannerController } from '../controllers/banner.controller';
 import { eventController } from '../controllers/event.controller';
+import { announcementController } from '../controllers/announcement.controller';
+import { payringController } from '../controllers/payring.controller';
 import { authenticateAdmin } from '../middleware/auth';
 
 const router = Router();
+
+import path from 'path';
+import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 
 // Multer configuration for file uploads (memory storage for Excel parsing)
 const upload = multer({
@@ -39,6 +45,35 @@ const upload = multer({
   }
 });
 
+// Image upload configuration
+const imageUpload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      const uploadDir = path.join(__dirname, '../../../uploads/products');
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname).toLowerCase();
+      const filename = `${uuidv4()}${ext}`;
+      cb(null, filename);
+    }
+  }),
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB limit for images
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('이미지 파일(jpg, png, gif, webp)만 업로드 가능합니다.'));
+    }
+  }
+});
+
 // Auth
 router.post('/auth/login', (req, res) => authController.adminLogin(req, res));
 
@@ -48,6 +83,7 @@ router.get('/users/:id', authenticateAdmin, (req, res) => userController.getUser
 router.post('/users', authenticateAdmin, (req, res) => userController.createUser(req, res));
 router.post('/users/bulk-upload', authenticateAdmin, upload.single('file'), (req, res) => userController.bulkUpload(req, res));
 router.put('/users/:id/grade', authenticateAdmin, (req, res) => userController.updateGrade(req, res));
+router.put('/users/:id/password', authenticateAdmin, (req, res) => userController.adminResetPassword(req, res));
 router.delete('/users/:id', authenticateAdmin, (req, res) => userController.deactivateUser(req, res));
 
 // Dealers (protected) - for referrer selection
@@ -76,6 +112,19 @@ router.get('/orders', authenticateAdmin, (req, res) => orderController.getAllOrd
 router.get('/orders/:id', authenticateAdmin, (req, res) => orderController.adminGetOrderById(req, res));
 router.put('/orders/:id/status', authenticateAdmin, (req, res) => orderController.updateOrderStatus(req, res));
 router.put('/orders/:id/invoice', authenticateAdmin, (req, res) => orderController.updateInvoiceNumber(req, res));
+
+// Image Upload (protected)
+router.post('/upload/image', authenticateAdmin, imageUpload.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: '이미지 파일을 선택해주세요.' });
+    }
+    const imageUrl = `/X-mall/uploads/products/${req.file.filename}`;
+    res.json({ success: true, data: { url: imageUrl, filename: req.file.filename } });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 // Products (protected)
 router.get('/products', authenticateAdmin, (req, res) => productController.adminGetProducts(req, res));
@@ -127,5 +176,17 @@ router.get('/events/:id', authenticateAdmin, (req, res) => eventController.getEv
 router.post('/events', authenticateAdmin, (req, res) => eventController.createEvent(req, res));
 router.put('/events/:id', authenticateAdmin, (req, res) => eventController.updateEvent(req, res));
 router.delete('/events/:id', authenticateAdmin, (req, res) => eventController.deleteEvent(req, res));
+
+// Announcements (protected)
+router.get('/announcements', authenticateAdmin, (req, res) => announcementController.adminGetAnnouncements(req, res));
+router.get('/announcements/:id', authenticateAdmin, (req, res) => announcementController.adminGetAnnouncementById(req, res));
+router.post('/announcements', authenticateAdmin, (req, res) => announcementController.createAnnouncement(req, res));
+router.put('/announcements/:id', authenticateAdmin, (req, res) => announcementController.updateAnnouncement(req, res));
+router.delete('/announcements/:id', authenticateAdmin, (req, res) => announcementController.deleteAnnouncement(req, res));
+
+// Payments (protected) - 카드 결제 내역
+router.get('/payments', authenticateAdmin, (req, res) => payringController.getPaymentList(req, res));
+router.get('/payments/:id', authenticateAdmin, (req, res) => payringController.getPaymentDetail(req, res));
+router.post('/payments/:id/cancel', authenticateAdmin, (req, res) => payringController.adminCancelPayment(req, res));
 
 export default router;

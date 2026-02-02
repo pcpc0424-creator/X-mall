@@ -3,6 +3,7 @@ import { generateUUID, generateOrderNumber } from '../utils/helpers';
 import { getPPointReleaseDate } from '../utils/business-day';
 import { rpayService } from './rpay.service';
 import { pointService } from './point.service';
+import { payringService } from './payring.service';
 import { Order, OrderStatus, CreateOrderBody, Product } from '../types';
 
 export class OrderService {
@@ -11,11 +12,6 @@ export class OrderService {
     userGrade: 'dealer' | 'consumer',
     data: CreateOrderBody
   ): Promise<Order> {
-    // Only dealers can place orders
-    if (userGrade !== 'dealer') {
-      throw new Error('대리점 회원만 주문할 수 있습니다.');
-    }
-
     const client = await getClient();
 
     try {
@@ -50,8 +46,12 @@ export class OrderService {
           throw new Error(`재고가 부족합니다: ${product.name} (재고: ${product.stock_quantity})`);
         }
 
-        const unitPrice = parseFloat(product.price_dealer_krw.toString());
-        const unitPv = parseFloat(product.pv_value.toString());
+        // Use dealer price for dealers, regular price for consumers
+        const unitPrice = userGrade === 'dealer'
+          ? parseFloat(product.price_dealer_krw.toString())
+          : parseFloat(product.price_krw.toString());
+        // Only dealers earn PV
+        const unitPv = userGrade === 'dealer' ? parseFloat(product.pv_value.toString()) : 0;
         const itemTotal = unitPrice * item.quantity;
         const itemPv = unitPv * item.quantity;
 
@@ -94,7 +94,7 @@ export class OrderService {
           [userId]
         );
         if (parseFloat(rpayBalance.rows[0]?.balance_krw || 0) < payment.rpay) {
-          throw new Error('R페이 잔액이 부족합니다.');
+          throw new Error('X페이 잔액이 부족합니다.');
         }
         await client.query(
           `UPDATE rpay_balance SET balance_krw = balance_krw - $1 WHERE user_id = $2`,
@@ -131,13 +131,14 @@ export class OrderService {
       const orderResult = await client.query(
         `INSERT INTO orders (id, order_number, user_id, total_pv, total_krw,
          payment_rpay, payment_ppoint, payment_cpoint, payment_tpoint, payment_card, payment_bank,
-         shipping_name, shipping_phone, shipping_address, status)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'paid')
+         shipping_name, shipping_phone, shipping_address, status, payring_order_id)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'paid', $15)
          RETURNING *`,
         [orderId, orderNumber, userId, totalPv, totalKrw,
          payment.rpay || 0, payment.ppoint || 0, payment.cpoint || 0, payment.tpoint || 0,
          payment.card || 0, payment.bank || 0,
-         data.shipping.name, data.shipping.phone, data.shipping.address]
+         data.shipping.name, data.shipping.phone, data.shipping.address,
+         payment.payring_order_id || null]
       );
 
       // Create order items
@@ -241,7 +242,7 @@ export class OrderService {
 
     if (search) {
       params.push(`%${search}%`);
-      conditions.push(`(o.order_number ILIKE $${params.length} OR u.name ILIKE $${params.length} OR u.email ILIKE $${params.length})`);
+      conditions.push(`(o.order_number ILIKE $${params.length} OR u.name ILIKE $${params.length} OR u.username ILIKE $${params.length})`);
     }
 
     if (conditions.length > 0) {
@@ -255,7 +256,7 @@ export class OrderService {
 
     params.push(limit, offset);
     const ordersResult = await query(
-      `SELECT o.*, u.name as user_name, u.email as user_email
+      `SELECT o.*, u.name as user_name, u.username as user_username
        FROM orders o
        JOIN users u ON o.user_id = u.id
        ${whereClause}
@@ -272,7 +273,7 @@ export class OrderService {
 
   async getOrderById(orderId: string): Promise<any> {
     const orderResult = await query(
-      `SELECT o.*, u.name as user_name, u.email as user_email
+      `SELECT o.*, u.name as user_name, u.username as user_username
        FROM orders o
        JOIN users u ON o.user_id = u.id
        WHERE o.id = $1`,
@@ -295,24 +296,174 @@ export class OrderService {
   }
 
   async updateOrderStatus(orderId: string, status: OrderStatus): Promise<Order> {
-    const result = await query(
-      `UPDATE orders SET status = $1 WHERE id = $2 RETURNING *`,
-      [status, orderId]
-    );
+    const client = await getClient();
 
-    if (result.rows.length === 0) {
-      throw new Error('주문을 찾을 수 없습니다.');
-    }
+    try {
+      await client.query('BEGIN');
 
-    // If cancelled, cancel pending P-points
-    if (status === 'cancelled' || status === 'refunded') {
-      await query(
-        `UPDATE pending_ppoints SET status = 'cancelled' WHERE order_id = $1 AND status = 'pending'`,
+      // 먼저 현재 주문 정보 조회
+      const orderInfo = await client.query(
+        `SELECT * FROM orders WHERE id = $1`,
         [orderId]
       );
-    }
 
-    return result.rows[0];
+      if (orderInfo.rows.length === 0) {
+        throw new Error('주문을 찾을 수 없습니다.');
+      }
+
+      const order = orderInfo.rows[0];
+      const previousStatus = order.status;
+
+      // 이미 취소/환불된 주문은 다시 처리하지 않음
+      if ((previousStatus === 'cancelled' || previousStatus === 'refunded') &&
+          (status === 'cancelled' || status === 'refunded')) {
+        throw new Error('이미 취소/환불된 주문입니다.');
+      }
+
+      const result = await client.query(
+        `UPDATE orders SET status = $1 WHERE id = $2 RETURNING *`,
+        [status, orderId]
+      );
+
+      // If cancelled or refunded, restore stock, refund points, and cancel pending P-points
+      if (status === 'cancelled' || status === 'refunded') {
+        const userId = order.user_id;
+
+        // 1. Cancel pending P-points
+        await client.query(
+          `UPDATE pending_ppoints SET status = 'cancelled' WHERE order_id = $1 AND status = 'pending'`,
+          [orderId]
+        );
+
+        // 2. Restore stock for each order item
+        const orderItems = await client.query(
+          `SELECT product_id, quantity FROM order_items WHERE order_id = $1`,
+          [orderId]
+        );
+
+        for (const item of orderItems.rows) {
+          if (item.product_id) {
+            await client.query(
+              `UPDATE products SET stock_quantity = stock_quantity + $1 WHERE id = $2`,
+              [item.quantity, item.product_id]
+            );
+          }
+        }
+
+        // 3. Refund R-pay (X페이)
+        const rpayAmount = parseFloat(order.payment_rpay || 0);
+        if (rpayAmount > 0) {
+          await client.query(
+            `UPDATE rpay_balance SET balance_krw = balance_krw + $1 WHERE user_id = $2`,
+            [rpayAmount, userId]
+          );
+          // 환불 트랜잭션 기록
+          await client.query(
+            `INSERT INTO rpay_transactions (id, user_id, type, amount_krw, description)
+             VALUES ($1, $2, 'refund', $3, $4)`,
+            [generateUUID(), userId, rpayAmount, `주문 ${status === 'cancelled' ? '취소' : '환불'} - ${order.order_number}`]
+          );
+        }
+
+        // 4. Refund P/C/T points
+        const pointRefunds = [
+          { amount: parseFloat(order.payment_ppoint || 0), type: 'P' },
+          { amount: parseFloat(order.payment_cpoint || 0), type: 'C' },
+          { amount: parseFloat(order.payment_tpoint || 0), type: 'T' }
+        ];
+
+        for (const refund of pointRefunds) {
+          if (refund.amount > 0) {
+            // 잔액 업데이트 또는 생성
+            await client.query(
+              `INSERT INTO point_balances (user_id, point_type, balance)
+               VALUES ($1, $2, $3)
+               ON CONFLICT (user_id, point_type)
+               DO UPDATE SET balance = point_balances.balance + $3`,
+              [userId, refund.type, refund.amount]
+            );
+
+            // 환불 후 잔액 조회
+            const balanceResult = await client.query(
+              `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = $2`,
+              [userId, refund.type]
+            );
+            const balanceAfter = parseFloat(balanceResult.rows[0]?.balance || 0);
+
+            // 환불 트랜잭션 기록
+            await client.query(
+              `INSERT INTO point_transactions (id, user_id, point_type, transaction_type, amount, balance_after, description)
+               VALUES ($1, $2, $3, 'refund', $4, $5, $6)`,
+              [generateUUID(), userId, refund.type, refund.amount, balanceAfter,
+               `주문 ${status === 'cancelled' ? '취소' : '환불'} - ${order.order_number}`]
+            );
+          }
+        }
+
+        // 5. 카드 결제 환불 처리 (페이링)
+        const cardAmount = parseFloat(order.payment_card || 0);
+        if (cardAmount > 0) {
+          // 페이링 결제 취소 API 호출
+          try {
+            // 주문에 저장된 페이링 주문번호 사용, 없으면 payment_requests에서 조회
+            let payringOrderId = order.payring_order_id;
+
+            if (!payringOrderId) {
+              // payment_requests 테이블에서 해당 주문의 페이링 주문번호 조회
+              const paymentResult = await client.query(
+                `SELECT order_id, payring_transaction_id, status FROM payment_requests
+                 WHERE order_id LIKE $1 AND status = 'completed'
+                 ORDER BY created_at DESC LIMIT 1`,
+                [`%${order.order_number}%`]
+              );
+
+              if (paymentResult.rows.length > 0) {
+                payringOrderId = paymentResult.rows[0].order_id;
+              } else {
+                payringOrderId = order.order_number;
+              }
+            }
+
+            console.log(`[주문취소] 페이링 결제 취소 요청: 주문번호=${payringOrderId}, 금액=${cardAmount}원`);
+
+            const cancelResult = await payringService.cancelPayment(payringOrderId, cardAmount);
+
+            if (cancelResult.success) {
+              console.log(`[주문취소] 페이링 결제 취소 성공: ${payringOrderId}`);
+
+              // payment_requests 상태 업데이트
+              await client.query(
+                `UPDATE payment_requests SET status = 'cancelled', updated_at = NOW()
+                 WHERE order_id = $1`,
+                [payringOrderId]
+              );
+            } else {
+              // 취소 실패 시 로그 기록 (주문 취소는 계속 진행)
+              console.error(`[주문취소] 페이링 결제 취소 실패: ${cancelResult.error}`);
+
+              // 실패 내역 기록
+              await client.query(
+                `UPDATE payment_requests
+                 SET error_message = $1, updated_at = NOW()
+                 WHERE order_id = $2`,
+                [`환불 실패: ${cancelResult.error}`, payringOrderId]
+              );
+            }
+          } catch (payringError: any) {
+            // 페이링 API 오류 시 로그만 남기고 주문 취소는 진행
+            console.error(`[주문취소] 페이링 API 오류:`, payringError.message);
+          }
+        }
+      }
+
+      await client.query('COMMIT');
+      return result.rows[0];
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   async updateInvoiceNumber(orderId: string, invoiceNumber: string): Promise<Order> {

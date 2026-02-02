@@ -10,19 +10,19 @@ const seedDatabase = async () => {
 
   try {
     // Create default admin user
-    const adminEmail = process.env.ADMIN_DEFAULT_EMAIL || 'admin@xmall.com';
-    const adminPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'admin123!@#';
+    const adminUsername = process.env.ADMIN_DEFAULT_USERNAME || 'admin';
+    const adminPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'admin';
     const adminPasswordHash = await bcrypt.hash(adminPassword, 10);
 
-    const existingAdmin = await query('SELECT id FROM admin_users WHERE email = $1', [adminEmail]);
+    const existingAdmin = await query('SELECT id FROM admin_users WHERE username = $1', [adminUsername]);
 
     if (existingAdmin.rows.length === 0) {
       await query(
-        `INSERT INTO admin_users (id, email, password_hash, name, role)
+        `INSERT INTO admin_users (id, username, password_hash, name, role)
          VALUES ($1, $2, $3, $4, $5)`,
-        [generateUUID(), adminEmail, adminPasswordHash, '시스템관리자', 'superadmin']
+        [generateUUID(), adminUsername, adminPasswordHash, '시스템관리자', 'superadmin']
       );
-      console.log(`Created admin user: ${adminEmail}`);
+      console.log(`Created admin user: ${adminUsername}`);
     } else {
       console.log('Admin user already exists');
     }

@@ -7,12 +7,13 @@ export class ProductController {
   // Get all products (public)
   async getProducts(req: Request, res: Response) {
     try {
-      const { page, limit, category, search } = req.query;
+      const { page, limit, category, subcategory, search } = req.query;
 
       const result = await productService.getProducts({
         page: page ? parseInt(page as string) : undefined,
         limit: limit ? parseInt(limit as string) : undefined,
         category: category as string,
+        subcategory: subcategory as string,
         search: search as string,
         activeOnly: true
       });
@@ -89,14 +90,15 @@ export class ProductController {
   // Admin: Get all products (including inactive)
   async adminGetProducts(req: AdminAuthRequest, res: Response) {
     try {
-      const { page, limit, category, search } = req.query;
+      const { page, limit, category, search, product_type } = req.query;
 
       const result = await productService.getProducts({
         page: page ? parseInt(page as string) : undefined,
         limit: limit ? parseInt(limit as string) : undefined,
         category: category as string,
         search: search as string,
-        activeOnly: false
+        activeOnly: false,
+        productType: product_type as any
       });
 
       res.json({
@@ -114,7 +116,7 @@ export class ProductController {
   // Admin: Create product
   async createProduct(req: AdminAuthRequest, res: Response) {
     try {
-      const { name, description, price_krw, price_dealer_krw, pv_value, stock_quantity, category, image_url, product_type } = req.body;
+      const { name, description, price_krw, price_dealer_krw, pv_value, stock_quantity, category, subcategory, image_url, product_type } = req.body;
 
       if (!name || !price_krw || !price_dealer_krw || pv_value === undefined) {
         return res.status(400).json({
@@ -131,6 +133,7 @@ export class ProductController {
         pv_value,
         stock_quantity,
         category,
+        subcategory,
         image_url,
         product_type
       });

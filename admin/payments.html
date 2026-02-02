@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>주문 관리 - X-mall 관리자</title>
+    <title>결제 내역 - X-mall 관리자</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/admin.css">
 </head>
@@ -25,11 +25,11 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                     회원 관리
                 </a>
-                <a href="orders.html" class="nav-item active">
+                <a href="orders.html" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
                     주문 관리
                 </a>
-                <a href="payments.html" class="nav-item">
+                <a href="payments.html" class="nav-item active">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                     결제 내역
                 </a>
@@ -80,7 +80,7 @@
                     <button class="menu-toggle" id="menuToggle">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                     </button>
-                    <h1 class="page-title">주문 관리</h1>
+                    <h1 class="page-title">결제 내역</h1>
                 </div>
                 <div class="header-right">
                     <a href="/X-mall/index.html" class="back-to-site">
@@ -93,35 +93,33 @@
             <div class="content-area">
                 <!-- Filters -->
                 <div class="filter-bar">
-                    <input type="text" class="form-control search" id="searchInput" placeholder="주문번호, 고객명 검색..." onkeyup="searchOrders()">
-                    <select class="form-control form-select" id="statusFilter" onchange="loadOrders()">
+                    <input type="text" class="form-control search" id="searchInput" placeholder="주문번호, 고객명 검색..." onkeyup="searchPayments()">
+                    <select class="form-control form-select" id="statusFilter" onchange="loadPayments()">
                         <option value="">전체 상태</option>
                         <option value="pending">대기중</option>
-                        <option value="confirmed">확인됨</option>
-                        <option value="processing">처리중</option>
-                        <option value="shipped">배송중</option>
-                        <option value="delivered">배송완료</option>
+                        <option value="completed">완료</option>
+                        <option value="failed">실패</option>
                         <option value="cancelled">취소됨</option>
                     </select>
                 </div>
 
-                <!-- Orders Table -->
+                <!-- Payments Table -->
                 <div class="card">
                     <div class="card-body" style="padding: 0;">
                         <div class="table-responsive">
-                            <table class="data-table" id="ordersTable">
+                            <table class="data-table" id="paymentsTable">
                                 <thead>
                                     <tr>
                                         <th>주문번호</th>
                                         <th>고객</th>
-                                        <th>상품</th>
                                         <th>결제금액</th>
                                         <th>상태</th>
-                                        <th>주문일</th>
+                                        <th>거래번호</th>
+                                        <th>결제일시</th>
                                         <th>작업</th>
                                     </tr>
                                 </thead>
-                                <tbody id="ordersBody">
+                                <tbody id="paymentsBody">
                                     <tr><td colspan="7" class="text-center text-muted">로딩 중...</td></tr>
                                 </tbody>
                             </table>
@@ -129,7 +127,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="pagination">
-                            <div class="pagination-info" id="paginationInfo">0건의 주문</div>
+                            <div class="pagination-info" id="paginationInfo">0건의 결제</div>
                             <div class="pagination-btns" id="paginationBtns"></div>
                         </div>
                     </div>
@@ -138,18 +136,18 @@
         </main>
     </div>
 
-    <!-- Order Detail Modal -->
-    <div class="modal-overlay" id="orderModal">
-        <div class="modal" style="max-width: 700px;">
+    <!-- Payment Detail Modal -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal" style="max-width: 600px;">
             <div class="modal-header">
-                <h3 class="modal-title">주문 상세</h3>
-                <button class="modal-close" onclick="closeModal('orderModal')">
+                <h3 class="modal-title">결제 상세</h3>
+                <button class="modal-close" onclick="closeModal('paymentModal')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            <div class="modal-body" id="orderModalBody"></div>
+            <div class="modal-body" id="paymentModalBody"></div>
             <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeModal('orderModal')">닫기</button>
+                <button class="btn btn-outline" onclick="closeModal('paymentModal')">닫기</button>
             </div>
         </div>
     </div>
@@ -157,138 +155,168 @@
     <script src="js/admin.js"></script>
     <script>
         let currentPage = 1;
-        let allOrders = [];
+        let allPayments = [];
 
-        async function loadOrders() {
+        async function loadPayments() {
             try {
                 const status = document.getElementById('statusFilter').value;
-                let url = `/admin/orders?page=${currentPage}&limit=20`;
+                let url = `/admin/payments?page=${currentPage}&limit=20`;
                 if (status) url += `&status=${status}`;
 
                 const result = await api.get(url);
-                allOrders = result.data?.orders || [];
-                renderOrders(allOrders);
+                allPayments = result.data?.payments || [];
+                renderPayments(allPayments);
                 updatePagination(result.data?.pagination);
             } catch (error) {
-                console.error('Load orders error:', error);
-                document.getElementById('ordersBody').innerHTML =
+                console.error('Load payments error:', error);
+                document.getElementById('paymentsBody').innerHTML =
                     '<tr><td colspan="7" class="text-center text-danger">데이터를 불러올 수 없습니다</td></tr>';
             }
         }
 
-        function renderOrders(orders) {
-            const tbody = document.getElementById('ordersBody');
-            if (orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">주문이 없습니다</td></tr>';
+        function renderPayments(payments) {
+            const tbody = document.getElementById('paymentsBody');
+            if (payments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">결제 내역이 없습니다</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = orders.map(o => `
+            tbody.innerHTML = payments.map(p => `
                 <tr>
-                    <td><strong>#${o.order_number || o.id?.slice(0, 8)}</strong></td>
-                    <td>${o.user_name || o.user?.name || '-'}<br><small class="text-muted">${o.user_username || o.user?.username || ''}</small></td>
-                    <td>${o.items?.[0]?.product_name || '-'} ${o.items?.length > 1 ? `외 ${o.items.length - 1}건` : ''}</td>
-                    <td class="fw-600">${formatCurrency(o.total_krw || o.total_amount)}</td>
-                    <td>${orderStatusBadge(o.status)}</td>
-                    <td>${formatDate(o.created_at)}</td>
+                    <td><strong>#${p.order_number || p.order_id?.slice(0, 8) || '-'}</strong></td>
+                    <td>${p.user_name || '-'}<br><small class="text-muted">${p.username || ''}</small></td>
+                    <td class="fw-600">${formatCurrency(p.amount)}</td>
+                    <td>${paymentStatusBadge(p.status)}</td>
+                    <td><small>${p.payring_transaction_id || '-'}</small></td>
+                    <td>${formatDateTime(p.created_at)}</td>
                     <td>
                         <div class="action-btns">
-                            <button class="action-btn" onclick="viewOrder('${o.id}')" title="상세보기">
+                            <button class="action-btn" onclick="viewPayment('${p.id}')" title="상세보기">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
+                            ${p.status === 'completed' ? `
+                            <button class="action-btn text-danger" onclick="cancelPayment('${p.id}')" title="결제취소">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                            </button>
+                            ` : ''}
                         </div>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function searchOrders() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allOrders.filter(o =>
-                (o.order_number || o.id || '').toLowerCase().includes(search) ||
-                (o.user?.name || '').toLowerCase().includes(search)
-            );
-            renderOrders(filtered);
+        function paymentStatusBadge(status) {
+            const statuses = {
+                pending: { text: '대기중', class: 'badge-warning' },
+                completed: { text: '완료', class: 'badge-success' },
+                failed: { text: '실패', class: 'badge-danger' },
+                cancelled: { text: '취소됨', class: 'badge-secondary' }
+            };
+            const s = statuses[status] || { text: status, class: 'badge-secondary' };
+            return `<span class="badge ${s.class}">${s.text}</span>`;
         }
 
-        async function viewOrder(id) {
+        function searchPayments() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allPayments.filter(p =>
+                (p.order_number || p.order_id || '').toLowerCase().includes(search) ||
+                (p.user_name || '').toLowerCase().includes(search)
+            );
+            renderPayments(filtered);
+        }
+
+        async function viewPayment(id) {
             try {
-                const result = await api.get(`/admin/orders/${id}`);
-                const o = result.data;
+                const result = await api.get(`/admin/payments/${id}`);
+                const p = result.data;
 
-                const itemsHtml = (o.items || []).map(item => `
-                    <tr>
-                        <td>${item.product_name}</td>
-                        <td>${item.quantity}</td>
-                        <td>${formatCurrency(item.price)}</td>
-                        <td>${formatCurrency(item.price * item.quantity)}</td>
-                    </tr>
-                `).join('');
+                // Parse payment_data if it's a string
+                let paymentData = {};
+                try {
+                    paymentData = typeof p.payment_data === 'string' ? JSON.parse(p.payment_data) : (p.payment_data || {});
+                } catch (e) {}
 
-                document.getElementById('orderModalBody').innerHTML = `
+                document.getElementById('paymentModalBody').innerHTML = `
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">주문번호</label>
-                            <p class="fw-600">#${o.order_number || o.id?.slice(0, 8)}</p>
+                            <p class="fw-600">#${p.order_number || p.order_id?.slice(0, 8) || '-'}</p>
                         </div>
                         <div class="form-group">
                             <label class="form-label">상태</label>
-                            <p>${orderStatusBadge(o.status)}</p>
+                            <p>${paymentStatusBadge(p.status)}</p>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">고객명</label>
-                            <p>${o.user_name || o.user?.name || '-'}</p>
+                            <p>${p.user_name || '-'} (${p.username || '-'})</p>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">주문일시</label>
-                            <p>${formatDateTime(o.created_at)}</p>
+                            <label class="form-label">결제금액</label>
+                            <p class="fw-600">${formatCurrency(p.amount)}</p>
                         </div>
                     </div>
-                    <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
-                    <h4 style="margin-bottom: 1rem;">주문 상품</h4>
-                    <table class="data-table" style="margin-bottom: 1rem;">
-                        <thead>
-                            <tr>
-                                <th>상품명</th>
-                                <th>수량</th>
-                                <th>단가</th>
-                                <th>금액</th>
-                            </tr>
-                        </thead>
-                        <tbody>${itemsHtml || '<tr><td colspan="4" class="text-muted">상품 정보 없음</td></tr>'}</tbody>
-                    </table>
-                    <div class="text-right">
-                        <strong>총 결제금액: ${formatCurrency(o.total_krw || o.total_amount)}</strong>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">거래번호</label>
+                            <p>${p.payring_transaction_id || '-'}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">결제일시</label>
+                            <p>${formatDateTime(p.created_at)}</p>
+                        </div>
                     </div>
+                    ${paymentData.cardNum ? `
+                    <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+                    <h4 style="margin-bottom: 1rem;">카드 정보</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">카드번호</label>
+                            <p>${paymentData.cardNum || '-'}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">카드사</label>
+                            <p>${paymentData.cardName || '-'}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">승인번호</label>
+                            <p>${paymentData.cardAuthNo || '-'}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">거래일시</label>
+                            <p>${paymentData.tranDate || '-'}</p>
+                        </div>
+                    </div>
+                    ` : ''}
+                    ${p.error_message ? `
                     <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
                     <div class="form-group">
-                        <label class="form-label">상태 변경</label>
-                        <select class="form-control form-select" id="orderStatusSelect" style="width: 200px;">
-                            <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>대기중</option>
-                            <option value="confirmed" ${o.status === 'confirmed' ? 'selected' : ''}>확인됨</option>
-                            <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>처리중</option>
-                            <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>배송중</option>
-                            <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>배송완료</option>
-                            <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>취소됨</option>
-                        </select>
-                        <button class="btn btn-primary btn-sm mt-2" onclick="updateOrderStatus('${o.id}')">상태 변경</button>
+                        <label class="form-label">오류 메시지</label>
+                        <p class="text-danger">${p.error_message}</p>
                     </div>
+                    ` : ''}
+                    ${p.status === 'completed' ? `
+                    <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+                    <button class="btn btn-danger" onclick="cancelPayment('${p.id}')">결제 취소</button>
+                    ` : ''}
                 `;
-                openModal('orderModal');
+                openModal('paymentModal');
             } catch (error) {
                 showToast(error.message, 'error');
             }
         }
 
-        async function updateOrderStatus(id) {
-            const status = document.getElementById('orderStatusSelect').value;
+        async function cancelPayment(id) {
+            if (!confirm('정말 이 결제를 취소하시겠습니까?')) return;
+
             try {
-                await api.put(`/admin/orders/${id}/status`, { status });
-                showToast('주문 상태가 변경되었습니다.');
-                closeModal('orderModal');
-                loadOrders();
+                await api.post(`/admin/payments/${id}/cancel`);
+                showToast('결제가 취소되었습니다.');
+                closeModal('paymentModal');
+                loadPayments();
             } catch (error) {
                 showToast(error.message, 'error');
             }
@@ -296,10 +324,27 @@
 
         function updatePagination(pagination) {
             if (!pagination) return;
-            document.getElementById('paginationInfo').textContent = `${pagination.total}건의 주문`;
+            document.getElementById('paginationInfo').textContent = `${pagination.total}건의 결제`;
+
+            const btns = document.getElementById('paginationBtns');
+            if (pagination.totalPages <= 1) {
+                btns.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                html += `<button class="pagination-btn ${i === pagination.page ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            }
+            btns.innerHTML = html;
         }
 
-        document.addEventListener('DOMContentLoaded', loadOrders);
+        function goToPage(page) {
+            currentPage = page;
+            loadPayments();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadPayments);
     </script>
 </body>
 </html>

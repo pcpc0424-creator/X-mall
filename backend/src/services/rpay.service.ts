@@ -68,7 +68,7 @@ export class RpayService {
       const currentBalance = parseFloat(balanceResult.rows[0]?.balance_krw || 0);
 
       if (currentBalance < amount) {
-        throw new Error(`R페이 잔액이 부족합니다. (현재: ${currentBalance}원, 필요: ${amount}원)`);
+        throw new Error(`X페이 잔액이 부족합니다. (현재: ${currentBalance}원, 필요: ${amount}원)`);
       }
 
       // Update balance

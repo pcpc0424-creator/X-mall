@@ -128,7 +128,7 @@ export class WithdrawalService {
 
     params.push(limit, offset);
     const result = await query(
-      `SELECT pw.*, u.email, u.name as user_name
+      `SELECT pw.*, u.username, u.name as user_name
        FROM point_withdrawals pw
        JOIN users u ON pw.user_id = u.id
        ${whereClause}

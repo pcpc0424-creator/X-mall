@@ -9,7 +9,7 @@ export type PendingPointStatus = 'pending' | 'released' | 'cancelled';
 
 export interface User {
   id: string;
-  email: string;
+  username: string;
   password_hash: string;
   name: string;
   phone: string;
@@ -21,7 +21,7 @@ export interface User {
 
 export interface AdminUser {
   id: string;
-  email: string;
+  username: string;
   password_hash: string;
   name: string;
   role: string;
@@ -146,7 +146,7 @@ export interface Holiday {
 export interface AuthRequest extends Request {
   user?: {
     id: string;
-    email: string;
+    username: string;
     grade: UserGrade;
   };
 }
@@ -154,7 +154,7 @@ export interface AuthRequest extends Request {
 export interface AdminAuthRequest extends Request {
   admin?: {
     id: string;
-    email: string;
+    username: string;
     role: string;
   };
 }
@@ -169,20 +169,25 @@ export interface ApiResponse<T = any> {
 
 // Request body types
 export interface SignupBody {
-  email: string;
+  username: string;
   password: string;
   name: string;
   phone: string;
-  referrer_email?: string;
+  referrer_username?: string;
 }
 
 export interface LoginBody {
-  email: string;
+  username: string;
+  password: string;
+}
+
+export interface AdminLoginBody {
+  username: string;
   password: string;
 }
 
 export interface PointTransferBody {
-  to_user_email: string;
+  to_user_username: string;
   point_type: 'P' | 'C';
   amount: number;
 }
@@ -206,6 +211,8 @@ export interface CreateOrderBody {
     tpoint?: number;
     card?: number;
     bank?: number;
+    payring_order_id?: string;
+    payring_transaction_id?: string;
   };
   shipping: {
     address: string;

@@ -7,11 +7,12 @@ export class ProductService {
     page?: number;
     limit?: number;
     category?: string;
+    subcategory?: string;
     search?: string;
     activeOnly?: boolean;
     productType?: ProductType;
-  } = {}): Promise<{ products: Product[]; total: number }> {
-    const { page = 1, limit = 20, category, search, activeOnly = true, productType } = options;
+  } = {}): Promise<{ products: Product[]; total: number; totalPages: number; page: number; limit: number }> {
+    const { page = 1, limit = 20, category, subcategory, search, activeOnly = true, productType } = options;
     const offset = (page - 1) * limit;
 
     const conditions: string[] = [];
@@ -24,6 +25,11 @@ export class ProductService {
     if (category) {
       params.push(category);
       conditions.push(`category = $${params.length}`);
+    }
+
+    if (subcategory) {
+      params.push(subcategory);
+      conditions.push(`subcategory = $${params.length}`);
     }
 
     if (search) {
@@ -51,9 +57,15 @@ export class ProductService {
       params
     );
 
+    const total = parseInt(countResult.rows[0].count);
+    const totalPages = Math.ceil(total / limit);
+
     return {
       products: result.rows,
-      total: parseInt(countResult.rows[0].count)
+      total,
+      totalPages,
+      page,
+      limit
     };
   }
 
@@ -73,12 +85,13 @@ export class ProductService {
     pv_value: number;
     stock_quantity?: number;
     category?: string;
+    subcategory?: string;
     image_url?: string;
     product_type?: ProductType;
   }): Promise<Product> {
     const result = await query(
-      `INSERT INTO products (id, name, description, price_krw, price_dealer_krw, pv_value, stock_quantity, category, image_url, product_type)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      `INSERT INTO products (id, name, description, price_krw, price_dealer_krw, pv_value, stock_quantity, category, subcategory, image_url, product_type)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
        RETURNING *`,
       [
         generateUUID(),
@@ -89,6 +102,7 @@ export class ProductService {
         data.pv_value,
         data.stock_quantity || 0,
         data.category,
+        data.subcategory,
         data.image_url,
         data.product_type || 'single'
       ]
@@ -104,6 +118,7 @@ export class ProductService {
     pv_value: number;
     stock_quantity: number;
     category: string;
+    subcategory: string;
     image_url: string;
     product_type: ProductType;
     is_active: boolean;

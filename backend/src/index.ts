@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
+import path from 'path';
 import routes from './routes';
 import { pool } from './config/database';
 import { initializeJobs } from './jobs';

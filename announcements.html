@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항 | X-mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=23">
+    <style>
+        .announcements-section {
+            padding: 120px 0 80px;
+            min-height: 70vh;
+            background: var(--gray-100);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            color: var(--gray-600);
+            font-size: 1.1rem;
+        }
+
+        .announcement-list {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .announcement-item {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: var(--transition-normal);
+        }
+
+        .announcement-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .announcement-header {
+            padding: 25px 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid transparent;
+            transition: var(--transition-normal);
+        }
+
+        .announcement-item.expanded .announcement-header {
+            border-bottom-color: var(--gray-200);
+        }
+
+        .announcement-badge {
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .announcement-badge.important {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .announcement-badge.normal {
+            background: var(--gray-200);
+            color: var(--gray-600);
+        }
+
+        .announcement-title {
+            flex: 1;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .announcement-date {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .announcement-toggle {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            transition: var(--transition-normal);
+        }
+
+        .announcement-item.expanded .announcement-toggle {
+            transform: rotate(180deg);
+        }
+
+        .announcement-content {
+            padding: 0 30px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .announcement-item.expanded .announcement-content {
+            padding: 25px 30px;
+            max-height: 1000px;
+        }
+
+        .announcement-content-inner {
+            color: var(--gray-700);
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .no-announcements {
+            text-align: center;
+            padding: 60px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+        }
+
+        .no-announcements i {
+            font-size: 3rem;
+            color: var(--gray-400);
+            margin-bottom: 20px;
+        }
+
+        .no-announcements p {
+            color: var(--gray-600);
+        }
+
+        @media (max-width: 768px) {
+            .announcements-section { padding: 100px 0 60px; }
+            .page-header h1 { font-size: 2rem; }
+            .announcement-header { padding: 20px; flex-wrap: wrap; }
+            .announcement-title { width: 100%; order: 2; margin-top: 10px; }
+            .announcement-date { order: 1; margin-left: auto; }
+            .announcement-toggle { order: 3; }
+            .announcement-content { padding: 0 20px; }
+            .announcement-item.expanded .announcement-content { padding: 20px; }
+        }
+    </style>
+</head>
+<body class="category-page">
+    <!-- 헤더 -->
+    <header class="header scrolled">
+        <nav class="nav-container">
+            <div class="logo">
+                <span class="logo-text">X-mall</span>
+                <span class="logo-dot"></span>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">홈</a></li>
+                <li class="has-dropdown">
+                    <a href="category-health.html" class="nav-link">건강식품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>비타민 & 미네랄</h4>
+                                <a href="sub-health-vitamin.html">멀티비타민</a>
+                                <a href="sub-health-vitamin.html">비타민C</a>
+                                <a href="sub-health-vitamin.html">비타민D</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>다이어트</h4>
+                                <a href="sub-health-probiotics.html">다이어트 보조제</a>
+                                <a href="sub-health-probiotics.html">단백질 쉐이크</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>피로회복</h4>
+                                <a href="sub-health-ginseng.html">홍삼</a>
+                                <a href="sub-health-ginseng.html">녹용</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-medical.html" class="nav-link">의료기기 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>건강측정기</h4>
+                                <a href="sub-medical-bp.html">혈압계</a>
+                                <a href="sub-medical-thermo.html">체온계</a>
+                                <a href="sub-medical-glucose.html">혈당계</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>치료기기</h4>
+                                <a href="sub-medical-massager.html">마사지기</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="has-dropdown">
+                    <a href="category-cosmetic.html" class="nav-link">화장품 <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-col">
+                                <h4>스킨케어</h4>
+                                <a href="sub-cosmetic-skincare.html">토너/스킨</a>
+                                <a href="sub-cosmetic-skincare.html">에센스/세럼</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>메이크업</h4>
+                                <a href="sub-cosmetic-makeup.html">베이스</a>
+                                <a href="sub-cosmetic-makeup.html">립</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="category-package.html" class="nav-link">패키지 상품</a></li>
+                <li><a href="brand-story.html" class="nav-link">브랜드 스토리</a></li>
+                <li><a href="event.html" class="nav-link">이벤트</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="search.html" class="search-btn" aria-label="검색"><i class="fas fa-search"></i></a>
+                <a href="login.html" class="user-btn" aria-label="로그인"><i class="fas fa-user"></i></a>
+                <a href="cart.html" class="cart-btn" aria-label="장바구니">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="menu-toggle-wrap">
+                    <button class="menu-toggle" aria-label="메뉴">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 공지사항 섹션 -->
+    <section class="announcements-section">
+        <div class="container">
+            <div class="page-header">
+                <h1>공지사항</h1>
+                <p>X-mall의 새로운 소식과 안내사항을 확인하세요</p>
+            </div>
+
+            <div class="announcement-list" id="announcementList">
+                <div class="no-announcements">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>공지사항을 불러오는 중...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-about">
+                        <a href="index.html" class="footer-logo">
+                            <span class="logo-text">X-mall</span>
+                            <span class="logo-dot"></span>
+                        </a>
+                        <p>프리미엄 건강식품, 의료기기, 화장품을 한 곳에서 만나보세요.</p>
+                        <div class="footer-socials">
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-col">
+                        <h4>쇼핑 안내</h4>
+                        <ul>
+                            <li><a href="#">이용약관</a></li>
+                            <li><a href="#">개인정보처리방침</a></li>
+                            <li><a href="#">배송 안내</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>고객 서비스</h4>
+                        <ul>
+                            <li><a href="#">자주 묻는 질문</a></li>
+                            <li><a href="#">1:1 문의</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>회사 정보</h4>
+                        <ul>
+                            <li><a href="brand-story.html">회사 소개</a></li>
+                            <li><a href="announcements.html">공지사항</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col footer-contact">
+                        <h4>고객센터</h4>
+                        <div class="contact-phone">
+                            <span>1588-0000</span>
+                            <small>평일 09:00 - 18:00</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2024 X-mall. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="scroll-top"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Scroll to Top
+        const scrollTopBtn = document.querySelector('.scroll-top');
+        if (scrollTopBtn) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) scrollTopBtn.classList.add('visible');
+                else scrollTopBtn.classList.remove('visible');
+            });
+            scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        }
+
+        // Mobile Menu Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        if (menuToggle && navMenu) {
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
+
+        // Load announcements
+        const API_BASE = '/X-mall/api';
+        loadAnnouncements();
+
+        async function loadAnnouncements() {
+            try {
+                const response = await fetch(`${API_BASE}/content/announcements`);
+                const result = await response.json();
+                if (result.success) {
+                    renderAnnouncements(result.data.announcements || []);
+                }
+            } catch (error) {
+                console.error('Failed to load announcements:', error);
+                document.getElementById('announcementList').innerHTML = `
+                    <div class="no-announcements">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>공지사항을 불러올 수 없습니다.</p>
+                    </div>`;
+            }
+        }
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+        }
+
+        function renderAnnouncements(announcements) {
+            const list = document.getElementById('announcementList');
+            if (announcements.length === 0) {
+                list.innerHTML = `
+                    <div class="no-announcements">
+                        <i class="fas fa-bell-slash"></i>
+                        <p>등록된 공지사항이 없습니다.</p>
+                    </div>`;
+                return;
+            }
+
+            list.innerHTML = announcements.map((a, index) => `
+                <div class="announcement-item ${index === 0 ? 'expanded' : ''}" data-id="${a.id}">
+                    <div class="announcement-header" onclick="toggleAnnouncement(this)">
+                        <span class="announcement-badge ${a.is_important ? 'important' : 'normal'}">${a.is_important ? '중요' : '일반'}</span>
+                        <span class="announcement-title">${escapeHtml(a.title)}</span>
+                        <span class="announcement-date">${formatDate(a.created_at)}</span>
+                        <span class="announcement-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="announcement-content">
+                        <div class="announcement-content-inner">${escapeHtml(a.content)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        window.toggleAnnouncement = function(header) {
+            const item = header.closest('.announcement-item');
+            item.classList.toggle('expanded');
+        };
+    });
+    </script>
+    <script src="frontend/js/api.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

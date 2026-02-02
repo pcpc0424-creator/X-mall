@@ -7,11 +7,12 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 사용자 테이블
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    email VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     name VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     grade VARCHAR(20) DEFAULT 'consumer' CHECK (grade IN ('dealer', 'consumer')),
+    referrer_id UUID REFERENCES users(id) ON DELETE SET NULL,
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -20,7 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- 관리자 테이블
 CREATE TABLE IF NOT EXISTS admin_users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    email VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     name VARCHAR(100) NOT NULL,
     role VARCHAR(50) DEFAULT 'admin',
@@ -44,7 +45,7 @@ CREATE TABLE IF NOT EXISTS products (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- R페이 잔액 테이블
+-- X페이 잔액 테이블
 CREATE TABLE IF NOT EXISTS rpay_balance (
     user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
     balance_krw DECIMAL(15, 2) DEFAULT 0,
@@ -151,7 +152,7 @@ CREATE TABLE IF NOT EXISTS holidays (
     description VARCHAR(255)
 );
 
--- R페이 거래 내역 테이블
+-- X페이 거래 내역 테이블
 CREATE TABLE IF NOT EXISTS rpay_transactions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
@@ -177,7 +178,7 @@ CREATE TABLE IF NOT EXISTS point_transactions (
 );
 
 -- 인덱스 생성
-CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_users_grade ON users(grade);
 CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);

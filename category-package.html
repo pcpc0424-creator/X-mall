@@ -449,7 +449,8 @@
         try {
             const params = new URLSearchParams({
                 page: currentPage,
-                limit: 12
+                limit: 12,
+                product_type: 'package'  // 서버에서 패키지만 가져오기
             });
 
             // 카테고리 필터
@@ -461,8 +462,8 @@
             const result = await response.json();
 
             if (result.success) {
-                // 패키지 상품만 필터링
-                const packageProducts = result.data.products.filter(p => p.product_type === 'package');
+                const packageProducts = result.data.products || [];
+                const total = result.data.total || packageProducts.length;
 
                 if (packageProducts.length === 0) {
                     grid.innerHTML = `
@@ -477,8 +478,8 @@
                     return;
                 }
 
-                // 상품 수 업데이트
-                document.getElementById('productCount').textContent = packageProducts.length;
+                // 상품 수 업데이트 (전체 패키지 상품 수)
+                document.getElementById('productCount').textContent = total;
 
                 // 상품 카드 렌더링
                 grid.innerHTML = '';
@@ -487,8 +488,8 @@
                     grid.appendChild(card);
                 }
 
-                // 페이지네이션 업데이트
-                updatePagination(result.data.total, packageProducts.length);
+                // 페이지네이션 업데이트 (실제 패키지 총 개수 사용)
+                updatePagination(total, packageProducts.length);
             } else {
                 throw new Error(result.error);
             }

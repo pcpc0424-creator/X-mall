@@ -16,8 +16,8 @@
 
         <form class="login-form" id="loginForm">
             <div class="form-group">
-                <label class="form-label" for="email">이메일</label>
-                <input type="email" class="form-control" id="email" placeholder="admin@example.com" required>
+                <label class="form-label" for="username">아이디</label>
+                <input type="text" class="form-control" id="username" placeholder="아이디 입력" required>
             </div>
 
             <div class="form-group">
@@ -46,7 +46,7 @@
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const loginBtn = document.getElementById('loginBtn');
 
@@ -59,7 +59,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({ username, password })
                 });
 
                 const data = await response.json();

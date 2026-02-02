@@ -7,7 +7,7 @@ export interface BulkGrantResult {
   total: number;
   success_count: number;
   fail_count: number;
-  errors: { row: number; email: string; error: string }[];
+  errors: { row: number; username: string; error: string }[];
 }
 
 export class PointService {
@@ -280,16 +280,16 @@ export class PointService {
       const rowNumber = i + startRowOffset;
 
       try {
-        // Find user by email
+        // Find user by username
         const userResult = await query(
-          'SELECT id, name FROM users WHERE email = $1 AND is_active = true',
-          [row.email]
+          'SELECT id, name FROM users WHERE username = $1 AND is_active = true',
+          [row.username]
         );
 
         if (userResult.rows.length === 0) {
           result.errors.push({
             row: rowNumber,
-            email: row.email,
+            username: row.username,
             error: '존재하지 않는 회원'
           });
           result.fail_count++;
@@ -307,7 +307,7 @@ export class PointService {
       } catch (error: any) {
         result.errors.push({
           row: rowNumber,
-          email: row.email,
+          username: row.username,
           error: error.message || '포인트 지급 실패'
         });
         result.fail_count++;

@@ -2,17 +2,26 @@ import { Request, Response } from 'express';
 import { userService } from '../services/user.service';
 import { adminService } from '../services/admin.service';
 import { generateUserToken, generateAdminToken } from '../middleware/auth';
-import { SignupBody, LoginBody } from '../types';
+import { SignupBody, LoginBody, AdminLoginBody } from '../types';
 
 export class AuthController {
   async signup(req: Request, res: Response) {
     try {
       const data: SignupBody = req.body;
 
-      if (!data.email || !data.password || !data.name || !data.phone) {
+      if (!data.username || !data.password || !data.name || !data.phone || !data.referrer_username) {
         return res.status(400).json({
           success: false,
-          error: '이메일, 비밀번호, 이름, 전화번호는 필수입니다.'
+          error: '아이디, 비밀번호, 이름, 전화번호, 추천인은 필수입니다.'
+        });
+      }
+
+      // 아이디 유효성 검사 (영문, 숫자만 허용, 4-20자)
+      const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
+      if (!usernameRegex.test(data.username)) {
+        return res.status(400).json({
+          success: false,
+          error: '아이디는 4~20자의 영문, 숫자만 사용 가능합니다.'
         });
       }
 
@@ -23,24 +32,21 @@ export class AuthController {
         });
       }
 
-      // Validate referrer if provided
-      let referrerId: string | undefined;
-      if (data.referrer_email) {
-        const referrer = await userService.findDealerByEmail(data.referrer_email);
-        if (!referrer) {
-          return res.status(400).json({
-            success: false,
-            error: '존재하지 않는 추천인이거나 대리점이 아닙니다.'
-          });
-        }
-        referrerId = referrer.id;
+      // Validate referrer (required)
+      const referrer = await userService.findDealerByUsername(data.referrer_username);
+      if (!referrer) {
+        return res.status(400).json({
+          success: false,
+          error: '존재하지 않는 추천인이거나 대리점이 아닙니다.'
+        });
       }
+      const referrerId = referrer.id;
 
       const user = await userService.createUser(data, 'consumer', referrerId);
 
       const token = generateUserToken({
         id: user.id,
-        email: user.email,
+        username: user.username,
         grade: user.grade
       });
 
@@ -49,7 +55,7 @@ export class AuthController {
         data: {
           user: {
             id: user.id,
-            email: user.email,
+            username: user.username,
             name: user.name,
             grade: user.grade
           },
@@ -67,21 +73,21 @@ export class AuthController {
 
   async login(req: Request, res: Response) {
     try {
-      const { email, password }: LoginBody = req.body;
+      const { username, password }: LoginBody = req.body;
 
-      if (!email || !password) {
+      if (!username || !password) {
         return res.status(400).json({
           success: false,
-          error: '이메일과 비밀번호를 입력해주세요.'
+          error: '아이디와 비밀번호를 입력해주세요.'
         });
       }
 
-      const user = await userService.findByEmail(email);
+      const user = await userService.findByUsername(username);
 
       if (!user) {
         return res.status(401).json({
           success: false,
-          error: '이메일 또는 비밀번호가 일치하지 않습니다.'
+          error: '아이디 또는 비밀번호가 일치하지 않습니다.'
         });
       }
 
@@ -90,13 +96,13 @@ export class AuthController {
       if (!isValid) {
         return res.status(401).json({
           success: false,
-          error: '이메일 또는 비밀번호가 일치하지 않습니다.'
+          error: '아이디 또는 비밀번호가 일치하지 않습니다.'
         });
       }
 
       const token = generateUserToken({
         id: user.id,
-        email: user.email,
+        username: user.username,
         grade: user.grade
       });
 
@@ -105,7 +111,7 @@ export class AuthController {
         data: {
           user: {
             id: user.id,
-            email: user.email,
+            username: user.username,
             name: user.name,
             grade: user.grade
           },
@@ -122,21 +128,21 @@ export class AuthController {
 
   async adminLogin(req: Request, res: Response) {
     try {
-      const { email, password }: LoginBody = req.body;
+      const { username, password } = req.body;
 
-      if (!email || !password) {
+      if (!username || !password) {
         return res.status(400).json({
           success: false,
-          error: '이메일과 비밀번호를 입력해주세요.'
+          error: '아이디와 비밀번호를 입력해주세요.'
         });
       }
 
-      const admin = await adminService.findByEmail(email);
+      const admin = await adminService.findByUsername(username);
 
       if (!admin) {
         return res.status(401).json({
           success: false,
-          error: '관리자 계정을 찾을 수 없습니다.'
+          error: '아이디 또는 비밀번호가 일치하지 않습니다.'
         });
       }
 
@@ -145,13 +151,13 @@ export class AuthController {
       if (!isValid) {
         return res.status(401).json({
           success: false,
-          error: '이메일 또는 비밀번호가 일치하지 않습니다.'
+          error: '아이디 또는 비밀번호가 일치하지 않습니다.'
         });
       }
 
       const token = generateAdminToken({
         id: admin.id,
-        email: admin.email,
+        username: admin.username,
         role: admin.role
       });
 
@@ -160,7 +166,7 @@ export class AuthController {
         data: {
           admin: {
             id: admin.id,
-            email: admin.email,
+            username: admin.username,
             name: admin.name,
             role: admin.role
           },

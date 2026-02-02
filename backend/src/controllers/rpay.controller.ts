@@ -51,12 +51,12 @@ export class RpayController {
   async adminDeposit(req: AdminAuthRequest, res: Response) {
     try {
       const adminId = req.admin!.id;
-      const { email, user_id, amount, reason } = req.body;
+      const { username, user_id, amount, reason } = req.body;
 
-      if ((!email && !user_id) || !amount) {
+      if ((!username && !user_id) || !amount) {
         return res.status(400).json({
           success: false,
-          error: '사용자 이메일/ID와 금액은 필수입니다.'
+          error: '사용자 아이디/ID와 금액은 필수입니다.'
         });
       }
 
@@ -67,10 +67,10 @@ export class RpayController {
         });
       }
 
-      // Find user by email or id
+      // Find user by username or id
       let user;
-      if (email) {
-        user = await userService.findByEmail(email);
+      if (username) {
+        user = await userService.findByUsername(username);
       } else {
         user = await userService.findById(user_id);
       }
@@ -91,7 +91,7 @@ export class RpayController {
           deposited: amount,
           new_balance: newBalance
         },
-        message: `${user.name}님에게 R페이 ${amount.toLocaleString()}원이 충전되었습니다.`
+        message: `${user.name}님에게 X페이 ${amount.toLocaleString()}원이 충전되었습니다.`
       });
     } catch (error: any) {
       res.status(400).json({

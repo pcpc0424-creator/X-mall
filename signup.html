@@ -237,10 +237,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="email">이메일 <span class="required">*</span></label>
+                                <label for="username">아이디 <span class="required">*</span></label>
                                 <div class="input-wrapper">
-                                    <i class="fas fa-envelope"></i>
-                                    <input type="email" id="email" name="email" placeholder="example@email.com" required>
+                                    <i class="fas fa-id-card"></i>
+                                    <input type="text" id="username" name="username" placeholder="영문, 숫자 4~20자" required>
                                 </div>
                                 <p class="input-hint">로그인 시 사용됩니다</p>
                             </div>
@@ -280,12 +280,12 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="referrerEmail">추천인 이메일</label>
+                                <label for="referrerUsername">추천인 아이디 <span class="required">*</span></label>
                                 <div class="input-wrapper">
                                     <i class="fas fa-user-plus"></i>
-                                    <input type="email" id="referrerEmail" name="referrerEmail" placeholder="추천인 이메일 (선택사항)">
+                                    <input type="text" id="referrerUsername" name="referrerUsername" placeholder="추천인 아이디" required>
                                 </div>
-                                <p class="input-hint">추천인이 있으시면 입력해주세요 (대리점 회원만 가능)</p>
+                                <p class="input-hint">대리점 회원의 아이디를 입력해주세요</p>
                             </div>
 
                             <button type="button" class="auth-submit-btn" id="nextStep1">
@@ -955,13 +955,21 @@
             // Step 1 -> Step 2
             nextStep1.addEventListener('click', function() {
                 const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
+                const username = document.getElementById('username').value;
                 const pass = password.value;
                 const passConfirm = passwordConfirm.value;
                 const phone = document.getElementById('phone').value;
+                const referrerUsername = document.getElementById('referrerUsername').value.trim();
 
-                if (!name || !email || !pass || !passConfirm || !phone) {
+                if (!name || !username || !pass || !passConfirm || !phone || !referrerUsername) {
                     alert('모든 필수 항목을 입력해주세요.');
+                    return;
+                }
+
+                // 아이디 유효성 검사
+                const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
+                if (!usernameRegex.test(username)) {
+                    alert('아이디는 4~20자의 영문, 숫자만 사용 가능합니다.');
                     return;
                 }
 
@@ -1012,15 +1020,15 @@
 
                 try {
                     const signupData = {
-                        email: document.getElementById('email').value,
+                        username: document.getElementById('username').value,
                         password: document.getElementById('password').value,
                         name: document.getElementById('name').value,
                         phone: document.getElementById('phone').value
                     };
 
-                    const referrerEmail = document.getElementById('referrerEmail').value.trim();
-                    if (referrerEmail) {
-                        signupData.referrer_email = referrerEmail;
+                    const referrerUsername = document.getElementById('referrerUsername').value.trim();
+                    if (referrerUsername) {
+                        signupData.referrer_username = referrerUsername;
                     }
 
                     await auth.signup(signupData);

@@ -41,8 +41,8 @@ class Auth {
     return user && user.grade === 'dealer';
   }
 
-  async login(email, password) {
-    const response = await authApi.login(email, password);
+  async login(username, password) {
+    const response = await authApi.login(username, password);
     if (response.success) {
       this.setToken(response.data.token);
       this.setUser(response.data.user);

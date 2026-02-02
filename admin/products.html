@@ -30,13 +30,13 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
                     주문 관리
                 </a>
+                <a href="payments.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    결제 내역
+                </a>
                 <a href="products.html" class="nav-item active">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
                     상품 관리
-                </a>
-                <a href="categories.html" class="nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-                    카테고리 관리
                 </a>
                 <a href="banners.html" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
@@ -129,6 +129,7 @@
                                         <th>상품명</th>
                                         <th>타입</th>
                                         <th>카테고리</th>
+                                        <th>서브카테고리</th>
                                         <th>소비자가</th>
                                         <th>대리점가</th>
                                         <th>PV</th>
@@ -138,7 +139,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="productsBody">
-                                    <tr><td colspan="9" class="text-center text-muted">로딩 중...</td></tr>
+                                    <tr><td colspan="10" class="text-center text-muted">로딩 중...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -204,8 +205,14 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">카테고리</label>
-                        <input type="text" class="form-control" id="productCategory" placeholder="카테고리">
+                        <label class="form-label">카테고리 <span style="color: #f44336;">*</span></label>
+                        <div class="category-btns" id="categoryBtns">
+                            <button type="button" class="category-btn" data-category="건강식품">건강식품</button>
+                            <button type="button" class="category-btn" data-category="의료기기">의료기기</button>
+                            <button type="button" class="category-btn" data-category="화장품">화장품</button>
+                            <button type="button" class="category-btn" data-category="패키지">패키지</button>
+                        </div>
+                        <input type="hidden" id="productCategory">
                     </div>
                     <div class="form-group">
                         <label class="form-label">상태</label>
@@ -215,9 +222,32 @@
                         </select>
                     </div>
                 </div>
+                <div class="form-group" id="subcategoryGroup" style="display: none;">
+                    <label class="form-label">서브카테고리</label>
+                    <div class="category-btns" id="subcategoryBtns">
+                        <!-- 서브카테고리 버튼이 동적으로 추가됨 -->
+                    </div>
+                    <input type="hidden" id="productSubcategory">
+                </div>
                 <div class="form-group">
-                    <label class="form-label">이미지 URL</label>
-                    <input type="text" class="form-control" id="productImageUrl" placeholder="https://...">
+                    <label class="form-label">상품 이미지</label>
+                    <div class="image-upload-area" id="imageUploadArea">
+                        <input type="file" id="productImageFile" accept="image/*" style="display: none;">
+                        <input type="hidden" id="productImageUrl">
+                        <div class="image-preview" id="imagePreview" style="display: none;">
+                            <img id="previewImg" src="" alt="미리보기">
+                            <button type="button" class="remove-image-btn" onclick="removeImage()">×</button>
+                        </div>
+                        <div class="image-upload-placeholder" id="imagePlaceholder">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21,15 16,10 5,21"/>
+                            </svg>
+                            <p>클릭하여 이미지 선택</p>
+                            <small>JPG, PNG, GIF, WEBP (최대 10MB)</small>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -357,6 +387,110 @@
         }
         .type-badge.single { background: #e3f2fd; color: #1976d2; }
         .type-badge.package { background: #f3e5f5; color: #7b1fa2; }
+
+        /* Category Buttons */
+        .category-btns {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .category-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+        .category-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .category-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Image Upload Area */
+        .image-upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(var(--primary-rgb), 0.05);
+        }
+        .image-upload-area.has-image {
+            border-style: solid;
+            padding: 0.5rem;
+        }
+        .image-upload-placeholder {
+            color: var(--text-muted);
+        }
+        .image-upload-placeholder p {
+            margin: 0.5rem 0 0.25rem;
+            font-size: 0.9rem;
+        }
+        .image-upload-placeholder small {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+        .image-preview {
+            position: relative;
+            display: inline-block;
+        }
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+        .remove-image-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remove-image-btn:hover {
+            background: #d32f2f;
+        }
+        .image-uploading {
+            position: relative;
+        }
+        .image-uploading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 
     <script src="js/admin.js"></script>
@@ -366,6 +500,14 @@
         let editingProductId = null;
         let singleProducts = [];
         let currentPackageItems = [];
+
+        // 카테고리별 서브카테고리 매핑
+        const subcategoryMap = {
+            '건강식품': ['비타민', '홍삼/인삼', '프로바이오틱스', '오메가3'],
+            '의료기기': ['혈압계', '체온계', '혈당계', '마사지기'],
+            '화장품': ['스킨케어', '메이크업', '바디케어', '헤어케어'],
+            '패키지': [] // 패키지는 서브카테고리 없음
+        };
 
         async function loadProducts() {
             try {
@@ -378,7 +520,7 @@
                 const result = await api.get(url);
                 allProducts = result.data?.products || [];
                 renderProducts(allProducts);
-                updatePagination(result.data?.pagination);
+                updatePagination(result.data);
                 updateCategoryFilter(allProducts);
             } catch (error) {
                 console.error('Load products error:', error);
@@ -416,7 +558,7 @@
         function renderProducts(products) {
             const tbody = document.getElementById('productsBody');
             if (products.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">상품이 없습니다</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted">상품이 없습니다</td></tr>';
                 return;
             }
 
@@ -429,6 +571,7 @@
                         </span>
                     </td>
                     <td>${escapeHtml(p.category || '-')}</td>
+                    <td>${escapeHtml(p.subcategory || '-')}</td>
                     <td>${formatCurrency(p.price_krw)}</td>
                     <td>${formatCurrency(p.price_dealer_krw)}</td>
                     <td>${p.pv_value ?? '-'}</td>
@@ -494,9 +637,14 @@
             document.getElementById('productPvValue').value = '';
             document.getElementById('productStock').value = '0';
             document.getElementById('productCategory').value = '';
+            document.getElementById('productSubcategory').value = '';
             document.getElementById('productIsActive').value = 'true';
             document.getElementById('productImageUrl').value = '';
             document.getElementById('productSaveBtn').textContent = '추가';
+            // Clear category button selection
+            clearCategorySelection();
+            // Clear image preview
+            clearImagePreview();
             openModal('productModal');
         }
 
@@ -517,14 +665,251 @@
             document.getElementById('productPvValue').value = product.pv_value ?? '';
             document.getElementById('productStock').value = product.stock_quantity ?? 0;
             document.getElementById('productCategory').value = product.category || '';
+            document.getElementById('productSubcategory').value = product.subcategory || '';
             document.getElementById('productIsActive').value = product.is_active ? 'true' : 'false';
             document.getElementById('productImageUrl').value = product.image_url || '';
             document.getElementById('productSaveBtn').textContent = '저장';
+            // Set category button selection (this also updates subcategory buttons)
+            selectCategoryButton(product.category);
+            // Set subcategory button selection
+            if (product.subcategory) {
+                selectSubcategoryButton(product.subcategory);
+            }
+            // Set image preview if exists
+            if (product.image_url) {
+                showImagePreview(product.image_url);
+            } else {
+                clearImagePreview();
+            }
             openModal('productModal');
         }
 
         function onProductTypeChange() {
             // Can be used for additional UI logic when type changes
+        }
+
+        // ========== Category Button Functions ==========
+        function initCategoryButtons() {
+            const categoryBtns = document.querySelectorAll('#categoryBtns .category-btn');
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    // Set hidden input value
+                    const category = this.dataset.category;
+                    document.getElementById('productCategory').value = category;
+                    // Update subcategory options
+                    updateSubcategoryButtons(category);
+                });
+            });
+        }
+
+        function clearCategorySelection() {
+            const categoryBtns = document.querySelectorAll('#categoryBtns .category-btn');
+            categoryBtns.forEach(btn => btn.classList.remove('active'));
+            document.getElementById('productCategory').value = '';
+            // Hide and clear subcategory
+            clearSubcategorySelection();
+            document.getElementById('subcategoryGroup').style.display = 'none';
+        }
+
+        function selectCategoryButton(category) {
+            const categoryBtns = document.querySelectorAll('#categoryBtns .category-btn');
+            categoryBtns.forEach(btn => {
+                if (btn.dataset.category === category) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            // Update subcategory options
+            updateSubcategoryButtons(category);
+        }
+
+        // ========== Subcategory Button Functions ==========
+        function updateSubcategoryButtons(category) {
+            const subcategoryGroup = document.getElementById('subcategoryGroup');
+            const subcategoryBtns = document.getElementById('subcategoryBtns');
+            const subcategories = subcategoryMap[category] || [];
+
+            if (subcategories.length === 0) {
+                subcategoryGroup.style.display = 'none';
+                clearSubcategorySelection();
+                return;
+            }
+
+            // Generate subcategory buttons
+            subcategoryBtns.innerHTML = subcategories.map(sub =>
+                `<button type="button" class="category-btn subcategory-btn" data-subcategory="${sub}">${sub}</button>`
+            ).join('');
+
+            // Add click handlers
+            subcategoryBtns.querySelectorAll('.subcategory-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    subcategoryBtns.querySelectorAll('.subcategory-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById('productSubcategory').value = this.dataset.subcategory;
+                });
+            });
+
+            subcategoryGroup.style.display = 'block';
+        }
+
+        function clearSubcategorySelection() {
+            const subcategoryBtns = document.getElementById('subcategoryBtns');
+            subcategoryBtns.querySelectorAll('.subcategory-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('productSubcategory').value = '';
+        }
+
+        function selectSubcategoryButton(subcategory) {
+            if (!subcategory) return;
+            const subcategoryBtns = document.getElementById('subcategoryBtns');
+            subcategoryBtns.querySelectorAll('.subcategory-btn').forEach(btn => {
+                if (btn.dataset.subcategory === subcategory) {
+                    btn.classList.add('active');
+                    document.getElementById('productSubcategory').value = subcategory;
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // ========== Image Upload Functions ==========
+        let isUploadingImage = false;
+
+        function initImageUpload() {
+            const uploadArea = document.getElementById('imageUploadArea');
+            const fileInput = document.getElementById('productImageFile');
+
+            // Click to select file
+            uploadArea.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-image-btn')) return;
+                fileInput.click();
+            });
+
+            // File selection
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    handleImageFile(file);
+                }
+            });
+
+            // Drag and drop
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = 'var(--primary)';
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '';
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '';
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    handleImageFile(file);
+                }
+            });
+        }
+
+        async function handleImageFile(file) {
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                showToast('JPG, PNG, GIF, WEBP 파일만 업로드 가능합니다.', 'error');
+                return;
+            }
+
+            // Validate file size (10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('파일 크기는 10MB 이하여야 합니다.', 'error');
+                return;
+            }
+
+            // Show preview immediately
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                showImagePreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+
+            // Upload to server
+            await uploadImage(file);
+        }
+
+        async function uploadImage(file) {
+            if (isUploadingImage) return;
+
+            const uploadArea = document.getElementById('imageUploadArea');
+            isUploadingImage = true;
+            uploadArea.classList.add('image-uploading');
+
+            try {
+                const formData = new FormData();
+                formData.append('image', file);
+
+                const token = localStorage.getItem('adminToken');
+                const response = await fetch('/X-mall/api/admin/upload/image', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (result.success && result.data) {
+                    document.getElementById('productImageUrl').value = result.data.url;
+                    showToast('이미지가 업로드되었습니다.', 'success');
+                } else {
+                    throw new Error(result.error || '업로드에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Image upload error:', error);
+                showToast(error.message || '이미지 업로드에 실패했습니다.', 'error');
+                clearImagePreview();
+            } finally {
+                isUploadingImage = false;
+                uploadArea.classList.remove('image-uploading');
+            }
+        }
+
+        function showImagePreview(imageUrl) {
+            const uploadArea = document.getElementById('imageUploadArea');
+            const preview = document.getElementById('imagePreview');
+            const placeholder = document.getElementById('imagePlaceholder');
+            const previewImg = document.getElementById('previewImg');
+
+            previewImg.src = imageUrl;
+            preview.style.display = 'inline-block';
+            placeholder.style.display = 'none';
+            uploadArea.classList.add('has-image');
+        }
+
+        function clearImagePreview() {
+            const uploadArea = document.getElementById('imageUploadArea');
+            const preview = document.getElementById('imagePreview');
+            const placeholder = document.getElementById('imagePlaceholder');
+            const previewImg = document.getElementById('previewImg');
+            const fileInput = document.getElementById('productImageFile');
+
+            previewImg.src = '';
+            preview.style.display = 'none';
+            placeholder.style.display = 'block';
+            uploadArea.classList.remove('has-image');
+            fileInput.value = '';
+            document.getElementById('productImageUrl').value = '';
+        }
+
+        function removeImage() {
+            clearImagePreview();
+            showToast('이미지가 제거되었습니다.', 'info');
         }
 
         // --- Save Product (Create or Update) ---
@@ -537,6 +922,7 @@
             const pv_value = parseFloat(document.getElementById('productPvValue').value);
             const stock_quantity = parseInt(document.getElementById('productStock').value) || 0;
             const category = document.getElementById('productCategory').value.trim();
+            const subcategory = document.getElementById('productSubcategory').value.trim();
             const is_active = document.getElementById('productIsActive').value === 'true';
             const image_url = document.getElementById('productImageUrl').value.trim();
 
@@ -556,8 +942,12 @@
                 showToast('PV를 올바르게 입력해주세요.', 'error');
                 return;
             }
+            if (!category) {
+                showToast('카테고리를 선택해주세요.', 'error');
+                return;
+            }
 
-            const data = { name, product_type, description, price_krw, price_dealer_krw, pv_value, stock_quantity, category, is_active, image_url };
+            const data = { name, product_type, description, price_krw, price_dealer_krw, pv_value, stock_quantity, category, subcategory, is_active, image_url };
             const btn = document.getElementById('productSaveBtn');
 
             try {
@@ -845,7 +1235,39 @@
             openModal('bulkResultModal');
         }
 
-        document.addEventListener('DOMContentLoaded', loadProducts);
+        function downloadProductsTemplate() {
+            // Create workbook and worksheet
+            const wb = XLSX.utils.book_new();
+            const data = [
+                ['name', 'price_krw', 'price_dealer_krw', 'pv_value', 'stock_quantity', 'category', 'description', 'product_type'],
+                ['밀크씨슬 예제', 50000, 40000, 100, 100, '건강식품', '예제 상품 설명입니다.', 'single']
+            ];
+            const ws = XLSX.utils.aoa_to_sheet(data);
+
+            // Set column widths
+            ws['!cols'] = [
+                { wch: 20 },  // name
+                { wch: 12 },  // price_krw
+                { wch: 14 },  // price_dealer_krw
+                { wch: 10 },  // pv_value
+                { wch: 14 },  // stock_quantity
+                { wch: 12 },  // category
+                { wch: 30 },  // description
+                { wch: 12 }   // product_type
+            ];
+
+            XLSX.utils.book_append_sheet(wb, ws, '상품');
+
+            // Download file
+            XLSX.writeFile(wb, '상품_일괄등록_양식.xlsx');
+            showToast('양식 파일이 다운로드되었습니다.', 'success');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            initCategoryButtons();
+            initImageUpload();
+        });
     </script>
 </body>
 </html>

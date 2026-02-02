@@ -415,16 +415,16 @@ function downloadMembersTemplate() {
     }
 
     const data = [
-        { email: 'user@example.com', password: 'password123', name: '홍길동', phone: '010-1234-5678', grade: 'consumer' }
+        { username: 'user1234', password: 'password123', name: '홍길동', phone: '010-1234-5678', grade: 'consumer' }
     ];
 
     const ws = XLSX.utils.json_to_sheet(data, {
-        header: ['email', 'password', 'name', 'phone', 'grade']
+        header: ['username', 'password', 'name', 'phone', 'grade']
     });
 
     // Set column widths
     ws['!cols'] = [
-        { wch: 25 }, // email
+        { wch: 15 }, // username
         { wch: 15 }, // password
         { wch: 12 }, // name
         { wch: 15 }, // phone
@@ -448,16 +448,16 @@ function downloadPointsTemplate() {
     }
 
     const data = [
-        { email: 'user@example.com', point_type: 'P', amount: 1000, reason: '이벤트 지급' }
+        { username: 'user1234', point_type: 'P', amount: 1000, reason: '이벤트 지급' }
     ];
 
     const ws = XLSX.utils.json_to_sheet(data, {
-        header: ['email', 'point_type', 'amount', 'reason']
+        header: ['username', 'point_type', 'amount', 'reason']
     });
 
     // Set column widths
     ws['!cols'] = [
-        { wch: 25 }, // email
+        { wch: 20 }, // username
         { wch: 12 }, // point_type
         { wch: 12 }, // amount
         { wch: 25 }  // reason
@@ -544,7 +544,7 @@ async function populateDealersDatalist(datalistId) {
 
     const dealers = await loadDealers();
     datalist.innerHTML = dealers.map(d =>
-        `<option value="${d.email}">${d.name} (${d.email})</option>`
+        `<option value="${d.username}">${d.name} (${d.username})</option>`
     ).join('');
 }
 
