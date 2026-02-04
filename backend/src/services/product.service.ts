@@ -164,8 +164,14 @@ export class ProductService {
   }
 
   async deleteProduct(id: string): Promise<void> {
+    // 패키지 구성품으로 사용되는 경우 먼저 삭제
     await query(
-      `UPDATE products SET is_active = false WHERE id = $1`,
+      `DELETE FROM package_items WHERE single_product_id = $1`,
+      [id]
+    );
+    // 상품 실제 삭제
+    await query(
+      `DELETE FROM products WHERE id = $1`,
       [id]
     );
   }
