@@ -26,7 +26,7 @@ export class WithdrawalController {
       res.status(201).json({
         success: true,
         data: withdrawal,
-        message: `P포인트 ${amount.toLocaleString()}원 출금이 신청되었습니다. 다음 영업일에 지급될 예정입니다.`
+        message: `X포인트 ${amount.toLocaleString()}원 출금이 신청되었습니다. 다음 영업일에 지급될 예정입니다.`
       });
     } catch (error: any) {
       res.status(400).json({

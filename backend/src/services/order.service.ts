@@ -1,6 +1,6 @@
 import { query, getClient } from '../config/database';
 import { generateUUID, generateOrderNumber } from '../utils/helpers';
-import { getPPointReleaseDate } from '../utils/business-day';
+import { getXPointReleaseDate } from '../utils/business-day';
 import { rpayService } from './rpay.service';
 import { pointService } from './point.service';
 import { payringService } from './payring.service';
@@ -75,10 +75,14 @@ export class OrderService {
         );
       }
 
-      // Validate payment amounts
+      // Validate payment amounts (X포인트, X페이, 카드, 무통장)
       const payment = data.payment;
-      const totalPayment = (payment.rpay || 0) + (payment.ppoint || 0) + (payment.cpoint || 0) +
-                          (payment.tpoint || 0) + (payment.card || 0) + (payment.bank || 0);
+      const xpointKrw = payment.xpoint || 0;  // X포인트 (원화)
+      const rpayKrw = payment.rpay || 0;  // X페이 (원화)
+      const cardKrw = payment.card || 0;
+      const bankKrw = payment.bank || 0;
+
+      const totalPayment = xpointKrw + rpayKrw + cardKrw + bankKrw;
 
       if (Math.abs(totalPayment - totalKrw) > 1) {
         throw new Error(`결제 금액이 일치하지 않습니다. (주문금액: ${totalKrw}, 결제금액: ${totalPayment})`);
@@ -87,7 +91,22 @@ export class OrderService {
       // Process payments
       const orderId = generateUUID();
 
-      // R-pay payment
+      // X포인트 결제 (원화 직접 차감)
+      if (payment.xpoint && payment.xpoint > 0) {
+        const xpointBalance = await client.query(
+          `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = 'X' FOR UPDATE`,
+          [userId]
+        );
+        if (parseFloat(xpointBalance.rows[0]?.balance || 0) < payment.xpoint) {
+          throw new Error('X포인트 잔액이 부족합니다.');
+        }
+        await client.query(
+          `UPDATE point_balances SET balance = balance - $1 WHERE user_id = $2 AND point_type = 'X'`,
+          [payment.xpoint, userId]
+        );
+      }
+
+      // R-pay (X페이) payment
       if (payment.rpay && payment.rpay > 0) {
         const rpayBalance = await client.query(
           `SELECT balance_krw FROM rpay_balance WHERE user_id = $1 FOR UPDATE`,
@@ -102,40 +121,16 @@ export class OrderService {
         );
       }
 
-      // Point payments
-      const pointTypes: Array<{ key: 'ppoint' | 'cpoint' | 'tpoint'; type: 'P' | 'C' | 'T' }> = [
-        { key: 'ppoint', type: 'P' },
-        { key: 'cpoint', type: 'C' },
-        { key: 'tpoint', type: 'T' }
-      ];
-
-      for (const pt of pointTypes) {
-        const amount = payment[pt.key];
-        if (amount && amount > 0) {
-          const balanceResult = await client.query(
-            `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = $2 FOR UPDATE`,
-            [userId, pt.type]
-          );
-          if (parseFloat(balanceResult.rows[0]?.balance || 0) < amount) {
-            throw new Error(`${pt.type}포인트 잔액이 부족합니다.`);
-          }
-          await client.query(
-            `UPDATE point_balances SET balance = balance - $1 WHERE user_id = $2 AND point_type = $3`,
-            [amount, userId, pt.type]
-          );
-        }
-      }
-
       // Create order
       const orderNumber = generateOrderNumber();
       const orderResult = await client.query(
         `INSERT INTO orders (id, order_number, user_id, total_pv, total_krw,
-         payment_rpay, payment_ppoint, payment_cpoint, payment_tpoint, payment_card, payment_bank,
+         payment_rpay, payment_xpoint, payment_ppoint, payment_cpoint, payment_tpoint, payment_card, payment_bank,
          shipping_name, shipping_phone, shipping_address, status, payring_order_id)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'paid', $15)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, 0, 0, 0, $8, $9, $10, $11, $12, 'paid', $13)
          RETURNING *`,
         [orderId, orderNumber, userId, totalPv, totalKrw,
-         payment.rpay || 0, payment.ppoint || 0, payment.cpoint || 0, payment.tpoint || 0,
+         payment.rpay || 0, payment.xpoint || 0,
          payment.card || 0, payment.bank || 0,
          data.shipping.name, data.shipping.phone, data.shipping.address,
          payment.payring_order_id || null]
@@ -151,16 +146,18 @@ export class OrderService {
         );
       }
 
-      // Schedule P-point reward (14 days later)
-      // Back margin = 50% of PV value
-      const ppointReward = totalPv * 0.5;
-      const releaseDate = getPPointReleaseDate(new Date());
+      // Schedule X-point reward (14 days later) - 대리점장만 X포인트 적립
+      // X포인트 = PV × 50% = 원화 (1:1)
+      if (userGrade === 'dealer' && totalPv > 0) {
+        const xpointReward = totalPv * 0.5;  // PV의 50%가 원화로 지급
+        const releaseDate = getXPointReleaseDate(new Date());
 
-      await client.query(
-        `INSERT INTO pending_ppoints (id, user_id, order_id, ppoint_amount, scheduled_release_date)
-         VALUES ($1, $2, $3, $4, $5)`,
-        [generateUUID(), userId, orderId, ppointReward, releaseDate]
-      );
+        await client.query(
+          `INSERT INTO pending_xpoints (id, user_id, order_id, xpoint_amount, pv_amount, scheduled_release_date)
+           VALUES ($1, $2, $3, $4, $5, $6)`,
+          [generateUUID(), userId, orderId, xpointReward, totalPv, releaseDate]
+        );
+      }
 
       await client.query('COMMIT');
       return orderResult.rows[0];
@@ -179,44 +176,57 @@ export class OrderService {
     const { page = 1, limit = 20, status } = options;
     const offset = (page - 1) * limit;
 
-    let whereClause = 'WHERE user_id = $1';
+    let whereClause = 'WHERE o.user_id = $1';
     const params: any[] = [userId];
 
     if (status) {
       params.push(status);
-      whereClause += ` AND status = $${params.length}`;
+      whereClause += ` AND o.status = $${params.length}`;
     }
 
-    const countResult = await query(
-      `SELECT COUNT(*) FROM orders ${whereClause}`,
-      params
-    );
-
+    // 단일 쿼리로 주문과 아이템 함께 조회 (N+1 최적화)
     params.push(limit, offset);
-    const ordersResult = await query(
-      `SELECT * FROM orders ${whereClause}
-       ORDER BY created_at DESC
-       LIMIT $${params.length - 1} OFFSET $${params.length}`,
+    const result = await query(
+      `WITH order_list AS (
+        SELECT o.*, COUNT(*) OVER() as total_count
+        FROM orders o
+        ${whereClause}
+        ORDER BY o.created_at DESC
+        LIMIT $${params.length - 1} OFFSET $${params.length}
+      )
+      SELECT ol.*,
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'id', oi.id,
+              'product_id', oi.product_id,
+              'product_name', oi.product_name,
+              'quantity', oi.quantity,
+              'unit_price', oi.unit_price,
+              'unit_pv', oi.unit_pv,
+              'total_price', oi.total_price,
+              'total_pv', oi.total_pv
+            )
+          ) FILTER (WHERE oi.id IS NOT NULL), '[]'
+        ) as items
+      FROM order_list ol
+      LEFT JOIN order_items oi ON ol.id = oi.order_id
+      GROUP BY ol.id, ol.order_number, ol.user_id, ol.total_pv, ol.total_krw,
+               ol.payment_rpay, ol.payment_xpoint, ol.payment_ppoint, ol.payment_cpoint,
+               ol.payment_tpoint, ol.payment_card, ol.payment_bank, ol.shipping_name,
+               ol.shipping_phone, ol.shipping_address, ol.shipping_memo, ol.status, ol.invoice_number,
+               ol.payring_order_id, ol.created_at, ol.updated_at, ol.total_count
+      ORDER BY ol.created_at DESC`,
       params
     );
 
-    // Get items for each order
-    const orders = [];
-    for (const order of ordersResult.rows) {
-      const itemsResult = await query(
-        `SELECT * FROM order_items WHERE order_id = $1`,
-        [order.id]
-      );
-      orders.push({
-        ...order,
-        items: itemsResult.rows
-      });
-    }
+    const total = result.rows[0]?.total_count ? parseInt(result.rows[0].total_count) : 0;
+    const orders = result.rows.map(row => {
+      const { total_count, ...order } = row;
+      return order;
+    });
 
-    return {
-      orders,
-      total: parseInt(countResult.rows[0].count)
-    };
+    return { orders, total };
   }
 
   async getAllOrders(
@@ -225,14 +235,15 @@ export class OrderService {
       limit?: number;
       status?: OrderStatus;
       search?: string;
+      startDate?: string;
+      endDate?: string;
     } = {}
   ): Promise<{ orders: any[]; total: number }> {
-    const { page = 1, limit = 20, status, search } = options;
+    const { page = 1, limit = 20, status, search, startDate, endDate } = options;
     const offset = (page - 1) * limit;
 
     let whereClause = '';
     const params: any[] = [];
-
     const conditions: string[] = [];
 
     if (status) {
@@ -245,30 +256,66 @@ export class OrderService {
       conditions.push(`(o.order_number ILIKE $${params.length} OR u.name ILIKE $${params.length} OR u.username ILIKE $${params.length})`);
     }
 
+    if (startDate) {
+      params.push(startDate);
+      conditions.push(`o.created_at >= $${params.length}::date`);
+    }
+
+    if (endDate) {
+      params.push(endDate);
+      conditions.push(`o.created_at < ($${params.length}::date + interval '1 day')`);
+    }
+
     if (conditions.length > 0) {
       whereClause = 'WHERE ' + conditions.join(' AND ');
     }
 
-    const countResult = await query(
-      `SELECT COUNT(*) FROM orders o JOIN users u ON o.user_id = u.id ${whereClause}`,
-      params
-    );
-
+    // 단일 쿼리로 주문과 아이템 함께 조회 (N+1 최적화)
     params.push(limit, offset);
-    const ordersResult = await query(
-      `SELECT o.*, u.name as user_name, u.username as user_username
-       FROM orders o
-       JOIN users u ON o.user_id = u.id
-       ${whereClause}
-       ORDER BY o.created_at DESC
-       LIMIT $${params.length - 1} OFFSET $${params.length}`,
+    const result = await query(
+      `WITH order_list AS (
+        SELECT o.*, u.name as user_name, u.username as user_username,
+               COUNT(*) OVER() as total_count
+        FROM orders o
+        JOIN users u ON o.user_id = u.id
+        ${whereClause}
+        ORDER BY o.created_at DESC
+        LIMIT $${params.length - 1} OFFSET $${params.length}
+      )
+      SELECT ol.*,
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'id', oi.id,
+              'product_id', oi.product_id,
+              'product_name', oi.product_name,
+              'quantity', oi.quantity,
+              'unit_price', oi.unit_price,
+              'unit_pv', oi.unit_pv,
+              'total_price', oi.total_price,
+              'total_pv', oi.total_pv
+            )
+          ) FILTER (WHERE oi.id IS NOT NULL), '[]'
+        ) as items
+      FROM order_list ol
+      LEFT JOIN order_items oi ON ol.id = oi.order_id
+      GROUP BY ol.id, ol.order_number, ol.user_id, ol.total_pv, ol.total_krw,
+               ol.payment_rpay, ol.payment_xpoint, ol.payment_ppoint, ol.payment_cpoint,
+               ol.payment_tpoint, ol.payment_card, ol.payment_bank, ol.shipping_name,
+               ol.shipping_phone, ol.shipping_address, ol.shipping_memo, ol.status, ol.invoice_number,
+               ol.payring_order_id, ol.created_at, ol.updated_at, ol.user_name,
+               ol.user_username, ol.total_count
+      ORDER BY ol.created_at DESC`,
       params
     );
 
-    return {
-      orders: ordersResult.rows,
-      total: parseInt(countResult.rows[0].count)
-    };
+    const total = result.rows[0]?.total_count ? parseInt(result.rows[0].total_count) : 0;
+    const orders = result.rows.map(row => {
+      const { total_count, ...order } = row;
+      return order;
+    });
+
+    return { orders, total };
   }
 
   async getOrderById(orderId: string): Promise<any> {
@@ -325,11 +372,17 @@ export class OrderService {
         [status, orderId]
       );
 
-      // If cancelled or refunded, restore stock, refund points, and cancel pending P-points
+      // If cancelled or refunded, restore stock, refund points, and cancel pending X-points
       if (status === 'cancelled' || status === 'refunded') {
         const userId = order.user_id;
 
-        // 1. Cancel pending P-points
+        // 1. Cancel pending X-points
+        await client.query(
+          `UPDATE pending_xpoints SET status = 'cancelled' WHERE order_id = $1 AND status = 'pending'`,
+          [orderId]
+        );
+
+        // Also cancel any legacy pending P-points
         await client.query(
           `UPDATE pending_ppoints SET status = 'cancelled' WHERE order_id = $1 AND status = 'pending'`,
           [orderId]
@@ -357,47 +410,46 @@ export class OrderService {
             `UPDATE rpay_balance SET balance_krw = balance_krw + $1 WHERE user_id = $2`,
             [rpayAmount, userId]
           );
+          // 환불 후 잔액 조회
+          const rpayBalanceResult = await client.query(
+            `SELECT balance_krw FROM rpay_balance WHERE user_id = $1`,
+            [userId]
+          );
+          const rpayBalanceAfter = parseFloat(rpayBalanceResult.rows[0]?.balance_krw || 0);
           // 환불 트랜잭션 기록
           await client.query(
-            `INSERT INTO rpay_transactions (id, user_id, type, amount_krw, description)
-             VALUES ($1, $2, 'refund', $3, $4)`,
-            [generateUUID(), userId, rpayAmount, `주문 ${status === 'cancelled' ? '취소' : '환불'} - ${order.order_number}`]
+            `INSERT INTO rpay_transactions (id, user_id, transaction_type, amount, balance_after, description)
+             VALUES ($1, $2, 'refund', $3, $4, $5)`,
+            [generateUUID(), userId, rpayAmount, rpayBalanceAfter, `주문 ${status === 'cancelled' ? '취소' : '환불'} - ${order.order_number}`]
           );
         }
 
-        // 4. Refund P/C/T points
-        const pointRefunds = [
-          { amount: parseFloat(order.payment_ppoint || 0), type: 'P' },
-          { amount: parseFloat(order.payment_cpoint || 0), type: 'C' },
-          { amount: parseFloat(order.payment_tpoint || 0), type: 'T' }
-        ];
+        // 4. Refund X points
+        const xpointAmount = parseFloat(order.payment_xpoint || 0);
+        if (xpointAmount > 0) {
+          // 잔액 업데이트 또는 생성
+          await client.query(
+            `INSERT INTO point_balances (user_id, point_type, balance)
+             VALUES ($1, 'X', $2)
+             ON CONFLICT (user_id, point_type)
+             DO UPDATE SET balance = point_balances.balance + $2`,
+            [userId, xpointAmount]
+          );
 
-        for (const refund of pointRefunds) {
-          if (refund.amount > 0) {
-            // 잔액 업데이트 또는 생성
-            await client.query(
-              `INSERT INTO point_balances (user_id, point_type, balance)
-               VALUES ($1, $2, $3)
-               ON CONFLICT (user_id, point_type)
-               DO UPDATE SET balance = point_balances.balance + $3`,
-              [userId, refund.type, refund.amount]
-            );
+          // 환불 후 잔액 조회
+          const balanceResult = await client.query(
+            `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = 'X'`,
+            [userId]
+          );
+          const balanceAfter = parseFloat(balanceResult.rows[0]?.balance || 0);
 
-            // 환불 후 잔액 조회
-            const balanceResult = await client.query(
-              `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = $2`,
-              [userId, refund.type]
-            );
-            const balanceAfter = parseFloat(balanceResult.rows[0]?.balance || 0);
-
-            // 환불 트랜잭션 기록
-            await client.query(
-              `INSERT INTO point_transactions (id, user_id, point_type, transaction_type, amount, balance_after, description)
-               VALUES ($1, $2, $3, 'refund', $4, $5, $6)`,
-              [generateUUID(), userId, refund.type, refund.amount, balanceAfter,
-               `주문 ${status === 'cancelled' ? '취소' : '환불'} - ${order.order_number}`]
-            );
-          }
+          // 환불 트랜잭션 기록
+          await client.query(
+            `INSERT INTO point_transactions (id, user_id, point_type, transaction_type, amount, balance_after, description)
+             VALUES ($1, $2, 'X', 'refund', $3, $4, $5)`,
+            [generateUUID(), userId, xpointAmount, balanceAfter,
+             `주문 ${status === 'cancelled' ? '취소' : '환불'} - ${order.order_number}`]
+          );
         }
 
         // 5. 카드 결제 환불 처리 (페이링)

@@ -51,7 +51,7 @@
                     포인트 관리
                 </a>
                 <a href="withdrawals.html" class="nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
                     출금 관리
                 </a>
                 <a href="settings.html" class="nav-item">
@@ -92,10 +92,16 @@
             </header>
 
             <div class="content-area">
-                <!-- Point Grant Card -->
+                <!-- Point Grant/Deduct Card -->
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">포인트 지급</h2>
+                        <h2 class="card-title">X포인트 지급/차감</h2>
+                        <div class="header-actions">
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-primary active" id="grantModeBtn" onclick="setPointMode('grant')">지급</button>
+                                <button class="btn btn-sm btn-outline" id="deductModeBtn" onclick="setPointMode('deduct')">차감</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <form id="grantPointForm" class="form-grid">
@@ -106,22 +112,21 @@
                             <div class="form-group">
                                 <label class="form-label">포인트 종류</label>
                                 <select class="form-control form-select" id="grantPointType" required>
-                                    <option value="P">P포인트 (출금 가능)</option>
-                                    <option value="C">C포인트 (주문 전용)</option>
-                                    <option value="T">T포인트 (전송 받은 포인트)</option>
+                                    <option value="X">X포인트 (원화)</option>
                                 </select>
+                                <small class="form-text">X포인트는 원화 기준입니다</small>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">지급 금액 (USD)</label>
+                                <label class="form-label" id="amountLabel">지급 금액 (원)</label>
                                 <input type="number" class="form-control" id="grantAmount" placeholder="0" min="1" required>
-                                <small class="form-text">1 포인트 = 1 USD</small>
+                                <small class="form-text">1 X포인트 = 1원</small>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">지급 사유</label>
+                                <label class="form-label" id="reasonLabel">지급 사유</label>
                                 <input type="text" class="form-control" id="grantReason" placeholder="지급 사유 입력">
                             </div>
                             <div class="form-group" style="grid-column: span 2;">
-                                <button type="submit" class="btn btn-primary">포인트 지급</button>
+                                <button type="submit" class="btn btn-primary" id="pointSubmitBtn">포인트 지급</button>
                             </div>
                         </form>
                     </div>
@@ -158,8 +163,8 @@
                                 <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem;">엑셀 양식 안내</h4>
                                 <table style="width: 100%; font-size: 0.85rem;">
                                     <tr><td style="padding: 0.25rem 0;"><strong>username</strong></td><td style="color: #f44336;">(필수)</td><td>회원 아이디</td></tr>
-                                    <tr><td style="padding: 0.25rem 0;"><strong>point_type</strong></td><td style="color: #f44336;">(필수)</td><td>P / C / T</td></tr>
-                                    <tr><td style="padding: 0.25rem 0;"><strong>amount</strong></td><td style="color: #f44336;">(필수)</td><td>지급 금액 (양수)</td></tr>
+                                    <tr><td style="padding: 0.25rem 0;"><strong>point_type</strong></td><td style="color: #f44336;">(필수)</td><td>X</td></tr>
+                                    <tr><td style="padding: 0.25rem 0;"><strong>amount</strong></td><td style="color: #f44336;">(필수)</td><td>지급 금액 (원, 양수)</td></tr>
                                     <tr><td style="padding: 0.25rem 0;"><strong>reason</strong></td><td style="color: var(--text-muted);">(선택)</td><td>지급 사유</td></tr>
                                 </table>
                             </div>
@@ -193,10 +198,49 @@
                     </div>
                 </div>
 
-                <!-- Pending P-Points -->
+                <!-- R-pay Bulk Deposit Card -->
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">대기 중 P포인트 (14일 후 지급 예정)</h2>
+                        <h2 class="card-title">X페이 일괄 충전</h2>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <div style="flex: 1;">
+                                <div class="file-upload-area" id="rpayFileUploadArea">
+                                    <input type="file" id="rpayBulkFileInput" accept=".xlsx,.xls" style="display: none;" onchange="handleRpayFileSelect(event)">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--text-muted);">
+                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                    <p style="margin: 0.5rem 0;">파일을 드래그하거나 클릭하여 선택</p>
+                                    <small style="color: var(--text-muted);">엑셀 파일(.xlsx, .xls)만 가능</small>
+                                </div>
+                                <p id="rpaySelectedFileName" style="margin-top: 0.5rem; color: var(--primary);"></p>
+                                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                    <button class="btn btn-outline" onclick="downloadRpayTemplate()">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        양식 다운로드
+                                    </button>
+                                    <button class="btn btn-primary" id="rpayBulkUploadBtn" onclick="uploadRpay()" disabled>
+                                        일괄 충전
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="flex: 1; background: var(--bg-secondary); padding: 1rem; border-radius: 8px;">
+                                <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem;">엑셀 양식 안내</h4>
+                                <table style="width: 100%; font-size: 0.85rem;">
+                                    <tr><td style="padding: 0.25rem 0;"><strong>username</strong></td><td style="color: #f44336;">(필수)</td><td>회원 아이디</td></tr>
+                                    <tr><td style="padding: 0.25rem 0;"><strong>amount</strong></td><td style="color: #f44336;">(필수)</td><td>충전 금액 (원, 양수)</td></tr>
+                                    <tr><td style="padding: 0.25rem 0;"><strong>reason</strong></td><td style="color: var(--text-muted);">(선택)</td><td>충전 사유</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending X-Points -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">대기 중 X포인트 (14일 후 지급 예정)</h2>
                     </div>
                     <div class="card-body" style="padding: 0;">
                         <div class="table-responsive">
@@ -205,13 +249,14 @@
                                     <tr>
                                         <th>회원</th>
                                         <th>주문번호</th>
-                                        <th>지급 예정 P포인트</th>
+                                        <th>PV</th>
+                                        <th>지급 예정 X포인트</th>
                                         <th>지급 예정일</th>
                                         <th>상태</th>
                                     </tr>
                                 </thead>
                                 <tbody id="pendingBody">
-                                    <tr><td colspan="5" class="text-center text-muted">로딩 중...</td></tr>
+                                    <tr><td colspan="6" class="text-center text-muted">로딩 중...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -222,13 +267,21 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">포인트 거래 내역</h2>
-                        <div class="header-actions">
-                            <select class="form-control form-select" id="txPointType" onchange="loadTransactions()">
+                        <div class="header-actions" style="display: flex; gap: 0.5rem; align-items: center;">
+                            <input type="text" class="form-control" id="txSearchUsername" placeholder="회원 아이디 검색" style="width: 150px;" onkeyup="if(event.key==='Enter') loadTransactions()">
+                            <select class="form-control form-select" id="txPointType" onchange="loadTransactions()" style="width: 120px;">
                                 <option value="">전체</option>
-                                <option value="P">P포인트</option>
-                                <option value="C">C포인트</option>
-                                <option value="T">T포인트</option>
+                                <option value="X">X포인트</option>
                             </select>
+                            <select class="form-control form-select" id="txType" onchange="loadTransactions()" style="width: 120px;">
+                                <option value="">전체 유형</option>
+                                <option value="grant">관리자 지급</option>
+                                <option value="admin_deduct">관리자 차감</option>
+                                <option value="payment">결제 사용</option>
+                                <option value="xpoint_reward">X포인트 리워드</option>
+                                <option value="refund">환불</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary" onclick="loadTransactions()">검색</button>
                         </div>
                     </div>
                     <div class="card-body" style="padding: 0;">
@@ -252,8 +305,9 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <div class="pagination">
+                        <div class="pagination" style="display: flex; justify-content: space-between; align-items: center;">
                             <div class="pagination-info" id="paginationInfo">0건</div>
+                            <div class="pagination-controls" id="paginationControls"></div>
                         </div>
                     </div>
                 </div>
@@ -279,7 +333,58 @@
         </div>
     </div>
 
+    <!-- Bulk R-pay Result Modal -->
+    <div class="modal-overlay" id="rpayBulkResultModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">X페이 일괄 충전 결과</h3>
+                <button class="modal-close" onclick="closeModal('rpayBulkResultModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="rpayBulkResultBody">
+                <!-- Result will be dynamically loaded -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal('rpayBulkResultModal');">확인</button>
+            </div>
+        </div>
+    </div>
+
     <style>
+        .btn-group {
+            display: flex;
+            gap: 0;
+        }
+        .btn-group .btn {
+            border-radius: 0;
+        }
+        .btn-group .btn:first-child {
+            border-radius: 4px 0 0 4px;
+        }
+        .btn-group .btn:last-child {
+            border-radius: 0 4px 4px 0;
+        }
+        .btn-group .btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-group .btn:not(.active) {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        .pagination-controls {
+            display: flex;
+            gap: 0.25rem;
+        }
+        .pagination-controls .btn {
+            min-width: 32px;
+            padding: 0.25rem 0.5rem;
+        }
+        .pagination-controls .btn.active {
+            background: var(--primary);
+            color: white;
+        }
         .file-upload-area {
             border: 2px dashed var(--border);
             border-radius: 8px;
@@ -324,13 +429,50 @@
     <script src="js/admin.js"></script>
     <script>
         let pointSelectedFile = null;
+        let rpaySelectedFile = null;
+        let currentPointMode = 'grant'; // 'grant' or 'deduct'
+        let currentPage = 1;
+        const pageSize = 20;
 
         // Initialize point file upload area
         document.addEventListener('DOMContentLoaded', function() {
             initPointFileUploadArea();
+            initRpayFileUploadArea();
             loadPendingPoints();
             loadTransactions();
         });
+
+        // Point mode switching (grant/deduct)
+        function setPointMode(mode) {
+            currentPointMode = mode;
+            const grantBtn = document.getElementById('grantModeBtn');
+            const deductBtn = document.getElementById('deductModeBtn');
+            const amountLabel = document.getElementById('amountLabel');
+            const reasonLabel = document.getElementById('reasonLabel');
+            const submitBtn = document.getElementById('pointSubmitBtn');
+
+            if (mode === 'grant') {
+                grantBtn.classList.add('active', 'btn-primary');
+                grantBtn.classList.remove('btn-outline');
+                deductBtn.classList.remove('active', 'btn-primary');
+                deductBtn.classList.add('btn-outline');
+                amountLabel.textContent = '지급 금액 (원)';
+                reasonLabel.textContent = '지급 사유';
+                submitBtn.textContent = '포인트 지급';
+                submitBtn.classList.remove('btn-danger');
+                submitBtn.classList.add('btn-primary');
+            } else {
+                deductBtn.classList.add('active', 'btn-danger');
+                deductBtn.classList.remove('btn-outline');
+                grantBtn.classList.remove('active', 'btn-primary');
+                grantBtn.classList.add('btn-outline');
+                amountLabel.textContent = '차감 금액 (원)';
+                reasonLabel.textContent = '차감 사유';
+                submitBtn.textContent = '포인트 차감';
+                submitBtn.classList.remove('btn-primary');
+                submitBtn.classList.add('btn-danger');
+            }
+        }
 
         function initPointFileUploadArea() {
             const area = document.getElementById('pointFileUploadArea');
@@ -359,10 +501,44 @@
             };
         }
 
+        function initRpayFileUploadArea() {
+            const area = document.getElementById('rpayFileUploadArea');
+            const input = document.getElementById('rpayBulkFileInput');
+
+            if (!area || !input) return;
+
+            area.onclick = () => input.click();
+
+            area.ondragover = (e) => {
+                e.preventDefault();
+                area.classList.add('dragover');
+            };
+
+            area.ondragleave = () => {
+                area.classList.remove('dragover');
+            };
+
+            area.ondrop = (e) => {
+                e.preventDefault();
+                area.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleRpayFile(files[0]);
+                }
+            };
+        }
+
         function handlePointFileSelect(event) {
             const files = event.target.files;
             if (files.length > 0) {
                 handlePointFile(files[0]);
+            }
+        }
+
+        function handleRpayFileSelect(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                handleRpayFile(files[0]);
             }
         }
 
@@ -378,6 +554,20 @@
             pointSelectedFile = file;
             document.getElementById('pointSelectedFileName').textContent = file.name;
             document.getElementById('pointBulkUploadBtn').disabled = false;
+        }
+
+        function handleRpayFile(file) {
+            const allowedExtensions = ['.xlsx', '.xls'];
+            const ext = file.name.toLowerCase().slice(file.name.lastIndexOf('.'));
+
+            if (!allowedExtensions.includes(ext)) {
+                showToast('엑셀 파일(.xlsx, .xls)만 업로드 가능합니다.', 'error');
+                return;
+            }
+
+            rpaySelectedFile = file;
+            document.getElementById('rpaySelectedFileName').textContent = file.name;
+            document.getElementById('rpayBulkUploadBtn').disabled = false;
         }
 
         async function uploadPoints() {
@@ -443,7 +633,86 @@
             openModal('pointBulkResultModal');
         }
 
-        // Grant Point
+        // R-pay Bulk Upload
+        async function uploadRpay() {
+            if (!rpaySelectedFile) {
+                showToast('파일을 선택해주세요.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('rpayBulkUploadBtn');
+            try {
+                setLoading(btn, true);
+                const result = await uploadFile('/admin/rpay/bulk-deposit', rpaySelectedFile);
+
+                // Reset file input
+                rpaySelectedFile = null;
+                document.getElementById('rpayBulkFileInput').value = '';
+                document.getElementById('rpaySelectedFileName').textContent = '';
+                document.getElementById('rpayBulkUploadBtn').disabled = true;
+
+                showRpayBulkResult(result.data);
+            } catch (error) {
+                showToast(error.message || '업로드에 실패했습니다.', 'error');
+            } finally {
+                setLoading(btn, false);
+            }
+        }
+
+        function showRpayBulkResult(data) {
+            const body = document.getElementById('rpayBulkResultBody');
+            let errorsHtml = '';
+
+            if (data.errors && data.errors.length > 0) {
+                errorsHtml = `
+                    <h4 style="margin-top: 1rem; margin-bottom: 0.5rem;">오류 목록</h4>
+                    <div class="error-list">
+                        ${data.errors.map(e => `
+                            <div class="error-item">
+                                <strong>행 ${e.row}</strong>${e.username ? ` (${e.username})` : ''}: ${e.error}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            body.innerHTML = `
+                <div class="result-stats">
+                    <div class="result-stat total">
+                        <div class="stat-value">${data.total}</div>
+                        <div class="stat-label">총 건수</div>
+                    </div>
+                    <div class="result-stat success">
+                        <div class="stat-value">${data.success_count}</div>
+                        <div class="stat-label">성공</div>
+                    </div>
+                    <div class="result-stat fail">
+                        <div class="stat-value">${data.fail_count}</div>
+                        <div class="stat-label">실패</div>
+                    </div>
+                </div>
+                ${errorsHtml}
+            `;
+
+            openModal('rpayBulkResultModal');
+        }
+
+        // Download R-pay Template
+        function downloadRpayTemplate() {
+            const headers = ['username', 'amount', 'reason'];
+            const sampleData = [
+                ['testuser1', '100000', '프로모션 지급'],
+                ['testuser2', '50000', '이벤트 당첨']
+            ];
+
+            const wsData = [headers, ...sampleData];
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'X페이 일괄 충전');
+            XLSX.writeFile(wb, 'xpay_bulk_deposit_template.xlsx');
+        }
+
+        // Grant/Deduct Point
         document.getElementById('grantPointForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -453,13 +722,23 @@
             const reason = document.getElementById('grantReason').value;
 
             try {
-                await api.post('/admin/points/grant', {
-                    username,
-                    point_type: pointType,
-                    amount,
-                    reason
-                });
-                showToast(`${pointType}포인트 ${amount} 지급 완료`, 'success');
+                if (currentPointMode === 'grant') {
+                    await api.post('/admin/points/grant', {
+                        username,
+                        point_type: pointType,
+                        amount,
+                        reason
+                    });
+                    showToast(`${pointType}포인트 ${amount.toLocaleString()}원 지급 완료`, 'success');
+                } else {
+                    await api.post('/admin/points/deduct', {
+                        username,
+                        point_type: pointType,
+                        amount,
+                        reason
+                    });
+                    showToast(`${pointType}포인트 ${amount.toLocaleString()}원 차감 완료`, 'success');
+                }
                 e.target.reset();
                 loadPendingPoints();
                 loadTransactions();
@@ -489,22 +768,23 @@
             }
         });
 
-        // Load Pending P-Points
+        // Load Pending X-Points
         async function loadPendingPoints() {
             try {
                 const result = await api.get('/admin/points/pending');
                 const tbody = document.getElementById('pendingBody');
 
                 if (!result.data || result.data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">대기 중인 P포인트가 없습니다</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">대기 중인 X포인트가 없습니다</td></tr>';
                     return;
                 }
 
                 tbody.innerHTML = result.data.map(p => `
                     <tr>
-                        <td>${p.user_name || p.user_email}</td>
+                        <td>${p.user_name || p.user_username || '-'}</td>
                         <td>#${p.order_number || p.order_id?.slice(0, 8)}</td>
-                        <td class="fw-600 text-success">+${p.ppoint_amount?.toLocaleString() || 0}</td>
+                        <td>${(p.pv_amount || 0).toLocaleString()} PV</td>
+                        <td class="fw-600 text-success">+₩${(p.xpoint_amount || 0).toLocaleString()}</td>
                         <td>${formatDate(p.scheduled_release_date)}</td>
                         <td>${pendingStatusBadge(p.status)}</td>
                     </tr>
@@ -523,25 +803,33 @@
             return badges[status] || status;
         }
 
-        // Load Transactions
-        async function loadTransactions() {
+        // Load Transactions with search and pagination
+        async function loadTransactions(page = 1) {
             try {
+                currentPage = page;
                 const pointType = document.getElementById('txPointType').value;
-                let url = '/admin/points/transactions?limit=50';
+                const txType = document.getElementById('txType').value;
+                const searchUsername = document.getElementById('txSearchUsername').value.trim();
+
+                let url = `/admin/points/transactions?limit=${pageSize}&page=${page}`;
                 if (pointType) url += `&point_type=${pointType}`;
+                if (txType) url += `&transaction_type=${txType}`;
+                if (searchUsername) url += `&username=${encodeURIComponent(searchUsername)}`;
 
                 const result = await api.get(url);
                 const tbody = document.getElementById('transactionsBody');
 
                 if (!result.data?.transactions || result.data.transactions.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">거래 내역이 없습니다</td></tr>';
+                    document.getElementById('paginationInfo').textContent = '0건';
+                    document.getElementById('paginationControls').innerHTML = '';
                     return;
                 }
 
                 tbody.innerHTML = result.data.transactions.map(t => `
                     <tr>
                         <td>${formatDateTime(t.created_at)}</td>
-                        <td>${t.user_name || t.user_email || '-'}</td>
+                        <td>${t.user_name || t.user_username || '-'}</td>
                         <td>${pointTypeBadge(t.point_type)}</td>
                         <td>${transactionTypeBadge(t.transaction_type)}</td>
                         <td class="${t.amount >= 0 ? 'text-success' : 'text-danger'} fw-600">
@@ -552,17 +840,69 @@
                     </tr>
                 `).join('');
 
-                document.getElementById('paginationInfo').textContent = `${result.data.total || result.data.transactions.length}건`;
+                const total = result.data.total || result.data.transactions.length;
+                document.getElementById('paginationInfo').textContent = `총 ${total.toLocaleString()}건`;
+
+                // Render pagination
+                renderPagination(total, page);
             } catch (error) {
                 console.error('Load transactions error:', error);
             }
         }
 
+        function renderPagination(total, currentPage) {
+            const totalPages = Math.ceil(total / pageSize);
+            const controls = document.getElementById('paginationControls');
+
+            if (totalPages <= 1) {
+                controls.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+
+            // Previous button
+            if (currentPage > 1) {
+                html += `<button class="btn btn-sm btn-outline" onclick="loadTransactions(${currentPage - 1})"><</button>`;
+            }
+
+            // Page numbers
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+
+            if (startPage > 1) {
+                html += `<button class="btn btn-sm btn-outline" onclick="loadTransactions(1)">1</button>`;
+                if (startPage > 2) {
+                    html += `<span style="padding: 0 0.25rem;">...</span>`;
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentPage) {
+                    html += `<button class="btn btn-sm active">${i}</button>`;
+                } else {
+                    html += `<button class="btn btn-sm btn-outline" onclick="loadTransactions(${i})">${i}</button>`;
+                }
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    html += `<span style="padding: 0 0.25rem;">...</span>`;
+                }
+                html += `<button class="btn btn-sm btn-outline" onclick="loadTransactions(${totalPages})">${totalPages}</button>`;
+            }
+
+            // Next button
+            if (currentPage < totalPages) {
+                html += `<button class="btn btn-sm btn-outline" onclick="loadTransactions(${currentPage + 1})">></button>`;
+            }
+
+            controls.innerHTML = html;
+        }
+
         function pointTypeBadge(type) {
             const badges = {
-                P: '<span class="status-badge" style="background:#52c41a20;color:#52c41a;">P포인트</span>',
-                C: '<span class="status-badge" style="background:#faad1420;color:#faad14;">C포인트</span>',
-                T: '<span class="status-badge" style="background:#722ed120;color:#722ed1;">T포인트</span>'
+                X: '<span class="status-badge" style="background:#2e7d3220;color:#2e7d32;">X포인트</span>'
             };
             return badges[type] || type;
         }
@@ -570,11 +910,10 @@
         function transactionTypeBadge(type) {
             const labels = {
                 grant: '관리자 지급',
-                transfer_in: '이체 받음',
-                transfer_out: '이체 보냄',
+                admin_deduct: '관리자 차감',
                 payment: '결제 사용',
-                withdrawal: '출금',
                 pv_reward: 'PV 리워드',
+                xpoint_reward: 'X포인트 리워드',
                 refund: '환불'
             };
             return labels[type] || type;

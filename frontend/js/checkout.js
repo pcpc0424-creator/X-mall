@@ -32,7 +32,7 @@ class Checkout {
     } catch (error) {
       console.error('Failed to load balances:', error);
     }
-    return { P: 0, C: 0, T: 0, rpay: 0 };
+    return { X: 0, rpay: 0 };
   }
 
   async loadCheckoutPage() {
@@ -65,10 +65,8 @@ class Checkout {
 
   updateBalanceDisplay(balances) {
     const elements = {
-      'available-rpay': balances.rpay,
-      'available-ppoint': balances.P,
-      'available-cpoint': balances.C,
-      'available-tpoint': balances.T,
+      'available-rpay': balances.rpay || 0,
+      'available-xpoint': balances.X || 0,
     };
 
     for (const [id, value] of Object.entries(elements)) {
@@ -95,12 +93,10 @@ class Checkout {
   }
 
   setupPaymentHandlers(balances) {
-    const paymentInputs = ['payment-rpay', 'payment-ppoint', 'payment-cpoint', 'payment-tpoint'];
+    const paymentInputs = ['payment-rpay', 'payment-xpoint'];
     const maxBalances = {
-      'payment-rpay': balances.rpay,
-      'payment-ppoint': balances.P,
-      'payment-cpoint': balances.C,
-      'payment-tpoint': balances.T,
+      'payment-rpay': balances.rpay || 0,
+      'payment-xpoint': balances.X || 0,
     };
 
     paymentInputs.forEach(inputId => {
@@ -117,11 +113,9 @@ class Checkout {
 
   updateRemainingAmount() {
     const rpay = parseInt(document.getElementById('payment-rpay')?.value || 0);
-    const ppoint = parseInt(document.getElementById('payment-ppoint')?.value || 0);
-    const cpoint = parseInt(document.getElementById('payment-cpoint')?.value || 0);
-    const tpoint = parseInt(document.getElementById('payment-tpoint')?.value || 0);
+    const xpoint = parseInt(document.getElementById('payment-xpoint')?.value || 0);
 
-    const pointsTotal = rpay + ppoint + cpoint + tpoint;
+    const pointsTotal = rpay + xpoint;
     const remaining = this.totalKrw - pointsTotal;
 
     document.getElementById('remaining-amount').textContent = Math.max(0, remaining).toLocaleString() + '원';
@@ -148,12 +142,10 @@ class Checkout {
 
     // Collect payment info
     const rpay = parseInt(document.getElementById('payment-rpay')?.value || 0);
-    const ppoint = parseInt(document.getElementById('payment-ppoint')?.value || 0);
-    const cpoint = parseInt(document.getElementById('payment-cpoint')?.value || 0);
-    const tpoint = parseInt(document.getElementById('payment-tpoint')?.value || 0);
+    const xpoint = parseInt(document.getElementById('payment-xpoint')?.value || 0);
     const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value;
 
-    const pointsTotal = rpay + ppoint + cpoint + tpoint;
+    const pointsTotal = rpay + xpoint;
     const cardBankAmount = this.totalKrw - pointsTotal;
 
     if (cardBankAmount > 0 && !paymentMethod) {
@@ -163,9 +155,7 @@ class Checkout {
 
     const payment = {
       rpay: rpay || undefined,
-      ppoint: ppoint || undefined,
-      cpoint: cpoint || undefined,
-      tpoint: tpoint || undefined,
+      xpoint: xpoint || undefined,
     };
 
     if (cardBankAmount > 0) {

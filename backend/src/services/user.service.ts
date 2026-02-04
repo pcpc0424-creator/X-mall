@@ -176,6 +176,25 @@ export class UserService {
           continue;
         }
 
+        // If referrer_username is provided, look up the referrer
+        let referrerId: string | null = null;
+        if (row.referrer_username) {
+          const referrerResult = await query(
+            "SELECT id FROM users WHERE username = $1 AND grade = 'dealer' AND is_active = true",
+            [row.referrer_username]
+          );
+          if (referrerResult.rows.length === 0) {
+            result.errors.push({
+              row: rowNumber,
+              username: row.username,
+              error: `추천인을 찾을 수 없음: ${row.referrer_username} (대리점 회원만 추천인 가능)`
+            });
+            result.fail_count++;
+            continue;
+          }
+          referrerId = referrerResult.rows[0].id;
+        }
+
         const client = await getClient();
         try {
           await client.query('BEGIN');
@@ -185,9 +204,9 @@ export class UserService {
           const grade: UserGrade = (row.grade === 'dealer' ? 'dealer' : 'consumer');
 
           await client.query(
-            `INSERT INTO users (id, username, password_hash, name, phone, grade)
-             VALUES ($1, $2, $3, $4, $5, $6)`,
-            [userId, row.username, passwordHash, row.name, row.phone, grade]
+            `INSERT INTO users (id, username, password_hash, name, phone, grade, referrer_id)
+             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [userId, row.username, passwordHash, row.name, row.phone, grade, referrerId]
           );
 
           // Initialize point balances

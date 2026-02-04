@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
 export type UserGrade = 'dealer' | 'consumer';
-export type PointType = 'P' | 'C' | 'T';
+export type PointType = 'X';
 export type ProductType = 'single' | 'package';
 export type OrderStatus = 'pending' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
 export type WithdrawalStatus = 'pending' | 'approved' | 'rejected' | 'completed';
@@ -64,14 +64,16 @@ export interface PointBalance {
   balance: number;
 }
 
-export interface PendingPPoint {
+export interface PendingXPoint {
   id: string;
   user_id: string;
   order_id: string;
-  ppoint_amount: number;
+  xpoint_amount: number;
+  pv_amount: number;
   scheduled_release_date: Date;
   status: PendingPointStatus;
   created_at: Date;
+  released_at?: Date;
 }
 
 export interface PointWithdrawal {
@@ -111,6 +113,7 @@ export interface Order {
   total_pv: number;
   total_krw: number;
   payment_rpay: number;
+  payment_xpoint: number;
   payment_ppoint: number;
   payment_cpoint: number;
   payment_tpoint: number;
@@ -186,11 +189,7 @@ export interface AdminLoginBody {
   password: string;
 }
 
-export interface PointTransferBody {
-  to_user_username: string;
-  point_type: 'P' | 'C';
-  amount: number;
-}
+// PointTransferBody removed - P/C/T point transfer no longer supported
 
 export interface WithdrawalRequestBody {
   amount: number;
@@ -206,9 +205,7 @@ export interface CreateOrderBody {
   }[];
   payment: {
     rpay?: number;
-    ppoint?: number;
-    cpoint?: number;
-    tpoint?: number;
+    xpoint?: number;
     card?: number;
     bank?: number;
     payring_order_id?: string;

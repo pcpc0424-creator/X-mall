@@ -24,12 +24,14 @@
         }
         @media (max-width: 992px) {
             .product-detail-container { grid-template-columns: 1fr; gap: 40px; }
+            .product-gallery { position: static; }
         }
 
         /* Product Gallery */
         .product-gallery {
             position: sticky;
             top: 100px;
+            z-index: 1;
         }
         .main-image {
             width: 100%;
@@ -62,7 +64,7 @@
             transition: all 0.3s ease;
         }
         .thumbnail:hover, .thumbnail.active {
-            border-color: var(--primary-color);
+            border-color: var(--primary);
         }
         .thumbnail img {
             width: 100%;
@@ -73,6 +75,8 @@
         /* Product Info */
         .product-detail-info {
             padding: 20px 0;
+            position: relative;
+            z-index: 2;
         }
         .product-badges-detail {
             display: flex;
@@ -136,7 +140,7 @@
         .discount-rate {
             font-size: 28px;
             font-weight: 800;
-            color: var(--secondary-color);
+            color: var(--secondary);
         }
         .price-pv-detail {
             font-size: 16px;
@@ -183,8 +187,8 @@
             font-size: 14px;
         }
         .option-btn:hover, .option-btn.active {
-            border-color: var(--primary-color);
-            background: var(--primary-color);
+            border-color: var(--primary);
+            background: var(--primary);
             color: #fff;
         }
 
@@ -245,7 +249,7 @@
         .total-amount {
             font-size: 28px;
             font-weight: 800;
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         /* Action Buttons */
@@ -266,8 +270,8 @@
             transition: all 0.3s ease;
         }
         .btn-wishlist-detail:hover, .btn-wishlist-detail.active {
-            border-color: var(--secondary-color);
-            color: var(--secondary-color);
+            border-color: var(--secondary);
+            color: var(--secondary);
         }
         .btn-wishlist-detail.active i {
             font-weight: 900;
@@ -275,17 +279,17 @@
         .btn-cart-detail {
             flex: 1;
             height: 56px;
-            border: 2px solid var(--primary-color);
+            border: 2px solid var(--primary);
             border-radius: 12px;
             background: #fff;
-            color: var(--primary-color);
+            color: var(--primary);
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         .btn-cart-detail:hover {
-            background: var(--primary-color);
+            background: var(--primary);
             color: #fff;
         }
         .btn-buy-detail {
@@ -293,7 +297,7 @@
             height: 56px;
             border: none;
             border-radius: 12px;
-            background: var(--primary-color);
+            background: var(--primary);
             color: #fff;
             font-size: 16px;
             font-weight: 600;
@@ -329,7 +333,7 @@
             justify-content: center;
             margin-bottom: 12px;
             font-size: 20px;
-            color: var(--primary-color);
+            color: var(--primary);
         }
         .benefit-text {
             font-size: 13px;
@@ -339,51 +343,28 @@
 
         /* Product Detail Tabs */
         .product-tabs-section {
-            background: var(--gray-100);
-            padding: 80px 0;
+            background: #fff;
+            padding: 60px 0;
+            border-top: 1px solid var(--gray-200);
         }
         .tabs-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        .tab-buttons {
-            display: flex;
-            border-bottom: 2px solid var(--gray-300);
-            margin-bottom: 40px;
-        }
-        .tab-btn {
-            padding: 16px 32px;
-            background: none;
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--gray-500);
-            cursor: pointer;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-        .tab-btn::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary-color);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        .tab-btn:hover, .tab-btn.active {
-            color: var(--primary-color);
-        }
-        .tab-btn.active::after {
-            transform: scaleX(1);
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 30px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
         }
         .tab-content {
-            background: #fff;
-            border-radius: 20px;
-            padding: 40px;
+            background: var(--gray-100);
+            border-radius: 16px;
+            padding: 32px;
         }
         .tab-panel {
             display: none;
@@ -394,21 +375,22 @@
 
         /* Product Description */
         .product-description h3 {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
             color: var(--gray-900);
         }
         .product-description p {
-            font-size: 16px;
-            line-height: 1.8;
-            color: var(--gray-600);
-            margin-bottom: 24px;
+            font-size: 15px;
+            line-height: 1.9;
+            color: var(--gray-700);
+            margin-bottom: 20px;
+            white-space: pre-wrap;
         }
         .product-description img {
-            width: 100%;
+            max-width: 100%;
             border-radius: 12px;
-            margin: 24px 0;
+            margin: 20px 0;
         }
         .feature-list {
             list-style: none;
@@ -428,7 +410,7 @@
             font-weight: 900;
             position: absolute;
             left: 0;
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         /* Reviews Section */
@@ -728,14 +710,10 @@
     <!-- Breadcrumb -->
     <div class="breadcrumb-section" style="padding: 120px 20px 20px; background: var(--gray-100);">
         <div style="max-width: 1400px; margin: 0 auto;">
-            <div class="breadcrumb">
-                <a href="index.html">홈</a>
-                <i class="fas fa-chevron-right"></i>
-                <a href="category-health.html">건강식품</a>
-                <i class="fas fa-chevron-right"></i>
-                <a href="sub-health-ginseng.html">홍삼</a>
-                <i class="fas fa-chevron-right"></i>
-                <span>프리미엄 홍삼정</span>
+            <div class="breadcrumb" style="justify-content: flex-start;">
+                <a href="index.html" style="color: var(--gray-500);">홈</a>
+                <i class="fas fa-chevron-right" style="color: var(--gray-400);"></i>
+                <span id="breadcrumb-category" style="color: var(--gray-700);">카테고리</span>
             </div>
         </div>
     </div>
@@ -844,146 +822,14 @@
         </div>
     </section>
 
-    <!-- Product Tabs -->
+    <!-- Product Description Section -->
     <section class="product-tabs-section">
         <div class="tabs-container">
-            <div class="tab-buttons">
-                <button class="tab-btn active" onclick="openTab(event, 'description')">상품 상세</button>
-                <button class="tab-btn" onclick="openTab(event, 'reviews')">리뷰 (8,765)</button>
-                <button class="tab-btn" onclick="openTab(event, 'qna')">Q&A</button>
-                <button class="tab-btn" onclick="openTab(event, 'shipping')">배송/교환</button>
-            </div>
+            <h2 class="section-title">상품 상세</h2>
             <div class="tab-content">
-                <!-- Description Tab -->
                 <div class="tab-panel active" id="description">
                     <div class="product-description">
-                        <h3>6년근 홍삼의 진한 맛과 영양</h3>
-                        <p>정관장 프리미엄 홍삼정은 6년근 홍삼만을 엄선하여 전통 방식으로 정성껏 달여 만들었습니다. 진한 홍삼의 맛과 향을 그대로 담아 면역력 증진과 피로 회복에 도움을 줍니다.</p>
-
-                        <img src="https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=1200&q=80" alt="상품 상세 이미지">
-
-                        <h3>이런 분께 추천드립니다</h3>
-                        <ul class="feature-list">
-                            <li>면역력 강화가 필요하신 분</li>
-                            <li>만성 피로에 시달리시는 분</li>
-                            <li>건강한 일상을 원하시는 분</li>
-                            <li>부모님께 건강 선물을 드리고 싶은 분</li>
-                            <li>체력 증진이 필요한 직장인</li>
-                        </ul>
-
-                        <h3>섭취 방법</h3>
-                        <p>1일 1회, 1회 1포를 물 또는 따뜻한 물에 타서 드시거나 그대로 드셔도 좋습니다. 아침 식사 전 또는 식후에 드시면 더욱 효과적입니다.</p>
-                </div>
-
-                <!-- Reviews Tab -->
-                <div class="tab-panel" id="reviews">
-                    <div class="reviews-summary">
-                        <div class="rating-big">
-                            <div class="score">4.9</div>
-                            <div class="stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="total">8,765개의 리뷰</div>
-                        </div>
-                        <div class="rating-bars">
-                            <div class="rating-bar-row">
-                                <span class="label">5점</span>
-                                <div class="rating-bar"><div class="rating-bar-fill" style="width: 85%"></div></div>
-                                <span class="count">7,450</span>
-                            </div>
-                            <div class="rating-bar-row">
-                                <span class="label">4점</span>
-                                <div class="rating-bar"><div class="rating-bar-fill" style="width: 10%"></div></div>
-                                <span class="count">876</span>
-                            </div>
-                            <div class="rating-bar-row">
-                                <span class="label">3점</span>
-                                <div class="rating-bar"><div class="rating-bar-fill" style="width: 3%"></div></div>
-                                <span class="count">263</span>
-                            </div>
-                            <div class="rating-bar-row">
-                                <span class="label">2점</span>
-                                <div class="rating-bar"><div class="rating-bar-fill" style="width: 1%"></div></div>
-                                <span class="count">88</span>
-                            </div>
-                            <div class="rating-bar-row">
-                                <span class="label">1점</span>
-                                <div class="rating-bar"><div class="rating-bar-fill" style="width: 1%"></div></div>
-                                <span class="count">88</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="review-item">
-                        <div class="review-header">
-                            <div class="reviewer-info">
-                                <div class="reviewer-avatar"><i class="fas fa-user"></i></div>
-                                <div>
-                                    <div class="reviewer-name">김**</div>
-                                    <div class="review-date">2024.01.15</div>
-                                </div>
-                            </div>
-                            <div class="review-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        <p class="review-content">부모님께 선물로 드렸는데 정말 좋아하세요. 진한 홍삼 맛이 느껴지고 건강에도 좋은 것 같아요. 포장도 고급스럽고 배송도 빨라서 만족합니다.</p>
-                    </div>
-
-                    <div class="review-item">
-                        <div class="review-header">
-                            <div class="reviewer-info">
-                                <div class="reviewer-avatar"><i class="fas fa-user"></i></div>
-                                <div>
-                                    <div class="reviewer-name">이**</div>
-                                    <div class="review-date">2024.01.12</div>
-                                </div>
-                            </div>
-                            <div class="review-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        <p class="review-content">매일 아침 먹고 있는데 확실히 피로가 덜해진 것 같아요. 맛도 쓰지 않고 먹기 좋습니다. 재구매 의사 100%!</p>
-                </div>
-
-                <!-- Q&A Tab -->
-                <div class="tab-panel" id="qna">
-                    <div style="text-align: center; padding: 60px 0; color: var(--gray-500);">
-                        <i class="fas fa-comments" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
-                        <p>등록된 Q&A가 없습니다.</p>
-                        <button style="margin-top: 20px; padding: 12px 32px; background: var(--primary-color); color: #fff; border: none; border-radius: 8px; cursor: pointer;">문의하기</button>
-                    </div>
-                </div>
-
-                <!-- Shipping Tab -->
-                <div class="tab-panel" id="shipping">
-                    <div class="product-description">
-                        <h3>배송 안내</h3>
-                        <ul class="feature-list">
-                            <li>배송비: 50,000원 이상 무료배송 (미만시 3,000원)</li>
-                            <li>배송기간: 결제 완료 후 1-3일 이내 출고</li>
-                            <li>도서산간 지역은 추가 배송비가 발생할 수 있습니다</li>
-                        </ul>
-
-                        <h3>교환/반품 안내</h3>
-                        <ul class="feature-list">
-                            <li>교환/반품 신청: 상품 수령 후 7일 이내</li>
-                            <li>단순 변심에 의한 교환/반품 시 왕복 배송비 고객 부담</li>
-                            <li>상품 하자 시 무료 교환/반품 가능</li>
-                            <li>개봉 후 사용한 상품은 교환/반품 불가</li>
-                        </ul>
+                        <p style="color: var(--gray-500);">상품 정보를 불러오는 중...</p>
                     </div>
                 </div>
             </div>
@@ -1237,6 +1083,29 @@
                 badgesEl.innerHTML = '<span class="badge" style="background: #6c63ff; color: white;">PACKAGE</span>';
             }
         }
+
+        // Breadcrumb 카테고리 업데이트
+        const breadcrumbCategory = document.getElementById('breadcrumb-category');
+        if (breadcrumbCategory && product.category) {
+            breadcrumbCategory.textContent = product.category;
+        }
+
+        // 상품 상세 탭 내용 업데이트
+        const descriptionTab = document.querySelector('#description .product-description');
+        if (descriptionTab) {
+            let descriptionHtml = `<h3>${product.name}</h3>`;
+
+            if (product.description) {
+                descriptionHtml += `<p>${product.description.replace(/\n/g, '<br>')}</p>`;
+            } else {
+                descriptionHtml += `<p style="color: var(--gray-500);">상품 설명이 등록되지 않았습니다.</p>`;
+            }
+
+            descriptionTab.innerHTML = descriptionHtml;
+        }
+
+        // 페이지 타이틀 업데이트
+        document.title = `${product.name} | X-mall`;
     }
 
     function changeImage(thumb, src) {

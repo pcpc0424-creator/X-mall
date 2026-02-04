@@ -50,7 +50,7 @@
                     포인트 관리
                 </a>
                 <a href="withdrawals.html" class="nav-item active">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
                     출금 관리
                 </a>
                 <a href="settings.html" class="nav-item">
@@ -110,6 +110,7 @@
                                 <thead>
                                     <tr>
                                         <th>신청자</th>
+                                        <th>포인트</th>
                                         <th>은행</th>
                                         <th>계좌번호</th>
                                         <th>예금주</th>
@@ -120,7 +121,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="withdrawalsBody">
-                                    <tr><td colspan="8" class="text-center text-muted">로딩 중...</td></tr>
+                                    <tr><td colspan="9" class="text-center text-muted">로딩 중...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -159,13 +160,16 @@
         function renderWithdrawals(withdrawals) {
             const tbody = document.getElementById('withdrawalsBody');
             if (withdrawals.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">출금 신청이 없습니다</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">출금 신청이 없습니다</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = withdrawals.map(w => `
+            tbody.innerHTML = withdrawals.map(w => {
+                const pointBadge = '<span class="status-badge" style="background:#2e7d3220;color:#2e7d32;">X포인트</span>';
+                return `
                 <tr>
-                    <td>${w.user?.name || '-'}<br><small class="text-muted">${w.user?.email || ''}</small></td>
+                    <td>${w.user_name || '-'}<br><small class="text-muted">${w.username || ''}</small></td>
+                    <td>${pointBadge}</td>
                     <td>${w.bank_name}</td>
                     <td>${w.account_number}</td>
                     <td>${w.account_holder}</td>
@@ -182,10 +186,12 @@
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                                 </button>
                             </div>
+                        ` : w.status === 'approved' ? `
+                            <button class="btn btn-sm btn-primary" onclick="completeWithdrawal('${w.id}')">완료 처리</button>
                         ` : '-'}
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
         async function approveWithdrawal(id) {
@@ -203,8 +209,19 @@
             const reason = prompt('거절 사유를 입력하세요:');
             if (reason === null) return;
             try {
-                await api.put(`/admin/withdrawals/${id}/reject`, { reject_reason: reason });
+                await api.put(`/admin/withdrawals/${id}/reject`, { admin_note: reason });
                 showToast('출금이 거절되었습니다.');
+                loadWithdrawals();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function completeWithdrawal(id) {
+            if (!confirm('이 출금을 완료 처리하시겠습니까? (실제 입금 완료 후 처리하세요)')) return;
+            try {
+                await api.put(`/admin/withdrawals/${id}/complete`);
+                showToast('출금이 완료 처리되었습니다.');
                 loadWithdrawals();
             } catch (error) {
                 showToast(error.message, 'error');

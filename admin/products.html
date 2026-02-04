@@ -51,7 +51,7 @@
                     포인트 관리
                 </a>
                 <a href="withdrawals.html" class="nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
                     출금 관리
                 </a>
                 <a href="settings.html" class="nav-item">
@@ -126,10 +126,10 @@
                             <table class="data-table" id="productsTable">
                                 <thead>
                                     <tr>
+                                        <th style="width: 60px;">이미지</th>
                                         <th>상품명</th>
                                         <th>타입</th>
                                         <th>카테고리</th>
-                                        <th>서브카테고리</th>
                                         <th>소비자가</th>
                                         <th>대리점가</th>
                                         <th>PV</th>
@@ -180,8 +180,18 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">설명</label>
-                    <textarea class="form-control" id="productDescription" rows="3" placeholder="상품 설명을 입력하세요" style="resize: vertical;"></textarea>
+                    <label class="form-label" style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                            <polyline points="14,2 14,8 20,8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10,9 9,9 8,9"/>
+                        </svg>
+                        상품 설명
+                    </label>
+                    <textarea class="form-control" id="productDescription" rows="5" placeholder="상품의 특징, 효능, 사용방법 등을 자세히 입력하세요.&#10;&#10;예시:&#10;- 주요 성분 및 효능&#10;- 복용/사용 방법&#10;- 주의사항" style="resize: vertical; min-height: 120px; line-height: 1.6;"></textarea>
+                    <small style="color: var(--text-muted); margin-top: 4px; display: block;">상품 상세 페이지에 표시됩니다.</small>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -230,8 +240,15 @@
                     <input type="hidden" id="productSubcategory">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">상품 이미지</label>
-                    <div class="image-upload-area" id="imageUploadArea">
+                    <label class="form-label" style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21,15 16,10 5,21"/>
+                        </svg>
+                        메인 이미지
+                    </label>
+                    <div class="image-upload-area" id="imageUploadArea" style="border: 2px dashed var(--primary); background: rgba(184, 169, 201, 0.05);">
                         <input type="file" id="productImageFile" accept="image/*" style="display: none;">
                         <input type="hidden" id="productImageUrl">
                         <div class="image-preview" id="imagePreview" style="display: none;">
@@ -239,13 +256,13 @@
                             <button type="button" class="remove-image-btn" onclick="removeImage()">×</button>
                         </div>
                         <div class="image-upload-placeholder" id="imagePlaceholder">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
                                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                                 <circle cx="8.5" cy="8.5" r="1.5"/>
                                 <polyline points="21,15 16,10 5,21"/>
                             </svg>
-                            <p>클릭하여 이미지 선택</p>
-                            <small>JPG, PNG, GIF, WEBP (최대 10MB)</small>
+                            <p style="margin-top: 12px; font-weight: 600; color: var(--primary);">클릭하거나 드래그하여 이미지 업로드</p>
+                            <small style="color: var(--text-muted);">JPG, PNG, GIF, WEBP (최대 10MB)</small>
                         </div>
                     </div>
                 </div>
@@ -564,6 +581,12 @@
 
             tbody.innerHTML = products.map(p => `
                 <tr>
+                    <td>
+                        ${p.image_url
+                            ? `<img src="${p.image_url}" alt="${escapeHtml(p.name)}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">`
+                            : `<div style="width: 50px; height: 50px; background: var(--bg-secondary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 10px;">No Image</div>`
+                        }
+                    </td>
                     <td class="fw-500">${escapeHtml(p.name)}</td>
                     <td>
                         <span class="type-badge ${p.product_type || 'single'}">
@@ -571,7 +594,6 @@
                         </span>
                     </td>
                     <td>${escapeHtml(p.category || '-')}</td>
-                    <td>${escapeHtml(p.subcategory || '-')}</td>
                     <td>${formatCurrency(p.price_krw)}</td>
                     <td>${formatCurrency(p.price_dealer_krw)}</td>
                     <td>${p.pv_value ?? '-'}</td>
@@ -650,8 +672,12 @@
 
         // --- Edit Product ---
         function openEditProduct(id) {
-            const product = allProducts.find(p => p.id === id);
-            if (!product) return;
+            const product = allProducts.find(p => String(p.id) === String(id));
+            if (!product) {
+                console.error('Product not found:', id);
+                showToast('상품을 찾을 수 없습니다.', 'error');
+                return;
+            }
 
             editingProductId = id;
             document.getElementById('productModalTitle').textContent = '상품 수정';
@@ -854,7 +880,7 @@
                 const formData = new FormData();
                 formData.append('image', file);
 
-                const token = localStorage.getItem('adminToken');
+                const token = api.getToken();
                 const response = await fetch('/X-mall/api/admin/upload/image', {
                     method: 'POST',
                     headers: {

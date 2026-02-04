@@ -12,37 +12,31 @@ export interface BulkGrantResult {
 
 export class PointService {
   async getBalances(userId: string): Promise<{
-    P: number;
-    C: number;
-    T: number;
+    X: number;
     rpay: number;
   }> {
-    const pointResult = await query(
-      `SELECT point_type, balance FROM point_balances WHERE user_id = $1`,
+    // 단일 쿼리로 잔액 조회 (X포인트, X페이만)
+    const result = await query(
+      `SELECT
+        COALESCE((SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = 'X'), 0) as x_balance,
+        COALESCE((SELECT balance_krw FROM rpay_balance WHERE user_id = $1), 0) as rpay_balance`,
       [userId]
     );
 
-    const rpayResult = await query(
-      `SELECT balance_krw FROM rpay_balance WHERE user_id = $1`,
-      [userId]
-    );
-
-    const balances: { P: number; C: number; T: number; rpay: number } = {
-      P: 0,
-      C: 0,
-      T: 0,
-      rpay: 0
+    const row = result.rows[0];
+    return {
+      X: parseFloat(row.x_balance),
+      rpay: parseFloat(row.rpay_balance)
     };
+  }
 
-    for (const row of pointResult.rows) {
-      balances[row.point_type as PointType] = parseFloat(row.balance);
-    }
-
-    if (rpayResult.rows[0]) {
-      balances.rpay = parseFloat(rpayResult.rows[0].balance_krw);
-    }
-
-    return balances;
+  // Get current exchange rate (USD to KRW)
+  async getExchangeRate(): Promise<number> {
+    const result = await query(
+      `SELECT rate FROM exchange_rates WHERE rate_type = 'weekly' ORDER BY effective_date DESC LIMIT 1`
+    );
+    // Default rate if none found
+    return result.rows[0] ? parseFloat(result.rows[0].rate) : 1400;
   }
 
   async getBalance(userId: string, pointType: PointType): Promise<number> {
@@ -148,71 +142,7 @@ export class PointService {
     }
   }
 
-  async transferPoints(
-    fromUserId: string,
-    toUserId: string,
-    fromPointType: 'P' | 'C',
-    amount: number
-  ): Promise<void> {
-    const client = await getClient();
-
-    try {
-      await client.query('BEGIN');
-
-      // Check sender's balance
-      const balanceResult = await client.query(
-        `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = $2 FOR UPDATE`,
-        [fromUserId, fromPointType]
-      );
-
-      const currentBalance = parseFloat(balanceResult.rows[0]?.balance || 0);
-
-      if (currentBalance < amount) {
-        throw new Error(`${fromPointType}포인트 잔액이 부족합니다.`);
-      }
-
-      // Deduct from sender (P or C)
-      const senderNewBalance = await client.query(
-        `UPDATE point_balances SET balance = balance - $1 WHERE user_id = $2 AND point_type = $3 RETURNING balance`,
-        [amount, fromUserId, fromPointType]
-      );
-
-      // Add to receiver (always T point)
-      const receiverNewBalance = await client.query(
-        `UPDATE point_balances SET balance = balance + $1 WHERE user_id = $2 AND point_type = 'T' RETURNING balance`,
-        [amount, toUserId]
-      );
-
-      const transferId = generateUUID();
-
-      // Record transfer
-      await client.query(
-        `INSERT INTO point_transfers (id, from_user_id, to_user_id, from_point_type, amount)
-         VALUES ($1, $2, $3, $4, $5)`,
-        [transferId, fromUserId, toUserId, fromPointType, amount]
-      );
-
-      // Record transactions
-      await client.query(
-        `INSERT INTO point_transactions (id, user_id, point_type, amount, transaction_type, balance_after, reference_id, description)
-         VALUES ($1, $2, $3, $4, 'transfer_out', $5, $6, $7)`,
-        [generateUUID(), fromUserId, fromPointType, -amount, senderNewBalance.rows[0].balance, transferId, `포인트 이체 (${toUserId}에게)`]
-      );
-
-      await client.query(
-        `INSERT INTO point_transactions (id, user_id, point_type, amount, transaction_type, balance_after, reference_id, description)
-         VALUES ($1, $2, 'T', $3, 'transfer_in', $4, $5, $6)`,
-        [generateUUID(), toUserId, amount, receiverNewBalance.rows[0].balance, transferId, `포인트 이체 받음 (${fromUserId}로부터)`]
-      );
-
-      await client.query('COMMIT');
-    } catch (error) {
-      await client.query('ROLLBACK');
-      throw error;
-    } finally {
-      client.release();
-    }
-  }
+  // transferPoints removed - P/C/T point transfer no longer supported
 
   async getTransactionHistory(
     userId: string,
@@ -259,8 +189,27 @@ export class PointService {
     amount: number,
     reason?: string
   ): Promise<number> {
+    // X포인트만 지원 (관리자 수동 지급 허용)
+    if (pointType !== 'X') {
+      throw new Error('X포인트만 지급할 수 있습니다.');
+    }
     const description = `관리자 지급${reason ? `: ${reason}` : ''}`;
     return this.addPoints(userId, pointType, amount, 'grant', adminId, description);
+  }
+
+  async adminDeductPoints(
+    adminId: string,
+    userId: string,
+    pointType: PointType,
+    amount: number,
+    reason?: string
+  ): Promise<number> {
+    // X포인트만 지원
+    if (pointType !== 'X') {
+      throw new Error('X포인트만 차감할 수 있습니다.');
+    }
+    const description = `관리자 차감${reason ? `: ${reason}` : ''}`;
+    return this.deductPoints(userId, pointType, amount, 'admin_deduct', adminId, description);
   }
 
   async bulkGrantPoints(

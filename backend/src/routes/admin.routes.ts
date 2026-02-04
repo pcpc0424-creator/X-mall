@@ -94,12 +94,14 @@ router.get('/users/:dealerId/genealogy', authenticateAdmin, (req, res) => userCo
 
 // Points (protected)
 router.post('/points/grant', authenticateAdmin, (req, res) => pointController.adminGrantPoints(req, res));
+router.post('/points/deduct', authenticateAdmin, (req, res) => pointController.adminDeductPoints(req, res));
 router.post('/points/bulk-grant', authenticateAdmin, upload.single('file'), (req, res) => pointController.bulkGrant(req, res));
-router.get('/points/pending', authenticateAdmin, (req, res) => pointController.getPendingPPoints(req, res));
+router.get('/points/pending', authenticateAdmin, (req, res) => pointController.getPendingXPoints(req, res));
 router.get('/points/transactions', authenticateAdmin, (req, res) => pointController.getAllTransactions(req, res));
 
 // R-pay (protected)
 router.post('/rpay/deposit', authenticateAdmin, (req, res) => rpayController.adminDeposit(req, res));
+router.post('/rpay/bulk-deposit', authenticateAdmin, upload.single('file'), (req, res) => rpayController.bulkDeposit(req, res));
 
 // Withdrawals (protected)
 router.get('/withdrawals', authenticateAdmin, (req, res) => withdrawalController.getAllWithdrawals(req, res));

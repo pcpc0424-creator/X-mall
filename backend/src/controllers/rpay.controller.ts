@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { rpayService } from '../services/rpay.service';
 import { userService } from '../services/user.service';
 import { AuthRequest, AdminAuthRequest, AdminRpayDepositBody } from '../types';
+import { parseRpayExcel } from '../utils/excel';
 
 export class RpayController {
   // Get R-pay balance
@@ -97,6 +98,59 @@ export class RpayController {
       res.status(400).json({
         success: false,
         error: error.message
+      });
+    }
+  }
+
+  // Admin: Bulk deposit R-pay
+  async bulkDeposit(req: AdminAuthRequest, res: Response) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          error: '엑셀 파일을 업로드해주세요.'
+        });
+      }
+
+      const adminId = req.admin!.id;
+
+      // Parse Excel file
+      const parseResult = parseRpayExcel(req.file.buffer);
+
+      if (parseResult.data.length === 0 && parseResult.errors.length === 0) {
+        return res.status(400).json({
+          success: false,
+          error: '엑셀 파일에 데이터가 없습니다.'
+        });
+      }
+
+      // Combine parse errors
+      const allErrors = parseResult.errors.map(e => ({
+        row: e.row,
+        username: '',
+        error: e.message
+      }));
+
+      // Bulk deposit
+      const bulkResult = await rpayService.bulkDeposit(adminId, parseResult.data);
+
+      // Merge errors
+      const finalErrors = [...allErrors, ...bulkResult.errors];
+
+      res.json({
+        success: true,
+        data: {
+          total: parseResult.data.length + parseResult.errors.length,
+          success_count: bulkResult.success_count,
+          fail_count: parseResult.errors.length + bulkResult.fail_count,
+          errors: finalErrors.slice(0, 100) // Limit error list
+        },
+        message: `총 ${bulkResult.success_count}건의 X페이가 충전되었습니다.`
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message || '파일 처리 중 오류가 발생했습니다.'
       });
     }
   }

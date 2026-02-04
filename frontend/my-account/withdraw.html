@@ -164,20 +164,21 @@
         </nav>
 
         <div class="card">
-            <h2>P포인트 출금</h2>
+            <h2>X포인트 출금</h2>
 
-            <div class="balance-display">
-                <label>출금 가능한 P포인트</label>
-                <div class="value" id="available-ppoint">0원</div>
+            <div class="balance-display" style="background: #e8f5e9;">
+                <label>출금 가능한 X포인트</label>
+                <div class="value" id="available-xpoint" style="color: #2e7d32;">0원</div>
             </div>
 
             <div class="info-box">
                 <strong>출금 안내</strong>
                 <ul>
+                    <li>X포인트만 출금이 가능합니다 (원화 기준)</li>
                     <li>최소 출금 금액: 10,000원</li>
                     <li>출금 신청 후 다음 영업일에 지급됩니다.</li>
                     <li>영업일: 월~금 (공휴일 제외)</li>
-                    <li>출금 신청 시 P포인트가 즉시 차감됩니다.</li>
+                    <li>출금 신청 시 X포인트가 즉시 차감됩니다.</li>
                 </ul>
             </div>
 
@@ -189,18 +190,7 @@
                 </div>
                 <div class="form-group">
                     <label>은행</label>
-                    <select id="bank-name" required>
-                        <option value="">선택하세요</option>
-                        <option value="국민은행">국민은행</option>
-                        <option value="신한은행">신한은행</option>
-                        <option value="우리은행">우리은행</option>
-                        <option value="하나은행">하나은행</option>
-                        <option value="농협은행">농협은행</option>
-                        <option value="기업은행">기업은행</option>
-                        <option value="SC제일은행">SC제일은행</option>
-                        <option value="카카오뱅크">카카오뱅크</option>
-                        <option value="토스뱅크">토스뱅크</option>
-                    </select>
+                    <input type="text" id="bank-name" placeholder="은행명 입력" required>
                 </div>
                 <div class="form-group">
                     <label>계좌번호</label>
@@ -266,8 +256,8 @@
             try {
                 const res = await pointsApi.getSummary();
                 if (res.success) {
-                    availableBalance = res.data.P;
-                    document.getElementById('available-ppoint').textContent = availableBalance.toLocaleString() + '원';
+                    availableBalance = res.data.X || 0;
+                    document.getElementById('available-xpoint').textContent = availableBalance.toLocaleString() + '원';
                 }
             } catch (error) {
                 console.error('Failed to load balance:', error);
@@ -328,7 +318,7 @@
                 return;
             }
 
-            if (!confirm(`${bankName} ${accountNumber} (${accountHolder})\n\n₩${amount.toLocaleString()}을 출금 신청하시겠습니까?\n\n출금 신청 시 P포인트가 즉시 차감됩니다.`)) {
+            if (!confirm(`${bankName} ${accountNumber} (${accountHolder})\n\n₩${amount.toLocaleString()}을 출금 신청하시겠습니까?\n\n출금 신청 시 X포인트가 즉시 차감됩니다.`)) {
                 return;
             }
 

@@ -6,11 +6,18 @@ export interface MemberExcelRow {
   name: string;
   phone: string;
   grade?: string;
+  referrer_username?: string;
 }
 
 export interface PointExcelRow {
   username: string;
   point_type: string;
+  amount: number;
+  reason?: string;
+}
+
+export interface RpayExcelRow {
+  username: string;
   amount: number;
   reason?: string;
 }
@@ -84,7 +91,7 @@ export function parseExcelBuffer<T>(
  * Validate point type
  */
 export function isValidPointType(pointType: string): boolean {
-  return ['P', 'C', 'T'].includes(pointType.toUpperCase());
+  return ['X'].includes(pointType.toUpperCase());
 }
 
 /**
@@ -133,6 +140,19 @@ export function parseMembersExcel(buffer: Buffer): ParseResult<MemberExcelRow> {
       row.grade = 'consumer';
     }
 
+    // Normalize referrer_username (trim whitespace)
+    if (row.referrer_username) {
+      row.referrer_username = String(row.referrer_username).trim();
+      // Validate referrer username format if provided
+      if (row.referrer_username && !isValidUsername(row.referrer_username)) {
+        result.errors.push({
+          row: rowNumber,
+          message: `잘못된 추천인 아이디 형식: ${row.referrer_username} (4~20자의 영문, 숫자만 가능)`
+        });
+        return;
+      }
+    }
+
     validatedData.push(row);
   });
 
@@ -165,7 +185,7 @@ export function parsePointsExcel(buffer: Buffer): ParseResult<PointExcelRow> {
     if (!isValidPointType(normalizedPointType)) {
       result.errors.push({
         row: originalRowNumber,
-        message: `잘못된 포인트 타입: ${row.point_type} (P, C, T 중 하나)`
+        message: `잘못된 포인트 타입: ${row.point_type} (X만 가능)`
       });
       return;
     }
@@ -266,6 +286,44 @@ export function parseProductsExcel(buffer: Buffer): ParseResult<ProductExcelRow>
     } else {
       row.product_type = 'single';
     }
+
+    validatedData.push(row);
+  });
+
+  return { data: validatedData, errors: result.errors };
+}
+
+/**
+ * Parse R-pay (X페이) bulk deposit excel file
+ */
+export function parseRpayExcel(buffer: Buffer): ParseResult<RpayExcelRow> {
+  const requiredFields = ['username', 'amount'];
+  const result = parseExcelBuffer<RpayExcelRow>(buffer, requiredFields);
+
+  const validatedData: RpayExcelRow[] = [];
+
+  result.data.forEach((row, index) => {
+    const originalRowNumber = index + 2;
+
+    // Validate username format
+    if (!isValidUsername(row.username)) {
+      result.errors.push({
+        row: originalRowNumber,
+        message: `잘못된 아이디 형식: ${row.username}`
+      });
+      return;
+    }
+
+    // Validate amount
+    const amount = parseFloat(String(row.amount));
+    if (isNaN(amount) || amount <= 0) {
+      result.errors.push({
+        row: originalRowNumber,
+        message: `잘못된 금액: ${row.amount} (양수만 가능)`
+      });
+      return;
+    }
+    row.amount = amount;
 
     validatedData.push(row);
   });

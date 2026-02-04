@@ -1,11 +1,13 @@
-import { schedulePPointReleaseJob, triggerPPointRelease } from './ppoint-release.job';
+// P-point job removed - P/C/T points no longer supported
+import { scheduleXPointReleaseJob, triggerXPointRelease } from './xpoint-release.job';
 import { scheduleExchangeRateJob, triggerExchangeRateUpdate } from './exchange-rate.job';
 
 export const initializeJobs = async () => {
   console.log('Initializing background jobs...');
 
   try {
-    await schedulePPointReleaseJob();
+    // X-point release job (14일 후 자동 지급)
+    await scheduleXPointReleaseJob();
     await scheduleExchangeRateJob();
 
     console.log('All background jobs initialized successfully');
@@ -15,6 +17,6 @@ export const initializeJobs = async () => {
 };
 
 export {
-  triggerPPointRelease,
+  triggerXPointRelease,
   triggerExchangeRateUpdate
 };

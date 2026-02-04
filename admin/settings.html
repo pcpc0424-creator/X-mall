@@ -50,7 +50,7 @@
                     포인트 관리
                 </a>
                 <a href="withdrawals.html" class="nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
                     출금 관리
                 </a>
                 <a href="settings.html" class="nav-item active">
@@ -95,13 +95,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">환율 설정</h2>
-                        <span class="badge badge-info">1 포인트 = 1 USD</span>
+                        <span class="badge badge-info">결제 환산용</span>
                     </div>
                     <div class="card-body">
                         <div class="setting-info" style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px;">
-                            <p><strong>포인트 환산 기준:</strong></p>
-                            <p>포인트 → USD → KRW (원화)</p>
-                            <p>예시: 100 P포인트 = 100 USD = 135,000원 (환율 1,350원/USD 기준)</p>
+                            <p><strong>환율 사용처:</strong></p>
+                            <p>상품 가격 환산 및 결제 금액 계산에 사용됩니다.</p>
                         </div>
                         <form id="exchangeRateForm" class="form-grid">
                             <div class="form-group">
@@ -154,7 +153,7 @@
                 <!-- PV Settings Info -->
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">PV (Point Value) 정책</h2>
+                        <h2 class="card-title">X포인트 리워드 정책</h2>
                     </div>
                     <div class="card-body">
                         <div class="policy-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:20px;">
@@ -164,19 +163,19 @@
                                 <p>예: 110만원 구매 → 100만 PV</p>
                             </div>
                             <div class="policy-item" style="background:#f6ffed;padding:20px;border-radius:12px;">
-                                <h4 style="color:#52c41a;margin-bottom:10px;">P포인트 적립</h4>
-                                <p>PV의 50% 백마진</p>
+                                <h4 style="color:#52c41a;margin-bottom:10px;">X포인트 적립</h4>
+                                <p>PV의 50% (원화 기준)</p>
                                 <p>주문일 포함 14일 후 지급</p>
                             </div>
                             <div class="policy-item" style="background:#fff7e6;padding:20px;border-radius:12px;">
                                 <h4 style="color:#fa8c16;margin-bottom:10px;">출금 정책</h4>
-                                <p>P포인트만 출금 가능</p>
+                                <p>X포인트만 출금 가능</p>
                                 <p>영업일 기준 익일 지급</p>
                             </div>
-                            <div class="policy-item" style="background:#f9f0ff;padding:20px;border-radius:12px;">
-                                <h4 style="color:#722ed1;margin-bottom:10px;">포인트 이체</h4>
-                                <p>P/C포인트 → T포인트로 전환</p>
-                                <p>이메일만 알면 이체 가능</p>
+                            <div class="policy-item" style="background:#e3f2fd;padding:20px;border-radius:12px;">
+                                <h4 style="color:#1565c0;margin-bottom:10px;">X페이</h4>
+                                <p>관리자가 충전하는 결제 수단</p>
+                                <p>상품 결제에 사용 가능</p>
                             </div>
                         </div>
                     </div>

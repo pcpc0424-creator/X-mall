@@ -94,13 +94,15 @@ export class OrderController {
   // Admin: Get all orders
   async getAllOrders(req: AdminAuthRequest, res: Response) {
     try {
-      const { page, limit, status, search } = req.query;
+      const { page, limit, status, search, start_date, end_date } = req.query;
 
       const result = await orderService.getAllOrders({
         page: page ? parseInt(page as string) : undefined,
         limit: limit ? parseInt(limit as string) : undefined,
         status: status as any,
-        search: search as string
+        search: search as string,
+        startDate: start_date as string,
+        endDate: end_date as string
       });
 
       res.json({

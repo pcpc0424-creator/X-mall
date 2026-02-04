@@ -4,6 +4,46 @@
 
 const API_BASE = '/X-mall/api';
 
+// 간단한 인메모리 캐시
+const apiCache = {
+    data: new Map(),
+    ttl: 30000, // 30초 기본 TTL
+
+    set(key, value, ttl = this.ttl) {
+        this.data.set(key, {
+            value,
+            expiry: Date.now() + ttl
+        });
+    },
+
+    get(key) {
+        const item = this.data.get(key);
+        if (!item) return null;
+        if (Date.now() > item.expiry) {
+            this.data.delete(key);
+            return null;
+        }
+        return item.value;
+    },
+
+    clear() {
+        this.data.clear();
+    }
+};
+
+// 디바운스 유틸리티
+function debounce(func, wait = 300) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // API Helper
 const api = {
     getToken() {
@@ -47,6 +87,16 @@ const api = {
 
     get(endpoint) {
         return this.request(endpoint, { method: 'GET' });
+    },
+
+    // 캐싱된 GET 요청 (자주 변경되지 않는 데이터용)
+    async getCached(endpoint, ttl = 30000) {
+        const cached = apiCache.get(endpoint);
+        if (cached) return cached;
+
+        const data = await this.request(endpoint, { method: 'GET' });
+        apiCache.set(endpoint, data, ttl);
+        return data;
     },
 
     post(endpoint, data) {
@@ -262,7 +312,8 @@ function showToast(message, type = 'success') {
  * Format Currency
  */
 function formatCurrency(amount) {
-    return new Intl.NumberFormat('ko-KR').format(amount) + '원';
+    const num = Number(amount);
+    return new Intl.NumberFormat('ko-KR').format(isNaN(num) ? 0 : num) + '원';
 }
 
 /**
@@ -307,11 +358,13 @@ function gradeBadge(grade) {
 function orderStatusBadge(status) {
     const statusMap = {
         'pending': { class: 'pending', text: '대기중' },
+        'paid': { class: 'processing', text: '결제완료' },
         'confirmed': { class: 'processing', text: '확인됨' },
         'processing': { class: 'processing', text: '처리중' },
         'shipped': { class: 'shipped', text: '배송중' },
         'delivered': { class: 'delivered', text: '배송완료' },
-        'cancelled': { class: 'cancelled', text: '취소됨' }
+        'cancelled': { class: 'cancelled', text: '취소됨' },
+        'refunded': { class: 'cancelled', text: '환불됨' }
     };
     const info = statusMap[status] || { class: '', text: status };
     return `<span class="status-badge ${info.class}">${info.text}</span>`;
@@ -415,11 +468,11 @@ function downloadMembersTemplate() {
     }
 
     const data = [
-        { username: 'user1234', password: 'password123', name: '홍길동', phone: '010-1234-5678', grade: 'consumer' }
+        { username: 'user1234', password: 'password123', name: '홍길동', phone: '010-1234-5678', grade: 'consumer', referrer_username: 'dealer001' }
     ];
 
     const ws = XLSX.utils.json_to_sheet(data, {
-        header: ['username', 'password', 'name', 'phone', 'grade']
+        header: ['username', 'password', 'name', 'phone', 'grade', 'referrer_username']
     });
 
     // Set column widths
@@ -428,7 +481,8 @@ function downloadMembersTemplate() {
         { wch: 15 }, // password
         { wch: 12 }, // name
         { wch: 15 }, // phone
-        { wch: 10 }  // grade
+        { wch: 10 }, // grade
+        { wch: 18 }  // referrer_username
     ];
 
     const wb = XLSX.utils.book_new();
@@ -439,7 +493,7 @@ function downloadMembersTemplate() {
 }
 
 /**
- * Download Points Excel Template
+ * Download Points Excel Template (X포인트 전용)
  */
 function downloadPointsTemplate() {
     if (typeof XLSX === 'undefined') {
@@ -448,7 +502,7 @@ function downloadPointsTemplate() {
     }
 
     const data = [
-        { username: 'user1234', point_type: 'P', amount: 1000, reason: '이벤트 지급' }
+        { username: 'user1234', point_type: 'X', amount: 10000, reason: '이벤트 지급' }
     ];
 
     const ws = XLSX.utils.json_to_sheet(data, {
@@ -464,9 +518,9 @@ function downloadPointsTemplate() {
     ];
 
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, '포인트지급');
+    XLSX.utils.book_append_sheet(wb, ws, 'X포인트지급');
 
-    XLSX.writeFile(wb, 'points_template.xlsx');
+    XLSX.writeFile(wb, 'xpoints_template.xlsx');
     showToast('양식이 다운로드되었습니다.', 'success');
 }
 
@@ -516,19 +570,15 @@ function downloadProductsTemplate() {
 }
 
 /**
- * Load Dealers for Referrer Selection
+ * Load Dealers for Referrer Selection (캐싱 적용)
  */
-let dealersCache = null;
-
 async function loadDealers(forceReload = false) {
-    if (dealersCache && !forceReload) {
-        return dealersCache;
-    }
-
     try {
-        const result = await api.get('/admin/dealers');
-        dealersCache = result.data?.dealers || [];
-        return dealersCache;
+        if (forceReload) {
+            apiCache.data.delete('/admin/dealers');
+        }
+        const result = await api.getCached('/admin/dealers', 60000); // 1분 캐시
+        return result.data?.dealers || [];
     } catch (error) {
         console.error('Failed to load dealers:', error);
         return [];

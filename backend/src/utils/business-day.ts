@@ -57,7 +57,7 @@ export const addBusinessDays = async (fromDate: Date, days: number): Promise<Dat
   return result;
 };
 
-// Add 14 calendar days for P-point release
-export const getPPointReleaseDate = (orderDate: Date): Date => {
+// Add 14 calendar days for X-point release
+export const getXPointReleaseDate = (orderDate: Date): Date => {
   return addDays(orderDate, 14);
 };

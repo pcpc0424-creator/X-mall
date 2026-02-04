@@ -97,24 +97,14 @@ const userApi = {
   },
 };
 
-// Points API
+// Points API (X포인트만 지원)
 const pointsApi = {
   async getSummary() {
     return api.get('/points/summary');
   },
 
-  async getHistory(pointType, page = 1, limit = 20) {
-    let endpoint = `/points/history?page=${page}&limit=${limit}`;
-    if (pointType) endpoint += `&point_type=${pointType}`;
-    return api.get(endpoint);
-  },
-
-  async transfer(toUsername, pointType, amount) {
-    return api.post('/points/transfer', {
-      to_user_username: toUsername,
-      point_type: pointType,
-      amount: parseFloat(amount),
-    });
+  async getHistory(page = 1, limit = 20) {
+    return api.get(`/points/history?page=${page}&limit=${limit}&point_type=X`);
   },
 };
 
@@ -129,7 +119,7 @@ const rpayApi = {
   },
 };
 
-// Withdrawal API
+// Withdrawal API (X포인트 출금)
 const withdrawalApi = {
   async create(data) {
     return api.post('/withdrawals', data);

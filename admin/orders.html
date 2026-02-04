@@ -50,7 +50,7 @@
                     포인트 관리
                 </a>
                 <a href="withdrawals.html" class="nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
                     출금 관리
                 </a>
                 <a href="settings.html" class="nav-item">
@@ -97,12 +97,24 @@
                     <select class="form-control form-select" id="statusFilter" onchange="loadOrders()">
                         <option value="">전체 상태</option>
                         <option value="pending">대기중</option>
+                        <option value="paid">결제완료</option>
                         <option value="confirmed">확인됨</option>
                         <option value="processing">처리중</option>
                         <option value="shipped">배송중</option>
                         <option value="delivered">배송완료</option>
                         <option value="cancelled">취소됨</option>
+                        <option value="refunded">환불됨</option>
                     </select>
+                    <input type="date" class="form-control" id="startDate" title="시작일">
+                    <input type="date" class="form-control" id="endDate" title="종료일">
+                    <button class="btn btn-primary" onclick="loadOrders()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        검색
+                    </button>
+                    <button class="btn btn-outline" onclick="downloadExcel()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        엑셀 다운로드
+                    </button>
                 </div>
 
                 <!-- Orders Table -->
@@ -154,7 +166,8 @@
         </div>
     </div>
 
-    <script src="js/admin.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="js/admin.js?v=2"></script>
     <script>
         let currentPage = 1;
         let allOrders = [];
@@ -162,8 +175,13 @@
         async function loadOrders() {
             try {
                 const status = document.getElementById('statusFilter').value;
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+
                 let url = `/admin/orders?page=${currentPage}&limit=20`;
                 if (status) url += `&status=${status}`;
+                if (startDate) url += `&start_date=${startDate}`;
+                if (endDate) url += `&end_date=${endDate}`;
 
                 const result = await api.get(url);
                 allOrders = result.data?.orders || [];
@@ -267,11 +285,13 @@
                         <label class="form-label">상태 변경</label>
                         <select class="form-control form-select" id="orderStatusSelect" style="width: 200px;">
                             <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>대기중</option>
+                            <option value="paid" ${o.status === 'paid' ? 'selected' : ''}>결제완료</option>
                             <option value="confirmed" ${o.status === 'confirmed' ? 'selected' : ''}>확인됨</option>
                             <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>처리중</option>
                             <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>배송중</option>
                             <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>배송완료</option>
                             <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>취소됨</option>
+                            <option value="refunded" ${o.status === 'refunded' ? 'selected' : ''}>환불됨</option>
                         </select>
                         <button class="btn btn-primary btn-sm mt-2" onclick="updateOrderStatus('${o.id}')">상태 변경</button>
                     </div>
@@ -297,6 +317,104 @@
         function updatePagination(pagination) {
             if (!pagination) return;
             document.getElementById('paginationInfo').textContent = `${pagination.total}건의 주문`;
+        }
+
+        async function downloadExcel() {
+            try {
+                const status = document.getElementById('statusFilter').value;
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+
+                // Fetch all orders for export (no pagination limit)
+                let url = `/admin/orders?limit=10000`;
+                if (status) url += `&status=${status}`;
+                if (startDate) url += `&start_date=${startDate}`;
+                if (endDate) url += `&end_date=${endDate}`;
+
+                showToast('주문 데이터를 불러오는 중...', 'success');
+
+                const result = await api.get(url);
+                const orders = result.data?.orders || [];
+
+                if (orders.length === 0) {
+                    showToast('다운로드할 주문이 없습니다.', 'error');
+                    return;
+                }
+
+                const statusMap = {
+                    'pending': '대기중',
+                    'paid': '결제완료',
+                    'confirmed': '확인됨',
+                    'processing': '처리중',
+                    'shipped': '배송중',
+                    'delivered': '배송완료',
+                    'cancelled': '취소됨',
+                    'refunded': '환불됨'
+                };
+
+                // Prepare data for Excel
+                const excelData = orders.map(o => ({
+                    '주문번호': o.order_number || o.id?.slice(0, 8),
+                    '주문일시': formatDateTime(o.created_at),
+                    '고객명': o.user_name || '-',
+                    '고객ID': o.user_username || '-',
+                    '상품명': o.items?.[0]?.product_name + (o.items?.length > 1 ? ` 외 ${o.items.length - 1}건` : '') || '-',
+                    '총PV': o.total_pv || 0,
+                    '결제금액(원)': o.total_krw || 0,
+                    'X페이': o.payment_rpay || 0,
+                    'X포인트': o.payment_xpoint || 0,
+                    '카드': o.payment_card || 0,
+                    '무통장': o.payment_bank || 0,
+                    '수령인': o.shipping_name || '-',
+                    '연락처': o.shipping_phone || '-',
+                    '배송주소': o.shipping_address || '-',
+                    '송장번호': o.invoice_number || '-',
+                    '상태': statusMap[o.status] || o.status
+                }));
+
+                // Create workbook
+                const ws = XLSX.utils.json_to_sheet(excelData);
+
+                // Set column widths
+                ws['!cols'] = [
+                    { wch: 15 }, // 주문번호
+                    { wch: 18 }, // 주문일시
+                    { wch: 10 }, // 고객명
+                    { wch: 12 }, // 고객ID
+                    { wch: 30 }, // 상품명
+                    { wch: 8 },  // 총PV
+                    { wch: 12 }, // 결제금액
+                    { wch: 10 }, // X페이
+                    { wch: 10 }, // X포인트
+                    { wch: 10 }, // 카드
+                    { wch: 10 }, // 무통장
+                    { wch: 10 }, // 수령인
+                    { wch: 15 }, // 연락처
+                    { wch: 40 }, // 배송주소
+                    { wch: 15 }, // 송장번호
+                    { wch: 10 }  // 상태
+                ];
+
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, '주문내역');
+
+                // Generate filename with date
+                const today = new Date().toISOString().slice(0, 10);
+                let filename = `주문내역_${today}`;
+                if (startDate && endDate) {
+                    filename = `주문내역_${startDate}_${endDate}`;
+                } else if (startDate) {
+                    filename = `주문내역_${startDate}_이후`;
+                } else if (endDate) {
+                    filename = `주문내역_${endDate}_이전`;
+                }
+
+                XLSX.writeFile(wb, `${filename}.xlsx`);
+                showToast(`${orders.length}건의 주문을 다운로드했습니다.`, 'success');
+            } catch (error) {
+                console.error('Excel download error:', error);
+                showToast('엑셀 다운로드에 실패했습니다.', 'error');
+            }
         }
 
         document.addEventListener('DOMContentLoaded', loadOrders);

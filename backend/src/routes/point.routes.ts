@@ -7,6 +7,6 @@ const router = Router();
 // Protected routes
 router.get('/summary', authenticateUser, (req, res) => pointController.getSummary(req, res));
 router.get('/history', authenticateUser, (req, res) => pointController.getHistory(req, res));
-router.post('/transfer', authenticateUser, (req, res) => pointController.transfer(req, res));
+// Transfer route removed - P/C/T no longer supported
 
 export default router;

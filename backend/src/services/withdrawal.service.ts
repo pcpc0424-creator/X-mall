@@ -19,16 +19,16 @@ export class WithdrawalService {
     try {
       await client.query('BEGIN');
 
-      // Check P-point balance
+      // Check X-point balance (X포인트만 출금 가능)
       const balanceResult = await client.query(
-        `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = 'P' FOR UPDATE`,
+        `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = 'X' FOR UPDATE`,
         [userId]
       );
 
       const currentBalance = parseFloat(balanceResult.rows[0]?.balance || 0);
 
       if (currentBalance < data.amount) {
-        throw new Error(`P포인트 잔액이 부족합니다. (현재: ${currentBalance}, 요청: ${data.amount})`);
+        throw new Error(`X포인트 잔액이 부족합니다. (현재: ${currentBalance}원, 요청: ${data.amount}원)`);
       }
 
       // Minimum withdrawal check
@@ -41,29 +41,29 @@ export class WithdrawalService {
 
       const withdrawalId = generateUUID();
 
-      // Deduct P-points immediately (hold)
+      // Deduct X-points immediately (hold)
       await client.query(
-        `UPDATE point_balances SET balance = balance - $1 WHERE user_id = $2 AND point_type = 'P'`,
+        `UPDATE point_balances SET balance = balance - $1 WHERE user_id = $2 AND point_type = 'X'`,
         [data.amount, userId]
       );
 
       // Get new balance for transaction record
       const newBalanceResult = await client.query(
-        `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = 'P'`,
+        `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = 'X'`,
         [userId]
       );
 
       // Record transaction
       await client.query(
         `INSERT INTO point_transactions (id, user_id, point_type, amount, transaction_type, balance_after, reference_id, description)
-         VALUES ($1, $2, 'P', $3, 'withdrawal', $4, $5, '출금 신청')`,
+         VALUES ($1, $2, 'X', $3, 'withdrawal', $4, $5, '출금 신청')`,
         [generateUUID(), userId, -data.amount, newBalanceResult.rows[0].balance, withdrawalId]
       );
 
-      // Create withdrawal request
+      // Create withdrawal request (point_type = 'X')
       const result = await client.query(
-        `INSERT INTO point_withdrawals (id, user_id, amount, bank_name, account_number, account_holder, request_date, scheduled_payment_date)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        `INSERT INTO point_withdrawals (id, user_id, amount, bank_name, account_number, account_holder, request_date, scheduled_payment_date, point_type)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'X')
          RETURNING *`,
         [withdrawalId, userId, data.amount, data.bank_name, data.account_number, data.account_holder, requestDate, scheduledPaymentDate]
       );
@@ -176,23 +176,27 @@ export class WithdrawalService {
       }
 
       const withdrawal = withdrawalResult.rows[0];
+      const pointType = withdrawal.point_type || 'X';  // 기본값 X (이전 레코드는 P일 수 있음)
 
-      // Refund P-points
+      // Refund X-points (or legacy P-points)
       await client.query(
-        `UPDATE point_balances SET balance = balance + $1 WHERE user_id = $2 AND point_type = 'P'`,
-        [withdrawal.amount, withdrawal.user_id]
+        `INSERT INTO point_balances (user_id, point_type, balance)
+         VALUES ($1, $2, $3)
+         ON CONFLICT (user_id, point_type)
+         DO UPDATE SET balance = point_balances.balance + $3`,
+        [withdrawal.user_id, pointType, withdrawal.amount]
       );
 
       const newBalanceResult = await client.query(
-        `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = 'P'`,
-        [withdrawal.user_id]
+        `SELECT balance FROM point_balances WHERE user_id = $1 AND point_type = $2`,
+        [withdrawal.user_id, pointType]
       );
 
       // Record refund transaction
       await client.query(
         `INSERT INTO point_transactions (id, user_id, point_type, amount, transaction_type, balance_after, reference_id, description)
-         VALUES ($1, $2, 'P', $3, 'refund', $4, $5, '출금 거절 환불')`,
-        [generateUUID(), withdrawal.user_id, withdrawal.amount, newBalanceResult.rows[0].balance, withdrawalId]
+         VALUES ($1, $2, $3, $4, 'refund', $5, $6, '출금 거절 환불')`,
+        [generateUUID(), withdrawal.user_id, pointType, withdrawal.amount, newBalanceResult.rows[0].balance, withdrawalId]
       );
 
       // Update withdrawal status

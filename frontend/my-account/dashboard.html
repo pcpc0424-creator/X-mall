@@ -68,9 +68,7 @@
             color: #333;
         }
         .balance-card.rpay .amount { color: #1890ff; }
-        .balance-card.ppoint .amount { color: #52c41a; }
-        .balance-card.cpoint .amount { color: #faad14; }
-        .balance-card.tpoint .amount { color: #722ed1; }
+        .balance-card.xpoint .amount { color: #52c41a; }
         .user-info-card {
             background: white;
             padding: 25px;
@@ -169,17 +167,9 @@
                 <h3>X페이</h3>
                 <div class="amount" id="balance-rpay">0원</div>
             </div>
-            <div class="balance-card ppoint">
-                <h3>P포인트</h3>
-                <div class="amount" id="balance-ppoint">0원</div>
-            </div>
-            <div class="balance-card cpoint">
-                <h3>C포인트</h3>
-                <div class="amount" id="balance-cpoint">0원</div>
-            </div>
-            <div class="balance-card tpoint">
-                <h3>T포인트</h3>
-                <div class="amount" id="balance-tpoint">0원</div>
+            <div class="balance-card xpoint">
+                <h3>X포인트</h3>
+                <div class="amount" id="balance-xpoint">0원</div>
             </div>
         </div>
 
@@ -207,8 +197,6 @@
             <h2>바로가기</h2>
             <div class="quick-actions">
                 <a href="orders.html" class="quick-action-btn">주문내역</a>
-                <a href="points.html" class="quick-action-btn">포인트 이체</a>
-                <a href="withdraw.html" class="quick-action-btn">출금 신청</a>
                 <a href="/X-mall/cart.html" class="quick-action-btn">장바구니</a>
                 <a href="#" class="quick-action-btn" onclick="openPasswordModal(event)">비밀번호 변경</a>
             </div>
@@ -363,11 +351,9 @@
                         document.getElementById('genealogyLink').style.display = '';
                     }
 
-                    // Update balances
-                    document.getElementById('balance-rpay').textContent = user.balances.rpay.toLocaleString() + '원';
-                    document.getElementById('balance-ppoint').textContent = user.balances.P.toLocaleString() + '원';
-                    document.getElementById('balance-cpoint').textContent = user.balances.C.toLocaleString() + '원';
-                    document.getElementById('balance-tpoint').textContent = user.balances.T.toLocaleString() + '원';
+                    // Update balances (X페이, X포인트)
+                    document.getElementById('balance-rpay').textContent = (user.balances.rpay || 0).toLocaleString() + '원';
+                    document.getElementById('balance-xpoint').textContent = (user.balances.X || 0).toLocaleString() + '원';
                 }
             } catch (error) {
                 console.error('Failed to load profile:', error);
