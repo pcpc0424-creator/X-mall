@@ -2,7 +2,7 @@
  * X-mall Admin Dashboard JavaScript
  */
 
-const API_BASE = '/X-mall/api';
+const API_BASE = '/api';
 
 // 간단한 인메모리 캐시
 const apiCache = {

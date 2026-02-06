@@ -533,7 +533,7 @@
                     const orderId = 'XM' + Date.now();
 
                     // 페이링 수기결제 API 호출
-                    const payringRes = await fetch('/X-mall/api/payring/payment', {
+                    const payringRes = await fetch('/api/payring/payment', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

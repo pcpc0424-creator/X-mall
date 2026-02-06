@@ -280,6 +280,40 @@ export class ProductService {
     return result.rows;
   }
 
+  // Get bestseller products based on sales volume
+  async getBestsellers(options: {
+    limit?: number;
+    category?: string;
+  } = {}): Promise<Product[]> {
+    const { limit = 8, category } = options;
+    const params: any[] = [];
+
+    let categoryCondition = '';
+    if (category && category !== 'all') {
+      params.push(category);
+      categoryCondition = `AND p.category = $${params.length}`;
+    }
+
+    params.push(limit);
+
+    // 판매량 기반 베스트셀러 쿼리 (최근 90일 기준)
+    const result = await query(
+      `SELECT p.*, COALESCE(SUM(oi.quantity), 0) as total_sold
+       FROM products p
+       LEFT JOIN order_items oi ON p.id = oi.product_id
+       LEFT JOIN orders o ON oi.order_id = o.id
+         AND o.status NOT IN ('cancelled', 'refunded')
+         AND o.created_at >= NOW() - INTERVAL '90 days'
+       WHERE p.is_active = true ${categoryCondition}
+       GROUP BY p.id
+       ORDER BY total_sold DESC, p.created_at DESC
+       LIMIT $${params.length}`,
+      params
+    );
+
+    return result.rows;
+  }
+
   // Bulk create products
   async bulkCreateProducts(rows: {
     name: string;

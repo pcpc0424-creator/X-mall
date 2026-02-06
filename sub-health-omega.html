@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function loadProducts(page = 1) {
         currentPage = page;
         try {
-            const response = await fetch(`/X-mall/api/products?category=${encodeURIComponent(CATEGORY)}&subcategory=${encodeURIComponent(SUBCATEGORY)}&page=${page}&limit=${ITEMS_PER_PAGE}`);
+            const response = await fetch(`/api/products?category=${encodeURIComponent(CATEGORY)}&subcategory=${encodeURIComponent(SUBCATEGORY)}&page=${page}&limit=${ITEMS_PER_PAGE}`);
             const result = await response.json();
             if (result.success && result.data) {
                 const products = result.data.products || [];

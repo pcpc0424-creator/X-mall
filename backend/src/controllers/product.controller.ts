@@ -30,6 +30,28 @@ export class ProductController {
     }
   }
 
+  // Get bestseller products (public)
+  async getBestsellers(req: Request, res: Response) {
+    try {
+      const { limit, category } = req.query;
+
+      const products = await productService.getBestsellers({
+        limit: limit ? parseInt(limit as string) : 8,
+        category: category as string
+      });
+
+      res.json({
+        success: true,
+        data: products
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
   // Get product by ID (public) - includes package items if package
   async getProductById(req: Request, res: Response) {
     try {

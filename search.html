@@ -600,7 +600,7 @@
 
             async function loadAllProducts() {
                 try {
-                    const response = await fetch('/X-mall/api/products');
+                    const response = await fetch('/api/products');
                     const result = await response.json();
                     if (result.success && result.data && result.data.products) {
                         allProducts = result.data.products;
@@ -671,8 +671,8 @@
                 let results = [];
                 try {
                     const searchUrl = keyword
-                        ? `/X-mall/api/products?search=${encodeURIComponent(keyword)}`
-                        : '/X-mall/api/products';
+                        ? `/api/products?search=${encodeURIComponent(keyword)}`
+                        : '/api/products';
                     const response = await fetch(searchUrl);
                     const result = await response.json();
                     if (result.success && result.data && result.data.products) {

@@ -1,7 +1,7 @@
 /**
  * X-mall API Client
  */
-const API_BASE_URL = '/X-mall/api';
+const API_BASE_URL = '/api';
 
 class ApiClient {
   constructor() {
@@ -161,6 +161,11 @@ const productsApi = {
   async getDealerList(params = {}) {
     const query = new URLSearchParams(params).toString();
     return api.get(`/products/dealer/list${query ? '?' + query : ''}`);
+  },
+
+  async getBestsellers(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    return api.get(`/products/bestsellers${query ? '?' + query : ''}`);
   },
 };
 

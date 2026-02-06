@@ -6,6 +6,7 @@ const router = Router();
 
 // Public routes
 router.get('/', (req, res) => productController.getProducts(req, res));
+router.get('/bestsellers', (req, res) => productController.getBestsellers(req, res));
 router.get('/:id', (req, res) => productController.getProductById(req, res));
 
 // Dealer routes

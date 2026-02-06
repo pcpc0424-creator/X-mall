@@ -595,7 +595,7 @@
 
         async function loadProductData(productId) {
             try {
-                const response = await fetch(`/X-mall/api/products/${productId}`);
+                const response = await fetch(`/api/products/${productId}`);
                 const result = await response.json();
 
                 if (result.success && result.data) {

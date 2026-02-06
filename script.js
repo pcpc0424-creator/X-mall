@@ -195,10 +195,272 @@ document.addEventListener('DOMContentLoaded', function() {
     startSlideshow();
 
     // ===================================
+    // Bestseller Products (Dynamic Loading)
+    // ===================================
+    const bestsellerContainer = document.getElementById('bestseller-products');
+
+    // 베스트셀러 상품 렌더링 함수
+    function renderBestsellerProduct(product) {
+        const defaultImage = 'https://via.placeholder.com/400x400?text=No+Image';
+        const imageUrl = product.image_url || defaultImage;
+        const priceKrw = parseInt(product.price_krw).toLocaleString();
+        const pvValue = parseFloat(product.pv_value || 0).toFixed(0);
+
+        return `
+            <div class="product-card" data-category="${product.category || ''}" data-product-id="${product.id}">
+                <a href="product-detail.html?id=${product.id}">
+                    <div class="product-image">
+                        <img src="${imageUrl}" alt="${product.name}" onerror="this.src='${defaultImage}'">
+                        <div class="product-badges">
+                            <span class="badge badge-best">BEST</span>
+                        </div>
+                        <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                        <div class="product-overlay">
+                            <button class="quick-view">Quick View</button>
+                        </div>
+                    </div>
+                </a>
+                <div class="product-info">
+                    <span class="product-brand">X-mall</span>
+                    <h4 class="product-name"><a href="product-detail.html?id=${product.id}">${product.name}</a></h4>
+                    <div class="product-price">
+                        <span class="price-sale">₩${priceKrw}</span>
+                        <span class="price-pv">PV ${pvValue}</span>
+                    </div>
+                    <button class="btn-add-cart" data-product-id="${product.id}" data-product-name="${product.name}" data-product-price="${product.price_krw}" data-product-pv="${product.pv_value}" data-product-image="${imageUrl}">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>장바구니</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    // 베스트셀러 로드 함수
+    async function loadBestsellers(category = 'all') {
+        if (!bestsellerContainer) return;
+
+        // 로딩 표시
+        bestsellerContainer.innerHTML = `
+            <div class="loading-placeholder">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>상품을 불러오는 중...</span>
+            </div>
+        `;
+
+        try {
+            const params = { limit: 8 };
+            if (category && category !== 'all') {
+                params.category = category;
+            }
+
+            const response = await productsApi.getBestsellers(params);
+
+            if (response.success && response.data && response.data.length > 0) {
+                bestsellerContainer.innerHTML = response.data.map(renderBestsellerProduct).join('');
+
+                // 장바구니 버튼 이벤트 바인딩
+                bestsellerContainer.querySelectorAll('.btn-add-cart').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const productData = {
+                            id: btn.dataset.productId,
+                            product_id: btn.dataset.productId,
+                            name: btn.dataset.productName,
+                            price: parseInt(btn.dataset.productPrice),
+                            pv: parseFloat(btn.dataset.productPv) || 0,
+                            image: btn.dataset.productImage,
+                            quantity: 1
+                        };
+
+                        if (typeof cartApi !== 'undefined') {
+                            cartApi.addItem(productData);
+                            alert('장바구니에 추가되었습니다.');
+                        }
+                    });
+                });
+
+                // 위시리스트 버튼 이벤트 바인딩
+                bestsellerContainer.querySelectorAll('.product-wishlist').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        btn.classList.toggle('active');
+                        const icon = btn.querySelector('i');
+                        if (btn.classList.contains('active')) {
+                            icon.classList.remove('far');
+                            icon.classList.add('fas');
+                        } else {
+                            icon.classList.remove('fas');
+                            icon.classList.add('far');
+                        }
+                    });
+                });
+            } else {
+                bestsellerContainer.innerHTML = `
+                    <div class="no-products">
+                        <i class="fas fa-box-open"></i>
+                        <p>등록된 상품이 없습니다.</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('베스트셀러 로드 오류:', error);
+            bestsellerContainer.innerHTML = `
+                <div class="error-placeholder">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>상품을 불러오는데 실패했습니다.</p>
+                    <button onclick="loadBestsellers('${category}')" class="btn btn-sm">다시 시도</button>
+                </div>
+            `;
+        }
+    }
+
+    // 페이지 로드 시 베스트셀러 로드
+    if (bestsellerContainer) {
+        loadBestsellers();
+    }
+
+    // ===================================
+    // New Arrivals (Dynamic Loading)
+    // ===================================
+    const newArrivalsGrid = document.getElementById('new-arrivals-grid');
+
+    function renderNewArrivalFeatured(product) {
+        const defaultImage = 'https://via.placeholder.com/600x800?text=No+Image';
+        const imageUrl = product.image_url || defaultImage;
+        const priceKrw = parseInt(product.price_krw).toLocaleString();
+        const pvValue = parseFloat(product.pv_value || 0).toFixed(0);
+
+        return `
+            <div class="new-product-featured">
+                <div class="product-card large">
+                    <a href="product-detail.html?id=${product.id}">
+                        <div class="product-image">
+                            <img src="${imageUrl}" alt="${product.name}" onerror="this.src='${defaultImage}'">
+                            <div class="product-badges">
+                                <span class="badge badge-new">NEW</span>
+                            </div>
+                            <button class="product-wishlist"><i class="far fa-heart"></i></button>
+                        </div>
+                    </a>
+                    <div class="product-info">
+                        <span class="product-brand">X-mall</span>
+                        <h4 class="product-name"><a href="product-detail.html?id=${product.id}">${product.name}</a></h4>
+                        <p class="product-desc">${product.description || ''}</p>
+                        <div class="product-price">
+                            <span class="price-sale">₩${priceKrw}</span>
+                            <span class="price-pv">PV ${pvValue}</span>
+                        </div>
+                        <button class="btn btn-primary btn-add-cart" data-product-id="${product.id}" data-product-name="${product.name}" data-product-price="${product.price_krw}" data-product-pv="${product.pv_value}" data-product-image="${imageUrl}">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>장바구니 담기</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderNewArrivalItem(product) {
+        const defaultImage = 'https://via.placeholder.com/200x200?text=No+Image';
+        const imageUrl = product.image_url || defaultImage;
+        const priceKrw = parseInt(product.price_krw).toLocaleString();
+        const pvValue = parseFloat(product.pv_value || 0).toFixed(0);
+
+        return `
+            <div class="product-card horizontal">
+                <a href="product-detail.html?id=${product.id}">
+                    <div class="product-image">
+                        <img src="${imageUrl}" alt="${product.name}" onerror="this.src='${defaultImage}'">
+                    </div>
+                </a>
+                <div class="product-info">
+                    <span class="product-brand">X-mall</span>
+                    <h4 class="product-name"><a href="product-detail.html?id=${product.id}">${product.name}</a></h4>
+                    <div class="product-price">
+                        <span class="price-sale">₩${priceKrw}</span>
+                        <span class="price-pv">PV ${pvValue}</span>
+                    </div>
+                </div>
+                <button class="btn-add-cart-mini" data-product-id="${product.id}" data-product-name="${product.name}" data-product-price="${product.price_krw}" data-product-pv="${product.pv_value}" data-product-image="${imageUrl}"><i class="fas fa-plus"></i></button>
+            </div>
+        `;
+    }
+
+    async function loadNewArrivals() {
+        if (!newArrivalsGrid) return;
+
+        try {
+            const response = await productsApi.getList({ limit: 5 });
+
+            if (response.success && response.data && response.data.products && response.data.products.length > 0) {
+                const products = response.data.products;
+                const featured = products[0];
+                const rest = products.slice(1);
+
+                let html = renderNewArrivalFeatured(featured);
+
+                if (rest.length > 0) {
+                    html += '<div class="new-product-list">';
+                    html += rest.map(renderNewArrivalItem).join('');
+                    html += '</div>';
+                }
+
+                newArrivalsGrid.innerHTML = html;
+
+                // 장바구니 버튼 이벤트 바인딩
+                newArrivalsGrid.querySelectorAll('.btn-add-cart, .btn-add-cart-mini').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const productData = {
+                            id: btn.dataset.productId,
+                            product_id: btn.dataset.productId,
+                            name: btn.dataset.productName,
+                            price: parseInt(btn.dataset.productPrice),
+                            pv: parseFloat(btn.dataset.productPv) || 0,
+                            image: btn.dataset.productImage,
+                            quantity: 1
+                        };
+
+                        if (typeof cartApi !== 'undefined') {
+                            cartApi.addItem(productData);
+                            alert('장바구니에 추가되었습니다.');
+                        }
+                    });
+                });
+            } else {
+                newArrivalsGrid.innerHTML = `
+                    <div class="no-products">
+                        <i class="fas fa-box-open"></i>
+                        <p>등록된 신상품이 없습니다.</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('신상품 로드 오류:', error);
+            newArrivalsGrid.innerHTML = `
+                <div class="error-placeholder">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>신상품을 불러오는데 실패했습니다.</p>
+                    <button onclick="loadNewArrivals()" class="btn btn-sm">다시 시도</button>
+                </div>
+            `;
+        }
+    }
+
+    if (newArrivalsGrid) {
+        loadNewArrivals();
+    }
+
+    // ===================================
     // Product Tabs
     // ===================================
     const tabBtns = document.querySelectorAll('.tab-btn');
-    const productCards = document.querySelectorAll('.products-track .product-card');
 
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -207,23 +469,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const category = btn.dataset.tab;
 
-            productCards.forEach(card => {
-                if (category === 'all' || card.dataset.category === category) {
-                    card.style.display = 'flex';
-                    card.style.flex = '0 0 300px';
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 50);
-                } else {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
-                    setTimeout(() => {
-                        card.style.display = 'none';
-                        card.style.flex = '0 0 0';
-                    }, 300);
-                }
-            });
+            // 베스트셀러 섹션인 경우 API 호출로 필터링
+            if (bestsellerContainer) {
+                loadBestsellers(category);
+            }
         });
     });
 
@@ -1016,7 +1265,7 @@ window.addToCartUtil = async function() {
         let pv = 0;
 
         try {
-            const res = await fetch('/X-mall/api/products?search=' + encodeURIComponent(name));
+            const res = await fetch('/api/products?search=' + encodeURIComponent(name));
             const data = await res.json();
             if (data.success && data.data.products && data.data.products.length > 0) {
                 const product = data.data.products[0];
