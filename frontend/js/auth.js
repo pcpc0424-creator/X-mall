@@ -64,12 +64,12 @@ class Auth {
     this.removeUser();
     // 장바구니 비우기
     localStorage.removeItem('xmall_cart');
-    window.location.href = '/X-mall/login.html';
+    window.location.href = '/login.html';
   }
 
   requireAuth() {
     if (!this.isLoggedIn()) {
-      window.location.href = '/X-mall/login.html';
+      window.location.href = '/login.html';
       return false;
     }
     return true;
@@ -79,7 +79,7 @@ class Auth {
     if (!this.requireAuth()) return false;
     if (!this.isDealer()) {
       alert('대리점 회원만 이용 가능합니다.');
-      window.location.href = '/X-mall/index.html';
+      window.location.href = '/index.html';
       return false;
     }
     return true;

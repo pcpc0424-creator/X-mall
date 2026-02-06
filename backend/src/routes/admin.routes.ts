@@ -121,7 +121,7 @@ router.post('/upload/image', authenticateAdmin, imageUpload.single('image'), (re
     if (!req.file) {
       return res.status(400).json({ success: false, error: '이미지 파일을 선택해주세요.' });
     }
-    const imageUrl = `/X-mall/uploads/products/${req.file.filename}`;
+    const imageUrl = `/uploads/products/${req.file.filename}`;
     res.json({ success: true, data: { url: imageUrl, filename: req.file.filename } });
   } catch (error: any) {
     res.status(500).json({ success: false, error: error.message });

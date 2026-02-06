@@ -44,7 +44,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Static files - serve uploaded images
-app.use('/X-mall/uploads', express.static(path.join(__dirname, '../../uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
 
 // API routes
 app.use('/api', routes);
