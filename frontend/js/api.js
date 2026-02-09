@@ -117,6 +117,10 @@ const rpayApi = {
   async getHistory(page = 1, limit = 20) {
     return api.get(`/rpay/history?page=${page}&limit=${limit}`);
   },
+
+  async chargeByCard(data) {
+    return api.post('/rpay/charge', data);
+  },
 };
 
 // Withdrawal API (X포인트 출금)

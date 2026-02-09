@@ -182,6 +182,58 @@ export class RpayService {
     return this.deposit(userId, amount, description);
   }
 
+  async adminDeduct(
+    adminId: string,
+    userId: string,
+    amount: number,
+    reason?: string
+  ): Promise<number> {
+    const client = await getClient();
+
+    try {
+      await client.query('BEGIN');
+
+      // Check balance
+      const balanceResult = await client.query(
+        `SELECT balance_krw FROM rpay_balance WHERE user_id = $1 FOR UPDATE`,
+        [userId]
+      );
+
+      const currentBalance = parseFloat(balanceResult.rows[0]?.balance_krw || 0);
+
+      if (currentBalance < amount) {
+        throw new Error(`X페이 잔액이 부족합니다. (현재: ${currentBalance.toLocaleString()}원, 필요: ${amount.toLocaleString()}원)`);
+      }
+
+      // Update balance
+      const result = await client.query(
+        `UPDATE rpay_balance
+         SET balance_krw = balance_krw - $1
+         WHERE user_id = $2
+         RETURNING balance_krw`,
+        [amount, userId]
+      );
+
+      const newBalance = parseFloat(result.rows[0].balance_krw);
+
+      // Record transaction
+      const description = `관리자 차감${reason ? `: ${reason}` : ''}`;
+      await client.query(
+        `INSERT INTO rpay_transactions (id, user_id, amount, transaction_type, balance_after, reference_id, description)
+         VALUES ($1, $2, $3, 'admin_deduct', $4, $5, $6)`,
+        [generateUUID(), userId, -amount, newBalance, adminId, description]
+      );
+
+      await client.query('COMMIT');
+      return newBalance;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async bulkDeposit(
     adminId: string,
     rows: RpayExcelRow[],

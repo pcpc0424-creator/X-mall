@@ -172,10 +172,16 @@
                     </div>
                 </div>
 
-                <!-- R-pay Deposit Card -->
+                <!-- R-pay Deposit/Deduct Card -->
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">X페이 충전</h2>
+                        <h2 class="card-title">X페이 충전/차감</h2>
+                        <div class="header-actions">
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-primary active" id="rpayDepositModeBtn" onclick="setRpayMode('deposit')">충전</button>
+                                <button class="btn btn-sm btn-outline" id="rpayDeductModeBtn" onclick="setRpayMode('deduct')">차감</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <form id="depositRpayForm" class="form-grid">
@@ -184,15 +190,15 @@
                                 <input type="text" class="form-control" id="rpayUsername" placeholder="회원 아이디 입력" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">충전 금액 (원)</label>
-                                <input type="number" class="form-control" id="rpayAmount" placeholder="0" min="1000" step="1000" required>
+                                <label class="form-label" id="rpayAmountLabel">충전 금액 (원)</label>
+                                <input type="number" class="form-control" id="rpayAmount" placeholder="0" min="1" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">충전 사유</label>
+                                <label class="form-label" id="rpayReasonLabel">충전 사유</label>
                                 <input type="text" class="form-control" id="rpayReason" placeholder="충전 사유 입력">
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary">X페이 충전</button>
+                                <button type="submit" class="btn btn-primary" id="rpaySubmitBtn">X페이 충전</button>
                             </div>
                         </form>
                     </div>
@@ -431,6 +437,7 @@
         let pointSelectedFile = null;
         let rpaySelectedFile = null;
         let currentPointMode = 'grant'; // 'grant' or 'deduct'
+        let currentRpayMode = 'deposit'; // 'deposit' or 'deduct'
         let currentPage = 1;
         const pageSize = 20;
 
@@ -469,6 +476,38 @@
                 amountLabel.textContent = '차감 금액 (원)';
                 reasonLabel.textContent = '차감 사유';
                 submitBtn.textContent = '포인트 차감';
+                submitBtn.classList.remove('btn-primary');
+                submitBtn.classList.add('btn-danger');
+            }
+        }
+
+        // R-pay mode switching (deposit/deduct)
+        function setRpayMode(mode) {
+            currentRpayMode = mode;
+            const depositBtn = document.getElementById('rpayDepositModeBtn');
+            const deductBtn = document.getElementById('rpayDeductModeBtn');
+            const amountLabel = document.getElementById('rpayAmountLabel');
+            const reasonLabel = document.getElementById('rpayReasonLabel');
+            const submitBtn = document.getElementById('rpaySubmitBtn');
+
+            if (mode === 'deposit') {
+                depositBtn.classList.add('active', 'btn-primary');
+                depositBtn.classList.remove('btn-outline');
+                deductBtn.classList.remove('active', 'btn-danger');
+                deductBtn.classList.add('btn-outline');
+                amountLabel.textContent = '충전 금액 (원)';
+                reasonLabel.textContent = '충전 사유';
+                submitBtn.textContent = 'X페이 충전';
+                submitBtn.classList.remove('btn-danger');
+                submitBtn.classList.add('btn-primary');
+            } else {
+                deductBtn.classList.add('active', 'btn-danger');
+                deductBtn.classList.remove('btn-outline');
+                depositBtn.classList.remove('active', 'btn-primary');
+                depositBtn.classList.add('btn-outline');
+                amountLabel.textContent = '차감 금액 (원)';
+                reasonLabel.textContent = '차감 사유';
+                submitBtn.textContent = 'X페이 차감';
                 submitBtn.classList.remove('btn-primary');
                 submitBtn.classList.add('btn-danger');
             }
@@ -747,7 +786,7 @@
             }
         });
 
-        // Deposit R-pay
+        // Deposit/Deduct R-pay
         document.getElementById('depositRpayForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -756,12 +795,21 @@
             const reason = document.getElementById('rpayReason').value;
 
             try {
-                await api.post('/admin/rpay/deposit', {
-                    username,
-                    amount,
-                    reason
-                });
-                showToast(`X페이 ${formatCurrency(amount)} 충전 완료`, 'success');
+                if (currentRpayMode === 'deposit') {
+                    await api.post('/admin/rpay/deposit', {
+                        username,
+                        amount,
+                        reason
+                    });
+                    showToast(`X페이 ${formatCurrency(amount)} 충전 완료`, 'success');
+                } else {
+                    await api.post('/admin/rpay/deduct', {
+                        username,
+                        amount,
+                        reason
+                    });
+                    showToast(`X페이 ${formatCurrency(amount)} 차감 완료`, 'success');
+                }
                 e.target.reset();
             } catch (error) {
                 showToast(error.message, 'error');

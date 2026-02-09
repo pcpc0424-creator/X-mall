@@ -101,6 +101,7 @@ router.get('/points/transactions', authenticateAdmin, (req, res) => pointControl
 
 // R-pay (protected)
 router.post('/rpay/deposit', authenticateAdmin, (req, res) => rpayController.adminDeposit(req, res));
+router.post('/rpay/deduct', authenticateAdmin, (req, res) => rpayController.adminDeduct(req, res));
 router.post('/rpay/bulk-deposit', authenticateAdmin, upload.single('file'), (req, res) => rpayController.bulkDeposit(req, res));
 
 // Withdrawals (protected)

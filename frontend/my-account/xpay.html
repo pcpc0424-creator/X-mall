@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X페이 - X-mall</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        .my-account-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .my-account-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #333;
+        }
+        .my-account-nav {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .my-account-nav a {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 5px;
+            background: #f5f5f5;
+        }
+        .my-account-nav a.active {
+            background: #333;
+            color: white;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .card h2 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .balance-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #1565c0, #1976d2);
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 25px;
+        }
+        .balance-display label {
+            display: block;
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        .balance-display .value {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .charge-form {
+            max-width: 500px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .amount-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .amount-btn {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .amount-btn:hover {
+            background: #e0e0e0;
+        }
+        .amount-btn.selected {
+            background: #1565c0;
+            color: white;
+            border-color: #1565c0;
+        }
+        .btn-primary {
+            background: #1565c0;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background: #1976d2;
+        }
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .history-table th, .history-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .history-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+        .amount-plus {
+            color: #52c41a;
+            font-weight: 600;
+        }
+        .amount-minus {
+            color: #ff4d4f;
+            font-weight: 600;
+        }
+        .info-box {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #1565c0;
+        }
+        .info-box h4 {
+            margin-bottom: 10px;
+        }
+        .info-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .info-box li {
+            margin-bottom: 5px;
+        }
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+        }
+        .form-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        .tab-btn {
+            padding: 12px 25px;
+            background: none;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+        .tab-btn.active {
+            color: #1565c0;
+            border-bottom-color: #1565c0;
+            font-weight: 600;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .amount-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header header-solid">
+        <nav class="nav-container">
+            <a href="/index.html" class="logo">
+                <span class="logo-text">X-mall</span>
+                <span class="logo-dot"></span>
+            </a>
+            <div class="nav-actions">
+                <a href="/index.html" class="nav-link">홈</a>
+                <a href="dashboard.html" class="nav-link">마이페이지</a>
+                <a href="/cart.html" class="cart-btn" aria-label="장바구니">
+                    <i class="fas fa-shopping-bag"></i>
+                </a>
+                <a href="#" class="user-btn logout-link" onclick="handleLogout(event)" aria-label="로그아웃">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="my-account-container">
+        <div class="my-account-header">
+            <h1>X페이</h1>
+        </div>
+
+        <nav class="my-account-nav" id="navMenu">
+            <a href="dashboard.html">대시보드</a>
+            <a href="xpay.html" class="active">X페이</a>
+            <a href="points.html">X포인트</a>
+            <a href="orders.html">주문내역</a>
+            <a href="withdraw.html">출금신청</a>
+            <a href="genealogy.html" id="genealogyLink" style="display: none;">계보도</a>
+        </nav>
+
+        <div class="card">
+            <div class="balance-display">
+                <label>X페이 잔액</label>
+                <div class="value" id="balance-rpay">0원</div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('charge')">충전하기</button>
+                <button class="tab-btn" onclick="showTab('history')">거래내역</button>
+            </div>
+
+            <!-- 충전 탭 -->
+            <div class="tab-content active" id="tab-charge">
+                <div class="info-box">
+                    <h4>X페이 충전 안내</h4>
+                    <ul>
+                        <li>최소 충전 금액: 1,000원</li>
+                        <li>최대 충전 금액: 10,000,000원</li>
+                        <li>충전된 X페이는 상품 결제에 사용할 수 있습니다.</li>
+                    </ul>
+                </div>
+
+                <form class="charge-form" id="chargeForm">
+                    <div class="form-group">
+                        <label>충전 금액</label>
+                        <div class="amount-buttons">
+                            <button type="button" class="amount-btn" data-amount="10000">1만원</button>
+                            <button type="button" class="amount-btn" data-amount="30000">3만원</button>
+                            <button type="button" class="amount-btn" data-amount="50000">5만원</button>
+                            <button type="button" class="amount-btn" data-amount="100000">10만원</button>
+                            <button type="button" class="amount-btn" data-amount="300000">30만원</button>
+                            <button type="button" class="amount-btn" data-amount="500000">50만원</button>
+                        </div>
+                        <input type="number" id="chargeAmount" placeholder="직접 입력 (원)" min="1000" max="10000000">
+                    </div>
+
+                    <div class="form-group">
+                        <label>카드번호</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" autocomplete="cc-number" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>유효기간</label>
+                            <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp" required>
+                        </div>
+                        <div class="form-group">
+                            <label>비밀번호 앞 2자리</label>
+                            <input type="password" id="cardPwd" placeholder="**" maxlength="2" autocomplete="off" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>생년월일 / 사업자번호</label>
+                            <input type="text" id="cardAuth" placeholder="YYMMDD 또는 사업자번호" maxlength="10" required>
+                            <p class="form-text">개인: 생년월일 6자리 / 법인: 사업자번호 10자리</p>
+                        </div>
+                        <div class="form-group">
+                            <label>할부</label>
+                            <select id="cardQuota">
+                                <option value="00">일시불</option>
+                                <option value="02">2개월</option>
+                                <option value="03">3개월</option>
+                                <option value="06">6개월</option>
+                                <option value="12">12개월</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="chargeBtn">
+                        <span id="chargeBtnText">충전하기</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 거래내역 탭 -->
+            <div class="tab-content" id="tab-history">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>날짜</th>
+                            <th>내용</th>
+                            <th>금액</th>
+                            <th>잔액</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body">
+                        <tr>
+                            <td colspan="4" class="empty-message">거래 내역이 없습니다.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="pagination" style="text-align: center; margin-top: 20px;"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/api.js?v=5"></script>
+    <script src="../js/auth.js?v=4"></script>
+    <script>
+        let currentPage = 1;
+        const pageSize = 20;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!auth.requireAuth()) return;
+
+            // Show genealogy link for dealers
+            const user = auth.getUser();
+            if (user && user.grade === 'dealer') {
+                document.getElementById('genealogyLink').style.display = '';
+            }
+
+            await loadBalance();
+
+            // Amount button handlers
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    document.getElementById('chargeAmount').value = this.dataset.amount;
+                });
+            });
+
+            // Card number formatting
+            document.getElementById('cardNumber').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+                e.target.value = value.substring(0, 19);
+            });
+
+            // Expiry formatting
+            document.getElementById('cardExpiry').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                e.target.value = value;
+            });
+
+            // Form submission
+            document.getElementById('chargeForm').addEventListener('submit', handleCharge);
+        });
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+
+            if (tabName === 'history') {
+                loadHistory();
+            }
+        }
+
+        async function loadBalance() {
+            try {
+                const res = await rpayApi.getBalance();
+                if (res.success) {
+                    document.getElementById('balance-rpay').textContent =
+                        (res.data.balance_krw || 0).toLocaleString() + '원';
+                }
+            } catch (error) {
+                console.error('Failed to load balance:', error);
+            }
+        }
+
+        async function loadHistory(page = 1) {
+            currentPage = page;
+            try {
+                const res = await rpayApi.getHistory(page, pageSize);
+                if (res.success) {
+                    renderHistory(res.data.transactions);
+                    renderPagination(res.data.total);
+                }
+            } catch (error) {
+                console.error('Failed to load history:', error);
+            }
+        }
+
+        function renderHistory(transactions) {
+            const tbody = document.getElementById('history-body');
+
+            if (!transactions || transactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-message">거래 내역이 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = transactions.map(tx => {
+                const date = new Date(tx.created_at).toLocaleDateString('ko-KR');
+                const isPlus = tx.amount > 0;
+                const amountDisplay = `${isPlus ? '+' : ''}${parseInt(tx.amount).toLocaleString()}원`;
+                const balanceDisplay = `${parseInt(tx.balance_after).toLocaleString()}원`;
+
+                return `
+                    <tr>
+                        <td>${date}</td>
+                        <td>${tx.description || getTransactionType(tx.transaction_type)}</td>
+                        <td class="${isPlus ? 'amount-plus' : 'amount-minus'}">${amountDisplay}</td>
+                        <td>${balanceDisplay}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getTransactionType(type) {
+            const types = {
+                'deposit': '충전',
+                'payment': '결제',
+                'refund': '환불',
+                'admin_deduct': '관리자 차감'
+            };
+            return types[type] || type;
+        }
+
+        function renderPagination(total) {
+            const totalPages = Math.ceil(total / pageSize);
+            const pagination = document.getElementById('pagination');
+
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            if (currentPage > 1) {
+                html += `<button onclick="loadHistory(${currentPage - 1})" style="margin: 0 5px; padding: 5px 10px; cursor: pointer;">이전</button>`;
+            }
+            html += `<span style="margin: 0 10px;">${currentPage} / ${totalPages}</span>`;
+            if (currentPage < totalPages) {
+                html += `<button onclick="loadHistory(${currentPage + 1})" style="margin: 0 5px; padding: 5px 10px; cursor: pointer;">다음</button>`;
+            }
+            pagination.innerHTML = html;
+        }
+
+        async function handleCharge(e) {
+            e.preventDefault();
+
+            const amount = parseInt(document.getElementById('chargeAmount').value);
+            const cardNumber = document.getElementById('cardNumber').value;
+            const cardExpiry = document.getElementById('cardExpiry').value;
+            const cardPwd = document.getElementById('cardPwd').value;
+            const cardAuth = document.getElementById('cardAuth').value;
+            const quota = document.getElementById('cardQuota').value;
+
+            // Validation
+            if (!amount || amount < 1000) {
+                alert('최소 충전 금액은 1,000원입니다.');
+                return;
+            }
+
+            if (!cardNumber || cardNumber.replace(/\D/g, '').length < 13) {
+                alert('카드번호를 정확히 입력해주세요.');
+                return;
+            }
+
+            if (!cardExpiry || cardExpiry.replace(/\D/g, '').length !== 4) {
+                alert('유효기간을 정확히 입력해주세요.');
+                return;
+            }
+
+            if (!cardPwd || cardPwd.length !== 2) {
+                alert('카드 비밀번호 앞 2자리를 입력해주세요.');
+                return;
+            }
+
+            if (!cardAuth || (cardAuth.length !== 6 && cardAuth.length !== 10)) {
+                alert('생년월일(6자리) 또는 사업자번호(10자리)를 입력해주세요.');
+                return;
+            }
+
+            const btn = document.getElementById('chargeBtn');
+            const btnText = document.getElementById('chargeBtnText');
+            btn.disabled = true;
+            btnText.textContent = '처리 중...';
+
+            try {
+                const res = await rpayApi.chargeByCard({
+                    amount,
+                    card_number: cardNumber,
+                    card_expiry: cardExpiry,
+                    card_pwd: cardPwd,
+                    card_auth: cardAuth,
+                    quota
+                });
+
+                if (res.success) {
+                    alert(res.message || `${amount.toLocaleString()}원이 충전되었습니다.`);
+                    document.getElementById('chargeForm').reset();
+                    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+                    await loadBalance();
+                } else {
+                    alert(res.error || '충전에 실패했습니다.');
+                }
+            } catch (error) {
+                alert(error.message || '충전 처리 중 오류가 발생했습니다.');
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = '충전하기';
+            }
+        }
+    </script>
+</body>
+</html>
