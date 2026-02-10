@@ -13,6 +13,7 @@ import { bannerController } from '../controllers/banner.controller';
 import { eventController } from '../controllers/event.controller';
 import { announcementController } from '../controllers/announcement.controller';
 import { payringController } from '../controllers/payring.controller';
+import { popupController } from '../controllers/popup.controller';
 import { authenticateAdmin } from '../middleware/auth';
 
 const router = Router();
@@ -191,5 +192,9 @@ router.delete('/announcements/:id', authenticateAdmin, (req, res) => announcemen
 router.get('/payments', authenticateAdmin, (req, res) => payringController.getPaymentList(req, res));
 router.get('/payments/:id', authenticateAdmin, (req, res) => payringController.getPaymentDetail(req, res));
 router.post('/payments/:id/cancel', authenticateAdmin, (req, res) => payringController.adminCancelPayment(req, res));
+
+// Popup (protected) - 팝업 설정
+router.get('/popup', authenticateAdmin, (req, res) => popupController.getPopupSettings(req, res));
+router.post('/popup', authenticateAdmin, (req, res) => popupController.savePopupSettings(req, res));
 
 export default router;

@@ -3,6 +3,7 @@ import { categoryController } from '../controllers/category.controller';
 import { bannerController } from '../controllers/banner.controller';
 import { eventController } from '../controllers/event.controller';
 import { announcementController } from '../controllers/announcement.controller';
+import { popupController } from '../controllers/popup.controller';
 
 const router = Router();
 
@@ -24,5 +25,8 @@ router.get('/events/:id', (req, res) => eventController.getEventById(req, res));
 // Public Announcement routes
 router.get('/announcements', (req, res) => announcementController.getAnnouncements(req, res));
 router.get('/announcements/:id', (req, res) => announcementController.getAnnouncementById(req, res));
+
+// Public Popup routes
+router.get('/popup', (req, res) => popupController.getActivePopup(req, res));
 
 export default router;

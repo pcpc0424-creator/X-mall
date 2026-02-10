@@ -11,6 +11,116 @@
     <link rel="stylesheet" href="styles.css?v=23">
 </head>
 <body>
+    <!-- 팝업 모달 -->
+    <div id="popupModal" class="popup-modal" style="display: none;">
+        <div class="popup-modal-content">
+            <button class="popup-close-btn">&times;</button>
+            <a href="#" id="popupLink" class="popup-image-link">
+                <img id="popupImage" src="" alt="팝업 이미지">
+            </a>
+            <div class="popup-footer">
+                <label class="popup-checkbox-label">
+                    <input type="checkbox" id="popupDontShowToday">
+                    <span>오늘 하루 보지 않기</span>
+                </label>
+                <button class="popup-close-text-btn">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .popup-modal {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            z-index: 10000;
+            animation: popupFadeIn 0.3s ease;
+        }
+        @keyframes popupFadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .popup-modal-content {
+            width: 500px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        .popup-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .popup-close-btn:hover {
+            background: rgba(0,0,0,0.7);
+        }
+        .popup-image-link {
+            display: block;
+        }
+        .popup-image-link img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .popup-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f5f5f5;
+            border-top: 1px solid #eee;
+        }
+        .popup-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+        }
+        .popup-checkbox-label input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .popup-close-text-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 4px 12px;
+        }
+        .popup-close-text-btn:hover {
+            color: #333;
+        }
+        @media (max-width: 560px) {
+            .popup-modal {
+                left: 10px;
+                right: 10px;
+                top: 80px;
+            }
+            .popup-modal-content {
+                width: 100%;
+            }
+        }
+    </style>
+
     <!-- 커서 팔로우 효과 -->
     <div class="cursor-follower"></div>
     <div class="cursor-dot"></div>
@@ -959,5 +1069,68 @@
     </script>
     <script src="frontend/js/api.js"></script>
     <script src="script.js"></script>
+
+    <!-- 팝업 모달 스크립트 -->
+    <script>
+    (async function initPopupModal() {
+        const modal = document.getElementById('popupModal');
+        const modalContent = modal.querySelector('.popup-modal-content');
+        const popupImage = document.getElementById('popupImage');
+        const popupLink = document.getElementById('popupLink');
+        const closeBtn = modal.querySelector('.popup-close-btn');
+        const closeTextBtn = modal.querySelector('.popup-close-text-btn');
+        const dontShowCheckbox = document.getElementById('popupDontShowToday');
+
+        // 오늘 하루 보지 않기 체크
+        const today = new Date().toDateString();
+        const hiddenDate = localStorage.getItem('popupHiddenDate');
+        if (hiddenDate === today) {
+            return; // 오늘 이미 "하루 보지 않기"를 선택했으면 표시하지 않음
+        }
+
+        // API에서 팝업 설정 불러오기
+        try {
+            const response = await fetch('/api/content/popup');
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.enabled) {
+                const popup = result.data;
+
+                // 이미지 설정
+                popupImage.src = popup.image_url;
+
+                // 링크 설정
+                if (popup.link_url) {
+                    popupLink.href = popup.link_url;
+                } else {
+                    popupLink.removeAttribute('href');
+                    popupLink.style.cursor = 'default';
+                }
+
+                // 세로 크기 설정 (관리자가 지정한 높이)
+                if (popup.height) {
+                    popupImage.style.height = popup.height + 'px';
+                    popupImage.style.objectFit = 'cover';
+                }
+
+                // 모달 표시
+                modal.style.display = 'block';
+            }
+        } catch (error) {
+            console.log('팝업 설정을 불러올 수 없습니다.');
+        }
+
+        // 닫기 기능
+        function closeModal() {
+            if (dontShowCheckbox.checked) {
+                localStorage.setItem('popupHiddenDate', today);
+            }
+            modal.style.display = 'none';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        closeTextBtn.addEventListener('click', closeModal);
+    })();
+    </script>
 </body>
 </html>

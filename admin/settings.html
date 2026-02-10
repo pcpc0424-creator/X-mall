@@ -91,6 +91,51 @@
             </header>
 
             <div class="content-area">
+                <!-- Popup Settings -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">팝업 설정</h2>
+                        <span class="badge" id="popupStatusBadge">비활성</span>
+                    </div>
+                    <div class="card-body">
+                        <form id="popupForm">
+                            <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                                <div class="form-group">
+                                    <label class="form-label">팝업 활성화</label>
+                                    <label class="switch" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+                                        <input type="checkbox" id="popupEnabled" style="width:18px;height:18px;">
+                                        <span id="popupEnabledLabel">비활성화</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">세로 크기 (px)</label>
+                                    <input type="number" class="form-control" id="popupHeight" placeholder="비워두면 이미지 원본 비율">
+                                    <small class="form-text">가로는 500px 고정, 세로만 지정</small>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top:15px;">
+                                <label class="form-label">팝업 이미지</label>
+                                <input type="file" class="form-control" id="popupImageFile" accept="image/*">
+                                <small class="form-text" id="uploadStatus"></small>
+                                <input type="hidden" id="popupImageUrl">
+                                <div id="popupImagePreview" style="margin-top:15px;display:none;">
+                                    <div style="position:relative;display:inline-block;">
+                                        <img src="" alt="팝업 미리보기" style="max-width:300px;border-radius:8px;border:1px solid #ddd;">
+                                        <button type="button" id="deletePopupImageBtn" style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;background:#ff4d4f;color:#fff;border:none;cursor:pointer;font-size:14px;line-height:1;">&times;</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top:15px;">
+                                <label class="form-label">클릭 시 이동 URL (선택)</label>
+                                <input type="url" class="form-control" id="popupLinkUrl" placeholder="https://example.com/event">
+                            </div>
+                            <div class="form-group" style="margin-top:20px;">
+                                <button type="submit" class="btn btn-primary">팝업 설정 저장</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <!-- Exchange Rate Settings -->
                 <div class="card">
                     <div class="card-header">
@@ -341,8 +386,145 @@
             }
         }
 
+        // =============== 팝업 설정 ===============
+        // Load popup settings
+        async function loadPopupSettings() {
+            try {
+                const result = await api.get('/admin/popup');
+                if (result.data) {
+                    const popup = result.data;
+                    document.getElementById('popupEnabled').checked = popup.enabled;
+                    document.getElementById('popupEnabledLabel').textContent = popup.enabled ? '활성화' : '비활성화';
+                    document.getElementById('popupHeight').value = popup.height || '';
+                    document.getElementById('popupImageUrl').value = popup.image_url || '';
+                    document.getElementById('popupLinkUrl').value = popup.link_url || '';
+
+                    // Preview
+                    if (popup.image_url) {
+                        document.getElementById('popupImagePreview').style.display = 'block';
+                        document.getElementById('popupImagePreview').querySelector('img').src = popup.image_url;
+                    }
+
+                    // Badge
+                    const badge = document.getElementById('popupStatusBadge');
+                    if (popup.enabled) {
+                        badge.textContent = '활성';
+                        badge.className = 'badge badge-success';
+                    } else {
+                        badge.textContent = '비활성';
+                        badge.className = 'badge badge-secondary';
+                    }
+                }
+            } catch (error) {
+                console.error('Load popup settings error:', error);
+            }
+        }
+
+        // Toggle enabled label
+        document.getElementById('popupEnabled').addEventListener('change', function() {
+            document.getElementById('popupEnabledLabel').textContent = this.checked ? '활성화' : '비활성화';
+        });
+
+        // Delete popup image
+        document.getElementById('deletePopupImageBtn').addEventListener('click', async function() {
+            if (!confirm('이미지를 삭제하시겠습니까?')) return;
+
+            try {
+                // 서버에 이미지 삭제 저장 (비활성화 처리)
+                await api.post('/admin/popup', {
+                    enabled: false,
+                    height: null,
+                    image_url: '',
+                    link_url: ''
+                });
+
+                document.getElementById('popupImageUrl').value = '';
+                document.getElementById('popupImagePreview').style.display = 'none';
+                document.getElementById('popupImageFile').value = '';
+                document.getElementById('uploadStatus').textContent = '';
+                document.getElementById('popupEnabled').checked = false;
+                document.getElementById('popupEnabledLabel').textContent = '비활성화';
+                document.getElementById('popupHeight').value = '';
+                document.getElementById('popupLinkUrl').value = '';
+
+                // Badge 업데이트
+                const badge = document.getElementById('popupStatusBadge');
+                badge.textContent = '비활성';
+                badge.className = 'badge badge-secondary';
+
+                showToast('팝업 이미지가 삭제되었습니다.', 'success');
+            } catch (error) {
+                showToast('삭제 실패', 'error');
+            }
+        });
+
+        // Upload popup image (자동 업로드)
+        document.getElementById('popupImageFile').addEventListener('change', async function() {
+            const file = this.files[0];
+            if (!file) return;
+
+            const statusEl = document.getElementById('uploadStatus');
+            statusEl.textContent = '업로드 중...';
+            statusEl.style.color = '#1890ff';
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const response = await fetch('/api/admin/upload/image', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + api.getToken()
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    document.getElementById('popupImageUrl').value = result.data.url;
+                    document.getElementById('popupImagePreview').style.display = 'block';
+                    document.getElementById('popupImagePreview').querySelector('img').src = result.data.url;
+                    statusEl.textContent = '업로드 완료!';
+                    statusEl.style.color = '#52c41a';
+                } else {
+                    statusEl.textContent = result.error || '업로드 실패';
+                    statusEl.style.color = '#ff4d4f';
+                }
+            } catch (error) {
+                statusEl.textContent = '업로드 실패';
+                statusEl.style.color = '#ff4d4f';
+            }
+        });
+
+        // Save popup settings
+        document.getElementById('popupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const imageUrl = document.getElementById('popupImageUrl').value;
+            if (!imageUrl) {
+                showToast('팝업 이미지를 업로드해주세요.', 'error');
+                return;
+            }
+
+            const data = {
+                enabled: document.getElementById('popupEnabled').checked,
+                height: document.getElementById('popupHeight').value ? parseInt(document.getElementById('popupHeight').value) : null,
+                image_url: imageUrl,
+                link_url: document.getElementById('popupLinkUrl').value || ''
+            };
+
+            try {
+                await api.post('/admin/popup', data);
+                showToast('팝업 설정이 저장되었습니다.', 'success');
+                loadPopupSettings();
+            } catch (error) {
+                showToast(error.message || '저장 실패', 'error');
+            }
+        });
+
         // Init
         document.addEventListener('DOMContentLoaded', () => {
+            loadPopupSettings();
             loadExchangeRate();
             loadRateHistory();
             loadHolidays();
