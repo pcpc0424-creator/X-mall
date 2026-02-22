@@ -4,6 +4,7 @@ import { getXPointReleaseDate } from '../utils/business-day';
 import { rpayService } from './rpay.service';
 import { pointService } from './point.service';
 import { payringService } from './payring.service';
+import { cacheGet } from '../config/redis';
 import { Order, OrderStatus, CreateOrderBody, Product } from '../types';
 
 export class OrderService {
@@ -148,7 +149,11 @@ export class OrderService {
 
       // Schedule X-point reward (14 days later) - 대리점장만 X포인트 적립
       // X포인트 = PV × 50% = 원화 (1:1)
-      if (userGrade === 'dealer' && totalPv > 0) {
+      // 자동 생성 설정 확인
+      const autoGenerateSetting = await cacheGet('settings:xpoint_auto_generate');
+      const isAutoGenerateEnabled = autoGenerateSetting === null ? true : autoGenerateSetting === 'true';
+
+      if (isAutoGenerateEnabled && userGrade === 'dealer' && totalPv > 0) {
         const xpointReward = totalPv * 0.5;  // PV의 50%가 원화로 지급
         const releaseDate = getXPointReleaseDate(new Date());
 

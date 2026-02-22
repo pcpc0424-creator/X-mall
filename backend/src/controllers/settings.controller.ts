@@ -174,6 +174,100 @@ class SettingsController {
       res.status(500).json({ success: false, message: error.message });
     }
   }
+
+  // Get point auto generation settings
+  async getPointAutoSettings(req: Request, res: Response) {
+    try {
+      const cached = await cacheGet('settings:xpoint_auto_generate');
+      const autoGenerate = cached === null ? true : cached === 'true';
+
+      res.json({
+        success: true,
+        data: {
+          xpoint_auto_generate: autoGenerate
+        }
+      });
+    } catch (error: any) {
+      console.error('Get point auto settings error:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  // Set point auto generation settings
+  async setPointAutoSettings(req: Request, res: Response) {
+    try {
+      const { xpoint_auto_generate } = req.body;
+
+      if (typeof xpoint_auto_generate !== 'boolean') {
+        return res.status(400).json({
+          success: false,
+          message: 'xpoint_auto_generate는 boolean 값이어야 합니다.'
+        });
+      }
+
+      await cacheSet('settings:xpoint_auto_generate', xpoint_auto_generate.toString(), 0); // 만료 없음
+
+      res.json({
+        success: true,
+        data: {
+          xpoint_auto_generate
+        },
+        message: xpoint_auto_generate
+          ? 'X포인트 자동 생성이 활성화되었습니다.'
+          : 'X포인트 자동 생성이 비활성화되었습니다.'
+      });
+    } catch (error: any) {
+      console.error('Set point auto settings error:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  // Get withdrawal settings (출금 신청 활성화/비활성화)
+  async getWithdrawalSettings(req: Request, res: Response) {
+    try {
+      const cached = await cacheGet('settings:withdrawal_enabled');
+      const withdrawalEnabled = cached === null ? true : cached === 'true';
+
+      res.json({
+        success: true,
+        data: {
+          withdrawal_enabled: withdrawalEnabled
+        }
+      });
+    } catch (error: any) {
+      console.error('Get withdrawal settings error:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  // Set withdrawal settings
+  async setWithdrawalSettings(req: Request, res: Response) {
+    try {
+      const { withdrawal_enabled } = req.body;
+
+      if (typeof withdrawal_enabled !== 'boolean') {
+        return res.status(400).json({
+          success: false,
+          message: 'withdrawal_enabled는 boolean 값이어야 합니다.'
+        });
+      }
+
+      await cacheSet('settings:withdrawal_enabled', withdrawal_enabled.toString(), 0); // 만료 없음
+
+      res.json({
+        success: true,
+        data: {
+          withdrawal_enabled
+        },
+        message: withdrawal_enabled
+          ? '출금 신청이 활성화되었습니다.'
+          : '출금 신청이 비활성화되었습니다.'
+      });
+    } catch (error: any) {
+      console.error('Set withdrawal settings error:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
 }
 
 export const settingsController = new SettingsController();

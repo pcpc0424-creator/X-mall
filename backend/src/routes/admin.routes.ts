@@ -98,6 +98,7 @@ router.post('/points/grant', authenticateAdmin, (req, res) => pointController.ad
 router.post('/points/deduct', authenticateAdmin, (req, res) => pointController.adminDeductPoints(req, res));
 router.post('/points/bulk-grant', authenticateAdmin, upload.single('file'), (req, res) => pointController.bulkGrant(req, res));
 router.get('/points/pending', authenticateAdmin, (req, res) => pointController.getPendingXPoints(req, res));
+router.delete('/points/pending/:id', authenticateAdmin, (req, res) => pointController.cancelPendingXPoint(req, res));
 router.get('/points/transactions', authenticateAdmin, (req, res) => pointController.getAllTransactions(req, res));
 
 // R-pay (protected)
@@ -156,6 +157,10 @@ router.get('/settings/exchange-rate/history', authenticateAdmin, (req, res) => s
 router.get('/settings/holidays', authenticateAdmin, (req, res) => settingsController.getHolidays(req, res));
 router.post('/settings/holidays', authenticateAdmin, (req, res) => settingsController.addHoliday(req, res));
 router.delete('/settings/holidays/:id', authenticateAdmin, (req, res) => settingsController.deleteHoliday(req, res));
+router.get('/settings/point-auto', authenticateAdmin, (req, res) => settingsController.getPointAutoSettings(req, res));
+router.post('/settings/point-auto', authenticateAdmin, (req, res) => settingsController.setPointAutoSettings(req, res));
+router.get('/settings/withdrawal', authenticateAdmin, (req, res) => settingsController.getWithdrawalSettings(req, res));
+router.post('/settings/withdrawal', authenticateAdmin, (req, res) => settingsController.setWithdrawalSettings(req, res));
 
 // Categories (protected)
 router.get('/categories', authenticateAdmin, (req, res) => categoryController.getCategories(req, res));

@@ -202,6 +202,51 @@ export class PointController {
     }
   }
 
+  // Admin: Cancel pending X-point (대기 중 X포인트 취소)
+  async cancelPendingXPoint(req: AdminAuthRequest, res: Response) {
+    try {
+      const { id } = req.params;
+
+      // 해당 pending xpoint 조회
+      const pendingResult = await query(
+        `SELECT * FROM pending_xpoints WHERE id = $1`,
+        [id]
+      );
+
+      if (pendingResult.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: '해당 대기 포인트를 찾을 수 없습니다.'
+        });
+      }
+
+      const pending = pendingResult.rows[0];
+
+      if (pending.status !== 'pending') {
+        return res.status(400).json({
+          success: false,
+          error: '이미 처리된 포인트입니다.'
+        });
+      }
+
+      // 상태를 cancelled로 변경
+      await query(
+        `UPDATE pending_xpoints SET status = 'cancelled', released_at = CURRENT_TIMESTAMP WHERE id = $1`,
+        [id]
+      );
+
+      res.json({
+        success: true,
+        message: '대기 중인 X포인트가 취소되었습니다.'
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
   // Admin: Get all transactions
   async getAllTransactions(req: AdminAuthRequest, res: Response) {
     try {

@@ -2,6 +2,7 @@ import { query, getClient } from '../config/database';
 import { generateUUID } from '../utils/helpers';
 import { getNextBusinessDay } from '../utils/business-day';
 import { pointService } from './point.service';
+import { cacheGet } from '../config/redis';
 import { PointWithdrawal, WithdrawalStatus } from '../types';
 
 export class WithdrawalService {
@@ -14,6 +15,14 @@ export class WithdrawalService {
       account_holder: string;
     }
   ): Promise<PointWithdrawal> {
+    // 출금 활성화 여부 확인
+    const withdrawalSetting = await cacheGet('settings:withdrawal_enabled');
+    const isWithdrawalEnabled = withdrawalSetting === null ? true : withdrawalSetting === 'true';
+
+    if (!isWithdrawalEnabled) {
+      throw new Error('현재 출금 신청이 일시 중지되어 있습니다. 관리자에게 문의해주세요.');
+    }
+
     const client = await getClient();
 
     try {

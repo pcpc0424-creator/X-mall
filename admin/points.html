@@ -7,6 +7,48 @@
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/admin.css?v=2">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+            cursor: pointer;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 28px;
+            transition: 0.3s;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #52c41a;
+        }
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+    </style>
 </head>
 <body>
     <div class="admin-wrapper">
@@ -243,6 +285,29 @@
                     </div>
                 </div>
 
+                <!-- Auto Generate Setting -->
+                <div class="card" style="margin-bottom: 1rem;">
+                    <div class="card-body" style="padding: 1rem 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="setting-icon" id="pointSettingIcon" style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: #52c41a20;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+                                        <polyline points="20,6 9,17 4,12"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 1rem;" id="pointSettingTitle">X포인트 자동 생성 활성화됨</div>
+                                    <div style="color: var(--text-muted); font-size: 0.85rem;" id="pointSettingDesc">주문 시 X포인트가 자동으로 생성됩니다</div>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="autoGenerateToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Pending X-Points -->
                 <div class="card">
                     <div class="card-header">
@@ -259,10 +324,11 @@
                                         <th>지급 예정 X포인트</th>
                                         <th>지급 예정일</th>
                                         <th>상태</th>
+                                        <th>작업</th>
                                     </tr>
                                 </thead>
                                 <tbody id="pendingBody">
-                                    <tr><td colspan="6" class="text-center text-muted">로딩 중...</td></tr>
+                                    <tr><td colspan="7" class="text-center text-muted">로딩 중...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -445,9 +511,70 @@
         document.addEventListener('DOMContentLoaded', function() {
             initPointFileUploadArea();
             initRpayFileUploadArea();
+            loadAutoGenerateSetting();
             loadPendingPoints();
             loadTransactions();
         });
+
+        // Update point setting UI
+        function updatePointSettingUI(enabled) {
+            const icon = document.getElementById('pointSettingIcon');
+            const title = document.getElementById('pointSettingTitle');
+            const desc = document.getElementById('pointSettingDesc');
+
+            if (enabled) {
+                icon.style.background = '#52c41a20';
+                icon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>';
+                title.textContent = 'X포인트 자동 생성 활성화됨';
+                title.style.color = '#52c41a';
+                desc.textContent = '주문 시 X포인트가 자동으로 생성됩니다';
+            } else {
+                icon.style.background = '#ff4d4f20';
+                icon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff4d4f" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+                title.textContent = 'X포인트 자동 생성 비활성화됨';
+                title.style.color = '#ff4d4f';
+                desc.textContent = '주문 시 X포인트가 생성되지 않습니다';
+            }
+        }
+
+        // Load auto generate setting
+        async function loadAutoGenerateSetting() {
+            try {
+                const result = await api.get('/admin/settings/point-auto');
+                const toggle = document.getElementById('autoGenerateToggle');
+                if (result.data) {
+                    toggle.checked = result.data.xpoint_auto_generate;
+                    updatePointSettingUI(result.data.xpoint_auto_generate);
+                }
+            } catch (error) {
+                console.error('Load auto generate setting error:', error);
+            }
+        }
+
+        // Toggle auto generate setting
+        document.getElementById('autoGenerateToggle').addEventListener('change', async function() {
+            const enabled = this.checked;
+            try {
+                await api.post('/admin/settings/point-auto', { xpoint_auto_generate: enabled });
+                updatePointSettingUI(enabled);
+                showToast(enabled ? 'X포인트 자동 생성이 활성화되었습니다.' : 'X포인트 자동 생성이 비활성화되었습니다.', 'success');
+            } catch (error) {
+                this.checked = !enabled;
+                showToast('설정 변경에 실패했습니다.', 'error');
+            }
+        });
+
+        // Cancel pending X-point
+        async function cancelPendingXPoint(id) {
+            if (!confirm('이 대기 중인 X포인트를 취소하시겠습니까?\n취소하면 해당 X포인트는 지급되지 않습니다.')) return;
+            try {
+                await api.delete(`/admin/points/pending/${id}`);
+                showToast('대기 중인 X포인트가 취소되었습니다.', 'success');
+                loadPendingPoints();
+            } catch (error) {
+                showToast(error.message || '취소에 실패했습니다.', 'error');
+            }
+        }
 
         // Point mode switching (grant/deduct)
         function setPointMode(mode) {
@@ -823,7 +950,7 @@
                 const tbody = document.getElementById('pendingBody');
 
                 if (!result.data || result.data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">대기 중인 X포인트가 없습니다</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">대기 중인 X포인트가 없습니다</td></tr>';
                     return;
                 }
 
@@ -835,6 +962,13 @@
                         <td class="fw-600 text-success">+₩${(p.xpoint_amount || 0).toLocaleString()}</td>
                         <td>${formatDate(p.scheduled_release_date)}</td>
                         <td>${pendingStatusBadge(p.status)}</td>
+                        <td>
+                            <button class="action-btn delete" onclick="cancelPendingXPoint('${p.id}')" title="취소">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </td>
                     </tr>
                 `).join('');
             } catch (error) {
