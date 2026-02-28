@@ -1088,44 +1088,70 @@
             return; // 오늘 이미 "하루 보지 않기"를 선택했으면 표시하지 않음
         }
 
+        let popups = [];
+        let currentIndex = 0;
+
         // API에서 팝업 설정 불러오기
         try {
             const response = await fetch('/api/content/popup');
             const result = await response.json();
 
-            if (result.success && result.data && result.data.enabled) {
-                const popup = result.data;
-
-                // 이미지 설정
-                popupImage.src = popup.image_url;
-
-                // 링크 설정
-                if (popup.link_url) {
-                    popupLink.href = popup.link_url;
-                } else {
-                    popupLink.removeAttribute('href');
-                    popupLink.style.cursor = 'default';
-                }
-
-                // 세로 크기 설정 (관리자가 지정한 높이)
-                if (popup.height) {
-                    popupImage.style.height = popup.height + 'px';
-                    popupImage.style.objectFit = 'cover';
-                }
-
-                // 모달 표시
-                modal.style.display = 'block';
+            if (result.success && result.data && Array.isArray(result.data) && result.data.length > 0) {
+                popups = result.data;
+                showPopup(currentIndex);
             }
         } catch (error) {
             console.log('팝업 설정을 불러올 수 없습니다.');
         }
 
-        // 닫기 기능
+        // 팝업 표시 함수
+        function showPopup(index) {
+            if (index >= popups.length) {
+                modal.style.display = 'none';
+                return;
+            }
+
+            const popup = popups[index];
+
+            // 이미지 초기화 및 설정
+            popupImage.style.height = '';
+            popupImage.style.objectFit = '';
+            popupImage.src = popup.image_url;
+
+            // 링크 설정
+            if (popup.link_url) {
+                popupLink.href = popup.link_url;
+                popupLink.style.cursor = 'pointer';
+            } else {
+                popupLink.removeAttribute('href');
+                popupLink.style.cursor = 'default';
+            }
+
+            // 세로 크기 설정 (관리자가 지정한 높이)
+            if (popup.height) {
+                popupImage.style.height = popup.height + 'px';
+                popupImage.style.objectFit = 'cover';
+            }
+
+            // 모달 표시
+            modal.style.display = 'block';
+        }
+
+        // 닫기 기능 - 다음 팝업 표시
         function closeModal() {
             if (dontShowCheckbox.checked) {
                 localStorage.setItem('popupHiddenDate', today);
+                modal.style.display = 'none';
+                return;
             }
-            modal.style.display = 'none';
+
+            currentIndex++;
+            if (currentIndex < popups.length) {
+                // 다음 팝업 표시
+                showPopup(currentIndex);
+            } else {
+                modal.style.display = 'none';
+            }
         }
 
         closeBtn.addEventListener('click', closeModal);

@@ -91,20 +91,49 @@
             </header>
 
             <div class="content-area">
-                <!-- Popup Settings -->
+                <!-- Popup List -->
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">팝업 설정</h2>
-                        <span class="badge" id="popupStatusBadge">비활성</span>
+                        <h2 class="card-title">팝업 관리</h2>
+                        <span class="badge badge-info" id="popupCountBadge">0개</span>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;">미리보기</th>
+                                        <th>제목</th>
+                                        <th>이동 URL</th>
+                                        <th style="width:80px;">상태</th>
+                                        <th style="width:100px;">작업</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="popupListBody">
+                                    <tr><td colspan="5" class="text-center text-muted">로딩 중...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add New Popup -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">새 팝업 추가</h2>
                     </div>
                     <div class="card-body">
                         <form id="popupForm">
-                            <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                            <div class="form-group">
+                                <label class="form-label">팝업 제목 (관리용)</label>
+                                <input type="text" class="form-control" id="popupTitle" placeholder="예: 3월 이벤트 팝업">
+                            </div>
+                            <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:15px;">
                                 <div class="form-group">
                                     <label class="form-label">팝업 활성화</label>
                                     <label class="switch" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-                                        <input type="checkbox" id="popupEnabled" style="width:18px;height:18px;">
-                                        <span id="popupEnabledLabel">비활성화</span>
+                                        <input type="checkbox" id="popupEnabled" style="width:18px;height:18px;" checked>
+                                        <span id="popupEnabledLabel">활성화</span>
                                     </label>
                                 </div>
                                 <div class="form-group">
@@ -121,7 +150,7 @@
                                 <div id="popupImagePreview" style="margin-top:15px;display:none;">
                                     <div style="position:relative;display:inline-block;">
                                         <img src="" alt="팝업 미리보기" style="max-width:300px;border-radius:8px;border:1px solid #ddd;">
-                                        <button type="button" id="deletePopupImageBtn" style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;background:#ff4d4f;color:#fff;border:none;cursor:pointer;font-size:14px;line-height:1;">&times;</button>
+                                        <button type="button" id="clearPopupImageBtn" style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;background:#ff4d4f;color:#fff;border:none;cursor:pointer;font-size:14px;line-height:1;">&times;</button>
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +159,7 @@
                                 <input type="url" class="form-control" id="popupLinkUrl" placeholder="https://example.com/event">
                             </div>
                             <div class="form-group" style="margin-top:20px;">
-                                <button type="submit" class="btn btn-primary">팝업 설정 저장</button>
+                                <button type="submit" class="btn btn-primary">팝업 추가</button>
                             </div>
                         </form>
                     </div>
@@ -387,36 +416,76 @@
         }
 
         // =============== 팝업 설정 ===============
-        // Load popup settings
-        async function loadPopupSettings() {
+        // Load popup list
+        async function loadPopupList() {
             try {
                 const result = await api.get('/admin/popup');
-                if (result.data) {
-                    const popup = result.data;
-                    document.getElementById('popupEnabled').checked = popup.enabled;
-                    document.getElementById('popupEnabledLabel').textContent = popup.enabled ? '활성화' : '비활성화';
-                    document.getElementById('popupHeight').value = popup.height || '';
-                    document.getElementById('popupImageUrl').value = popup.image_url || '';
-                    document.getElementById('popupLinkUrl').value = popup.link_url || '';
+                const tbody = document.getElementById('popupListBody');
+                const countBadge = document.getElementById('popupCountBadge');
 
-                    // Preview
-                    if (popup.image_url) {
-                        document.getElementById('popupImagePreview').style.display = 'block';
-                        document.getElementById('popupImagePreview').querySelector('img').src = popup.image_url;
-                    }
-
-                    // Badge
-                    const badge = document.getElementById('popupStatusBadge');
-                    if (popup.enabled) {
-                        badge.textContent = '활성';
-                        badge.className = 'badge badge-success';
-                    } else {
-                        badge.textContent = '비활성';
-                        badge.className = 'badge badge-secondary';
-                    }
+                if (!result.data || result.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">등록된 팝업이 없습니다</td></tr>';
+                    countBadge.textContent = '0개';
+                    return;
                 }
+
+                const activeCount = result.data.filter(p => p.enabled).length;
+                countBadge.textContent = `${activeCount}개 활성`;
+
+                tbody.innerHTML = result.data.map(popup => `
+                    <tr>
+                        <td>
+                            <img src="${popup.image_url}" alt="${popup.title || '팝업'}"
+                                 style="width:60px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #eee;">
+                        </td>
+                        <td>${popup.title || '(제목 없음)'}</td>
+                        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                            ${popup.link_url ? `<a href="${popup.link_url}" target="_blank">${popup.link_url}</a>` : '-'}
+                        </td>
+                        <td>
+                            <label style="display:flex;align-items:center;cursor:pointer;">
+                                <input type="checkbox" ${popup.enabled ? 'checked' : ''}
+                                       onchange="togglePopup(${popup.id}, this.checked)"
+                                       style="width:16px;height:16px;">
+                            </label>
+                        </td>
+                        <td>
+                            <button class="action-btn delete" onclick="deletePopup(${popup.id})" title="삭제">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3,6 5,6 21,6"/>
+                                    <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
             } catch (error) {
-                console.error('Load popup settings error:', error);
+                console.error('Load popup list error:', error);
+            }
+        }
+
+        // Toggle popup enabled
+        async function togglePopup(id, enabled) {
+            try {
+                await api.patch(`/admin/popup/${id}/toggle`, { enabled });
+                showToast(enabled ? '팝업이 활성화되었습니다.' : '팝업이 비활성화되었습니다.', 'success');
+                loadPopupList();
+            } catch (error) {
+                showToast(error.message || '상태 변경 실패', 'error');
+                loadPopupList();
+            }
+        }
+
+        // Delete popup
+        async function deletePopup(id) {
+            if (!confirm('이 팝업을 삭제하시겠습니까?')) return;
+
+            try {
+                await api.delete(`/admin/popup/${id}`);
+                showToast('팝업이 삭제되었습니다.', 'success');
+                loadPopupList();
+            } catch (error) {
+                showToast(error.message || '삭제 실패', 'error');
             }
         }
 
@@ -425,37 +494,12 @@
             document.getElementById('popupEnabledLabel').textContent = this.checked ? '활성화' : '비활성화';
         });
 
-        // Delete popup image
-        document.getElementById('deletePopupImageBtn').addEventListener('click', async function() {
-            if (!confirm('이미지를 삭제하시겠습니까?')) return;
-
-            try {
-                // 서버에 이미지 삭제 저장 (비활성화 처리)
-                await api.post('/admin/popup', {
-                    enabled: false,
-                    height: null,
-                    image_url: '',
-                    link_url: ''
-                });
-
-                document.getElementById('popupImageUrl').value = '';
-                document.getElementById('popupImagePreview').style.display = 'none';
-                document.getElementById('popupImageFile').value = '';
-                document.getElementById('uploadStatus').textContent = '';
-                document.getElementById('popupEnabled').checked = false;
-                document.getElementById('popupEnabledLabel').textContent = '비활성화';
-                document.getElementById('popupHeight').value = '';
-                document.getElementById('popupLinkUrl').value = '';
-
-                // Badge 업데이트
-                const badge = document.getElementById('popupStatusBadge');
-                badge.textContent = '비활성';
-                badge.className = 'badge badge-secondary';
-
-                showToast('팝업 이미지가 삭제되었습니다.', 'success');
-            } catch (error) {
-                showToast('삭제 실패', 'error');
-            }
+        // Clear popup image preview
+        document.getElementById('clearPopupImageBtn').addEventListener('click', function() {
+            document.getElementById('popupImageUrl').value = '';
+            document.getElementById('popupImagePreview').style.display = 'none';
+            document.getElementById('popupImageFile').value = '';
+            document.getElementById('uploadStatus').textContent = '';
         });
 
         // Upload popup image (자동 업로드)
@@ -496,7 +540,7 @@
             }
         });
 
-        // Save popup settings
+        // Add new popup
         document.getElementById('popupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -507,6 +551,7 @@
             }
 
             const data = {
+                title: document.getElementById('popupTitle').value || '',
                 enabled: document.getElementById('popupEnabled').checked,
                 height: document.getElementById('popupHeight').value ? parseInt(document.getElementById('popupHeight').value) : null,
                 image_url: imageUrl,
@@ -515,16 +560,25 @@
 
             try {
                 await api.post('/admin/popup', data);
-                showToast('팝업 설정이 저장되었습니다.', 'success');
-                loadPopupSettings();
+                showToast('팝업이 추가되었습니다.', 'success');
+
+                // 폼 초기화
+                document.getElementById('popupForm').reset();
+                document.getElementById('popupImageUrl').value = '';
+                document.getElementById('popupImagePreview').style.display = 'none';
+                document.getElementById('uploadStatus').textContent = '';
+                document.getElementById('popupEnabled').checked = true;
+                document.getElementById('popupEnabledLabel').textContent = '활성화';
+
+                loadPopupList();
             } catch (error) {
-                showToast(error.message || '저장 실패', 'error');
+                showToast(error.message || '추가 실패', 'error');
             }
         });
 
         // Init
         document.addEventListener('DOMContentLoaded', () => {
-            loadPopupSettings();
+            loadPopupList();
             loadExchangeRate();
             loadRateHistory();
             loadHolidays();

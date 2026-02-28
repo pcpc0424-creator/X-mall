@@ -200,6 +200,9 @@ router.post('/payments/:id/cancel', authenticateAdmin, (req, res) => payringCont
 
 // Popup (protected) - 팝업 설정
 router.get('/popup', authenticateAdmin, (req, res) => popupController.getPopupSettings(req, res));
-router.post('/popup', authenticateAdmin, (req, res) => popupController.savePopupSettings(req, res));
+router.post('/popup', authenticateAdmin, (req, res) => popupController.addPopup(req, res));
+router.put('/popup/:id', authenticateAdmin, (req, res) => popupController.updatePopup(req, res));
+router.delete('/popup/:id', authenticateAdmin, (req, res) => popupController.deletePopup(req, res));
+router.patch('/popup/:id/toggle', authenticateAdmin, (req, res) => popupController.togglePopup(req, res));
 
 export default router;
