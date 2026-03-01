@@ -81,6 +81,7 @@ router.post('/auth/login', (req, res) => authController.adminLogin(req, res));
 // Users (protected)
 router.get('/users', authenticateAdmin, (req, res) => userController.getUsers(req, res));
 router.get('/users/:id', authenticateAdmin, (req, res) => userController.getUserById(req, res));
+router.post('/users/:userId/impersonate', authenticateAdmin, (req, res) => authController.adminImpersonate(req, res));
 router.post('/users', authenticateAdmin, (req, res) => userController.createUser(req, res));
 router.post('/users/bulk-upload', authenticateAdmin, upload.single('file'), (req, res) => userController.bulkUpload(req, res));
 router.put('/users/:id/grade', authenticateAdmin, (req, res) => userController.updateGrade(req, res));

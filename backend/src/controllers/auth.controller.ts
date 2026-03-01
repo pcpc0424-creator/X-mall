@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { userService } from '../services/user.service';
 import { adminService } from '../services/admin.service';
 import { generateUserToken, generateAdminToken } from '../middleware/auth';
-import { SignupBody, LoginBody, AdminLoginBody } from '../types';
+import { SignupBody, LoginBody, AdminLoginBody, AdminAuthRequest } from '../types';
 
 export class AuthController {
   async signup(req: Request, res: Response) {
@@ -169,6 +169,47 @@ export class AuthController {
             username: admin.username,
             name: admin.name,
             role: admin.role
+          },
+          token
+        }
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+  // Admin impersonate user (관리자가 회원으로 로그인)
+  async adminImpersonate(req: AdminAuthRequest, res: Response) {
+    try {
+      const { userId } = req.params;
+
+      const user = await userService.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          error: '회원을 찾을 수 없습니다.'
+        });
+      }
+
+      // Generate token for the user
+      const token = generateUserToken({
+        id: user.id,
+        username: user.username,
+        grade: user.grade
+      });
+
+      res.json({
+        success: true,
+        data: {
+          user: {
+            id: user.id,
+            username: user.username,
+            name: user.name,
+            grade: user.grade
           },
           token
         }

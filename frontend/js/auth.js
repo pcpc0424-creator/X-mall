@@ -126,8 +126,41 @@ function handleLogout(event) {
   auth.logout();
 }
 
+// Check for impersonate token in URL (관리자 회원 마이페이지 접속)
+function checkImpersonateToken() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const impersonateToken = urlParams.get('impersonate_token');
+
+  if (impersonateToken) {
+    // Set the token
+    auth.setToken(impersonateToken);
+
+    // Decode token to get user info (JWT payload is base64)
+    try {
+      const payload = JSON.parse(atob(impersonateToken.split('.')[1]));
+      auth.setUser({
+        id: payload.id,
+        username: payload.username,
+        grade: payload.grade
+      });
+    } catch (e) {
+      console.error('Failed to decode impersonate token:', e);
+    }
+
+    // Remove token from URL (clean URL)
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+
+    return true;
+  }
+  return false;
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+  // Check impersonate token first
+  checkImpersonateToken();
+
   updateAuthUI();
 
   // Attach logout handlers

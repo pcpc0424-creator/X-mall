@@ -500,6 +500,9 @@
                             <button class="action-btn" onclick="viewMember('${m.id}')" title="상세보기">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
+                            <button class="action-btn" onclick="impersonateUser('${m.id}')" title="마이페이지 접속" style="color: #52c41a;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                            </button>
                             <button class="action-btn" onclick="editMember('${m.id}', '${m.name}', '${m.grade}')" title="등급 수정">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
@@ -890,6 +893,22 @@
                 showToast(error.message || '비밀번호 변경에 실패했습니다.', 'error');
             } finally {
                 setLoading(btn, false);
+            }
+        }
+
+        // Impersonate user (관리자가 회원 마이페이지 접속)
+        async function impersonateUser(userId) {
+            try {
+                const result = await api.post(`/admin/users/${userId}/impersonate`);
+                const { token, user } = result.data;
+
+                // 새 탭에서 마이페이지 열기 (토큰을 URL 파라미터로 전달)
+                const url = `/frontend/my-account/dashboard.html?impersonate_token=${token}`;
+                window.open(url, '_blank');
+
+                showToast(`${user.name}님의 마이페이지로 이동합니다.`, 'success');
+            } catch (error) {
+                showToast(error.message || '마이페이지 접속에 실패했습니다.', 'error');
             }
         }
 

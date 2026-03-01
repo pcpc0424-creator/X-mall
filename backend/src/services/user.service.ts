@@ -125,9 +125,11 @@ export class UserService {
     params.push(limit, offset);
     const result = await query(
       `SELECT u.id, u.username, u.name, u.phone, u.grade, u.is_active, u.created_at,
-              r.username as referrer_username, r.name as referrer_name
+              r.username as referrer_username, r.name as referrer_name,
+              COALESCE(rp.balance_krw, 0) as rpay_balance
        FROM users u
        LEFT JOIN users r ON u.referrer_id = r.id
+       LEFT JOIN rpay_balance rp ON u.id = rp.user_id
        ${whereClause}
        ORDER BY u.created_at DESC
        LIMIT $${params.length - 1} OFFSET $${params.length}`,
