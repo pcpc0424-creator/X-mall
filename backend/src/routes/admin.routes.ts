@@ -99,7 +99,9 @@ router.post('/points/deduct', authenticateAdmin, (req, res) => pointController.a
 router.post('/points/bulk-grant', authenticateAdmin, upload.single('file'), (req, res) => pointController.bulkGrant(req, res));
 router.get('/points/pending', authenticateAdmin, (req, res) => pointController.getPendingXPoints(req, res));
 router.delete('/points/pending/:id', authenticateAdmin, (req, res) => pointController.cancelPendingXPoint(req, res));
+router.post('/points/pending/:id/release', authenticateAdmin, (req, res) => pointController.releaseSingleXPoint(req, res));
 router.get('/points/transactions', authenticateAdmin, (req, res) => pointController.getAllTransactions(req, res));
+router.post('/points/trigger-release', authenticateAdmin, (req, res) => pointController.triggerXPointRelease(req, res));
 
 // R-pay (protected)
 router.post('/rpay/deposit', authenticateAdmin, (req, res) => rpayController.adminDeposit(req, res));

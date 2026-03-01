@@ -312,6 +312,17 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">대기 중 X포인트 (14일 후 지급 예정)</h2>
+                        <div class="header-actions" style="display: flex; gap: 0.5rem; align-items: center;">
+                            <div id="overdueInfo" style="display: none; background: #ff4d4f20; color: #ff4d4f; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.85rem; font-weight: 500;">
+                                <span id="overdueCount">0</span>건 지급 지연
+                            </div>
+                            <button class="btn btn-sm btn-primary" id="triggerReleaseBtn" onclick="triggerXPointRelease()" style="display: none;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                                    <polyline points="20,6 9,17 4,12"/>
+                                </svg>
+                                밀린 포인트 지급
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body" style="padding: 0;">
                         <div class="table-responsive">
@@ -948,21 +959,46 @@
             try {
                 const result = await api.get('/admin/points/pending');
                 const tbody = document.getElementById('pendingBody');
+                const overdueInfo = document.getElementById('overdueInfo');
+                const overdueCount = document.getElementById('overdueCount');
+                const triggerBtn = document.getElementById('triggerReleaseBtn');
 
                 if (!result.data || result.data.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">대기 중인 X포인트가 없습니다</td></tr>';
+                    overdueInfo.style.display = 'none';
+                    triggerBtn.style.display = 'none';
                     return;
                 }
 
-                tbody.innerHTML = result.data.map(p => `
-                    <tr>
+                // Check for overdue points (scheduled_release_date <= today)
+                const today = new Date().toISOString().split('T')[0];
+                const overdueItems = result.data.filter(p => p.scheduled_release_date <= today);
+
+                if (overdueItems.length > 0) {
+                    overdueInfo.style.display = 'block';
+                    overdueCount.textContent = overdueItems.length;
+                    triggerBtn.style.display = 'inline-flex';
+                } else {
+                    overdueInfo.style.display = 'none';
+                    triggerBtn.style.display = 'none';
+                }
+
+                tbody.innerHTML = result.data.map(p => {
+                    const isOverdue = p.scheduled_release_date <= today;
+                    return `
+                    <tr style="${isOverdue ? 'background: #ff4d4f10;' : ''}">
                         <td>${p.user_name || p.user_username || '-'}</td>
                         <td>#${p.order_number || p.order_id?.slice(0, 8)}</td>
                         <td>${(p.pv_amount || 0).toLocaleString()} PV</td>
                         <td class="fw-600 text-success">+₩${(p.xpoint_amount || 0).toLocaleString()}</td>
-                        <td>${formatDate(p.scheduled_release_date)}</td>
+                        <td>${formatDate(p.scheduled_release_date)} ${isOverdue ? '<span style="color:#ff4d4f;font-weight:600;">(지연)</span>' : ''}</td>
                         <td>${pendingStatusBadge(p.status)}</td>
-                        <td>
+                        <td style="display: flex; gap: 4px;">
+                            <button class="action-btn" onclick="releaseSingleXPoint('${p.id}')" title="지급" style="color: #52c41a;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20,6 9,17 4,12"/>
+                                </svg>
+                            </button>
                             <button class="action-btn delete" onclick="cancelPendingXPoint('${p.id}')" title="취소">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -970,9 +1006,47 @@
                             </button>
                         </td>
                     </tr>
-                `).join('');
+                `}).join('');
             } catch (error) {
                 console.error('Load pending error:', error);
+            }
+        }
+
+        // Release single X-point
+        async function releaseSingleXPoint(id) {
+            if (!confirm('이 X포인트를 지금 지급하시겠습니까?')) return;
+
+            try {
+                const result = await api.post(`/admin/points/pending/${id}/release`);
+                showToast(result.message || 'X포인트가 지급되었습니다.', 'success');
+                loadPendingPoints();
+                loadTransactions();
+            } catch (error) {
+                showToast(error.message || '지급에 실패했습니다.', 'error');
+            }
+        }
+
+        // Trigger X-point release manually
+        async function triggerXPointRelease() {
+            if (!confirm('지급 예정일이 지난 모든 X포인트를 지금 지급하시겠습니까?')) return;
+
+            const btn = document.getElementById('triggerReleaseBtn');
+            try {
+                setLoading(btn, true);
+                const result = await api.post('/admin/points/trigger-release');
+
+                if (result.data.releasedCount > 0) {
+                    showToast(`${result.data.releasedCount}건의 X포인트가 지급되었습니다. (총 ${result.data.totalAmount.toLocaleString()}원)`, 'success');
+                } else {
+                    showToast('지급할 X포인트가 없습니다.', 'info');
+                }
+
+                loadPendingPoints();
+                loadTransactions();
+            } catch (error) {
+                showToast(error.message || '지급에 실패했습니다.', 'error');
+            } finally {
+                setLoading(btn, false);
             }
         }
 

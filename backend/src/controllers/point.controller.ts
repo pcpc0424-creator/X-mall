@@ -1,9 +1,10 @@
 import { Response } from 'express';
 import { pointService } from '../services/point.service';
 import { userService } from '../services/user.service';
-import { query } from '../config/database';
+import { query, getClient } from '../config/database';
 import { AuthRequest, AdminAuthRequest, AdminGrantPointsBody } from '../types';
 import { parsePointsExcel } from '../utils/excel';
+import { generateUUID } from '../utils/helpers';
 
 export class PointController {
   // Get point summary
@@ -358,6 +359,167 @@ export class PointController {
         success: false,
         error: error.message || '파일 처리 중 오류가 발생했습니다.'
       });
+    }
+  }
+
+  // Admin: Release single pending X-point (개별 X포인트 지급)
+  async releaseSingleXPoint(req: AdminAuthRequest, res: Response) {
+    const { id } = req.params;
+    const client = await getClient();
+
+    try {
+      await client.query('BEGIN');
+
+      // Find the pending X-point
+      const pendingResult = await client.query(
+        `SELECT * FROM pending_xpoints WHERE id = $1 AND status = 'pending' FOR UPDATE`,
+        [id]
+      );
+
+      if (pendingResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return res.status(404).json({
+          success: false,
+          error: '해당 대기 포인트를 찾을 수 없거나 이미 처리되었습니다.'
+        });
+      }
+
+      const pending = pendingResult.rows[0];
+
+      // Upsert X-point balance
+      const balanceResult = await client.query(
+        `INSERT INTO point_balances (user_id, point_type, balance)
+         VALUES ($1, 'X', $2)
+         ON CONFLICT (user_id, point_type)
+         DO UPDATE SET balance = point_balances.balance + $2, updated_at = NOW()
+         RETURNING balance`,
+        [pending.user_id, pending.xpoint_amount]
+      );
+
+      const newBalance = parseFloat(balanceResult.rows[0].balance);
+
+      // Record transaction
+      await client.query(
+        `INSERT INTO point_transactions (id, user_id, point_type, amount, transaction_type, balance_after, reference_id, description)
+         VALUES ($1, $2, 'X', $3, 'pv_reward', $4, $5, $6)`,
+        [
+          generateUUID(),
+          pending.user_id,
+          pending.xpoint_amount,
+          newBalance,
+          pending.order_id,
+          `PV 리워드 X포인트 지급 (PV: ${pending.pv_amount}, 주문: ${pending.order_id})`
+        ]
+      );
+
+      // Update pending status
+      await client.query(
+        `UPDATE pending_xpoints SET status = 'released', released_at = CURRENT_TIMESTAMP WHERE id = $1`,
+        [id]
+      );
+
+      await client.query('COMMIT');
+
+      res.json({
+        success: true,
+        data: { amount: parseFloat(pending.xpoint_amount) },
+        message: `X포인트 ${parseFloat(pending.xpoint_amount).toLocaleString()}원이 지급되었습니다.`
+      });
+    } catch (error: any) {
+      await client.query('ROLLBACK');
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    } finally {
+      client.release();
+    }
+  }
+
+  // Admin: Trigger X-point release manually (수동 X포인트 지급 트리거)
+  async triggerXPointRelease(req: AdminAuthRequest, res: Response) {
+    const client = await getClient();
+
+    try {
+      await client.query('BEGIN');
+
+      const today = new Date().toISOString().split('T')[0];
+
+      // Find all pending X-points that should be released today or before
+      const pendingResult = await client.query(
+        `SELECT * FROM pending_xpoints
+         WHERE status = 'pending'
+         AND scheduled_release_date <= $1
+         FOR UPDATE`,
+        [today]
+      );
+
+      if (pendingResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return res.json({
+          success: true,
+          data: { releasedCount: 0, totalAmount: 0 },
+          message: '지급 예정일이 지난 대기 중인 X포인트가 없습니다.'
+        });
+      }
+
+      let releasedCount = 0;
+      let totalAmount = 0;
+
+      for (const pending of pendingResult.rows) {
+        // Upsert X-point balance
+        const balanceResult = await client.query(
+          `INSERT INTO point_balances (user_id, point_type, balance)
+           VALUES ($1, 'X', $2)
+           ON CONFLICT (user_id, point_type)
+           DO UPDATE SET balance = point_balances.balance + $2, updated_at = NOW()
+           RETURNING balance`,
+          [pending.user_id, pending.xpoint_amount]
+        );
+
+        const newBalance = parseFloat(balanceResult.rows[0].balance);
+
+        // Record transaction
+        await client.query(
+          `INSERT INTO point_transactions (id, user_id, point_type, amount, transaction_type, balance_after, reference_id, description)
+           VALUES ($1, $2, 'X', $3, 'pv_reward', $4, $5, $6)`,
+          [
+            generateUUID(),
+            pending.user_id,
+            pending.xpoint_amount,
+            newBalance,
+            pending.order_id,
+            `PV 리워드 X포인트 지급 (PV: ${pending.pv_amount}, 주문: ${pending.order_id})`
+          ]
+        );
+
+        // Update pending status
+        await client.query(
+          `UPDATE pending_xpoints
+           SET status = 'released', released_at = CURRENT_TIMESTAMP
+           WHERE id = $1`,
+          [pending.id]
+        );
+
+        releasedCount++;
+        totalAmount += parseFloat(pending.xpoint_amount);
+      }
+
+      await client.query('COMMIT');
+
+      res.json({
+        success: true,
+        data: { releasedCount, totalAmount },
+        message: `${releasedCount}건의 X포인트가 지급되었습니다. (총 ${totalAmount.toLocaleString()}원)`
+      });
+    } catch (error: any) {
+      await client.query('ROLLBACK');
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    } finally {
+      client.release();
     }
   }
 }
