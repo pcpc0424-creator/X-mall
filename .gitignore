@@ -30,3 +30,9 @@ screenshot*.js
 
 # Backup folders
 *-backup/
+node_modules/
+.next/
+.env
+.env.*
+dist/
+build/
